@@ -1,38 +1,55 @@
 <template>
 <v-container>
   <h2>{{title}}</h2>
-  <v-data-table
-    :headers="headers"
-    :items="items"
-    :items-per-page="-1"
-    
-  >
+
+  <p class="mt-5">ノードをクリックしてください。</p>
+
+  <p class="mb-5">選択済み: {{fact || "None"}}</p>
+
+  <v-btn class="primary my-5" @click="fact = ''">リセット</v-btn>
   
-  <template #[`item.fac`]="{ item }">
-      <a
-      :href="`${baseUrl}/snorql/?describe=${encodeURIComponent(item.fac)}`"
-      >
-        {{ item.fac }}
-      </a>
-    </template>
+  <div v-if="loading" class="pa-10 text-center">
+    <v-progress-circular
+      indeterminate
+      color="primary"
+    ></v-progress-circular>
+  </div>
   
-  </v-data-table>
+  <network id="mynetwork" ref="network"
+    style="width: 100%; height: 500px;"
+    :nodes="nodes"
+    :edges="edges"
+    :options="options"
+    @click="onNodeSelected"
+    >
+    </network>
+
   </v-container>
 </template>
 <script>
+
+const { Network } = require('vue-vis-network')
+
 export default {
+  components: {
+    network: Network,
+  },
   data () {
     return {
       baseUrl: process.env.BASE_URL,
-      headers: [{
-        text: "Fac",
-        value: "fac"
-      },{
-        text: "Ent",
-        value: "ent"
-      }],
-      items: [],
-      title: this.$t("network")
+      loading: false,
+      nodes: [],
+      edges: [],
+      options: {
+         nodes: {
+          borderWidth: 1
+         },
+         edges: {
+          color: 'lightgray'
+        }
+      },
+      title: this.$t("network"),
+      fact: ""
     }
   },
 
@@ -41,37 +58,80 @@ export default {
       title: this.title
     }
   },
-  async mounted(){
-    const url = "https://dydra.com/junjun7613/roman-factoid/sparql"
-
-    const query = `prefix owl: <http://www.w3.org/2002/07/owl#>
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix xsd: <http://www.w3.org/2001/XMLSchema#>
-prefix dprr: <http://romanrepublic.ac.uk/rdf/ontology#>
-prefix fpo: <https://github.com/johnBradley501/FPO/raw/master/fpo.owl#>
-prefix ex: <https://junjun7613.github.io/roman_factoid/Roman_Contextual_Factoid.owl#>
-
-
-select ?fac(COUNT(?ent_name) AS ?ent) where { 
-{?fac a ex:Action} UNION {?fac a ex:Contact} UNION {?fac a ex:Thought} UNION {?fac a ex:Situation}
-?fac (ex:subject|ex:whom|ex:what)/ex:referencesEntity/ex:name ?ent_name.
-} GROUP BY ?fac
-HAVING (COUNT(?ent_name) > 1)`
-
-    const data = (await this.$axios.get(`${url}?query=${encodeURIComponent(query)}`)).data
-
-    const items = []
-    for(const obj of data){
-      items.push({
-        fac: obj.fac,
-        ent: obj.ent
-      })
+  watch: { 
+    fact(){
+      this.updateFact()
     }
-    
-    this.items = items
+  },
+  mounted(){
+    this.updateFact()
+  },
+  methods : {
+    onNodeSelected(value) {
+      const nodes = value.nodes
+      if (nodes.length > 0) {
+        const s = nodes[0]
+        this.fact = s
 
+        // this.updateFact()
+      }
+    },
+    async updateFact(){
+      this.loading = true
+      const url = "https://dydra.com/junjun7613/roman-factoid/sparql"
+
+      const fact = this.fact
+
+      const query = `
+      select * where {
+        ?s <https://junjun7613.github.io/roman_factoid/Roman_Contextual_Factoid.owl#mentionedAsPrecedent> ?o . 
+        ${fact ? ` filter (?s = <${fact}> || ?o = <${fact}>) ` : ``}
+      }`
+
+      const data = (await this.$axios.get(`${url}?query=${encodeURIComponent(query)}`)).data
+
+      const nodesMap = {}
+      const edges = []
+
+      for(const obj of data){
+        const s = obj.s
+        const spl = s.split("/")
+        const label = spl[spl.length - 1]
+        if(!nodesMap[s]){
+          nodesMap[s] = {
+            id: s,  
+            label,
+            shape: 'dot'
+          }
+        }
+        
+        edges.push({
+          from: obj.s,
+          to: obj.o,
+          arrows: {
+            to: {
+              enabled: true
+            },
+          },
+        })
+      }
+
+      const nodes = []
+      for(const s in nodesMap){
+        nodes.push(nodesMap[s])
+      }
+
+      this.nodes = nodes
+      this.edges = edges
+
+      this.loading = false
+    }
   }
 }
 </script>
+<style>
+#mynetwork {
+   border: 1px solid lightgray;
+}
+</style>
 

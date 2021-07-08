@@ -58,6 +58,11 @@ export default {
           to: this.localePath({ name: 'index'})
         },
         {
+          icon: 'mdi-table',
+          title: 'table',
+          to: this.localePath({ name: 'table'})
+        },
+        {
           icon: 'mdi-network',
           title: 'Network',
           to: this.localePath({ name: 'network'})
