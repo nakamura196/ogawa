@@ -9,6 +9,7 @@
           v-for="(item, i) in items"
           :key="i"
           :to="item.to"
+          :href="item.href"
           router
           exact
         >
@@ -57,14 +58,14 @@ export default {
           to: this.localePath({ name: 'index'})
         },
         {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
-        },
-        {
           icon: 'mdi-network',
           title: 'Network',
           to: this.localePath({ name: 'network'})
+        },
+        {
+          icon: 'mdi-dabase',
+          title: 'Snorql',
+          href: process.env.BASE_URL + "/snorql"
         },
       ],
       title: '小川さんプロジェクト'

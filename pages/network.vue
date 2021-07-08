@@ -6,13 +6,24 @@
     :items="items"
     :items-per-page="-1"
     
-  ></v-data-table>
+  >
+  
+  <template #[`item.fac`]="{ item }">
+      <a
+      :href="`${baseUrl}/snorql/?describe=${encodeURIComponent(item.fac)}`"
+      >
+        {{ item.fac }}
+      </a>
+    </template>
+  
+  </v-data-table>
   </v-container>
 </template>
 <script>
 export default {
   data () {
     return {
+      baseUrl: process.env.BASE_URL,
       headers: [{
         text: "Fac",
         value: "fac"
