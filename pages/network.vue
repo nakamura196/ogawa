@@ -1,72 +1,69 @@
 <template>
-<v-container>
-  <h2>{{title}}</h2>
+  <v-container>
+    <h2>{{ title }}</h2>
 
-  <p class="mt-5">ノードをクリックしてください。</p>
+    <p class="mt-5">ノードをクリックしてください。</p>
 
-  <p class="mb-5">選択済み: {{fact || "None"}}</p>
+    <p class="mb-5">選択済み: {{ fact || 'None' }}</p>
 
-  <v-btn class="primary my-5" @click="fact = ''">リセット</v-btn>
-  
-  <div v-if="loading" class="pa-10 text-center">
-    <v-progress-circular
-      indeterminate
-      color="primary"
-    ></v-progress-circular>
-  </div>
-  
-  <network id="mynetwork" ref="network"
-    style="width: 100%; height: 500px;"
-    :nodes="nodes"
-    :edges="edges"
-    :options="options"
-    @click="onNodeSelected"
+    <v-btn class="primary my-5" @click="fact = ''">リセット</v-btn>
+
+    <div v-if="loading" class="pa-10 text-center">
+      <v-progress-circular indeterminate color="primary"></v-progress-circular>
+    </div>
+
+    <network
+      id="mynetwork"
+      ref="network"
+      style="width: 100%; height: 500px"
+      :nodes="nodes"
+      :edges="edges"
+      :options="options"
+      @click="onNodeSelected"
     >
     </network>
-
   </v-container>
 </template>
 <script>
-
 const { Network } = require('vue-vis-network')
 
 export default {
   components: {
     network: Network,
   },
-  data () {
+  data() {
     return {
       baseUrl: process.env.BASE_URL,
       loading: false,
       nodes: [],
       edges: [],
       options: {
-         nodes: {
-          borderWidth: 1
-         },
-         edges: {
-          color: 'lightgray'
-        }
+        nodes: {
+          borderWidth: 1,
+        },
+        edges: {
+          color: 'lightgray',
+        },
       },
-      title: this.$t("network"),
-      fact: ""
+      title: this.$t('network'),
+      fact: '',
     }
   },
 
-  head(){
+  head() {
     return {
-      title: this.title
+      title: this.title,
     }
   },
-  watch: { 
-    fact(){
+  watch: {
+    fact() {
       this.updateFact()
-    }
+    },
   },
-  mounted(){
+  mounted() {
     this.updateFact()
   },
-  methods : {
+  methods: {
     onNodeSelected(value) {
       const nodes = value.nodes
       if (nodes.length > 0) {
@@ -76,9 +73,9 @@ export default {
         // this.updateFact()
       }
     },
-    async updateFact(){
+    async updateFact() {
       this.loading = true
-      const url = "https://dydra.com/junjun7613/roman-factoid/sparql"
+      const url = 'https://dydra.com/junjun7613/roman-factoid/sparql'
 
       const fact = this.fact
 
@@ -88,36 +85,38 @@ export default {
         ${fact ? ` filter (?s = <${fact}> || ?o = <${fact}>) ` : ``}
       }`
 
-      const data = (await this.$axios.get(`${url}?query=${encodeURIComponent(query)}`)).data
+      const data = (
+        await this.$axios.get(`${url}?query=${encodeURIComponent(query)}`)
+      ).data
 
       const nodesMap = {}
       const edges = []
 
-      for(const obj of data){
+      for (const obj of data) {
         const s = obj.s
-        const spl = s.split("/")
+        const spl = s.split('/')
         const label = spl[spl.length - 1]
-        if(!nodesMap[s]){
+        if (!nodesMap[s]) {
           nodesMap[s] = {
-            id: s,  
+            id: s,
             label,
-            shape: 'dot'
+            shape: 'dot',
           }
         }
-        
+
         edges.push({
           from: obj.s,
           to: obj.o,
           arrows: {
             to: {
-              enabled: true
+              enabled: true,
             },
           },
         })
       }
 
       const nodes = []
-      for(const s in nodesMap){
+      for (const s in nodesMap) {
         nodes.push(nodesMap[s])
       }
 
@@ -125,13 +124,12 @@ export default {
       this.edges = edges
 
       this.loading = false
-    }
-  }
+    },
+  },
 }
 </script>
 <style>
 #mynetwork {
-   border: 1px solid lightgray;
+  border: 1px solid lightgray;
 }
 </style>
-

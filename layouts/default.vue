@@ -1,9 +1,6 @@
 <template>
   <v-app dark>
-    <v-navigation-drawer
-      v-model="drawer"
-      app
-    >
+    <v-navigation-drawer v-model="drawer" app>
       <v-list>
         <v-list-item
           v-for="(item, i) in items"
@@ -22,24 +19,18 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar
-    app
-    >
+    <v-app-bar app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      
-      <v-toolbar-title v-text="title" />
 
+      <v-toolbar-title v-text="title" />
     </v-app-bar>
     <v-main>
       <v-container>
         <Nuxt />
       </v-container>
     </v-main>
-    
-    
-    <v-footer
-      class="py-10"
-    >
+
+    <v-footer class="py-10">
       <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
   </v-app>
@@ -47,34 +38,39 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       drawer: false,
-      
+
       items: [
         {
           icon: 'mdi-apps',
           title: 'Welcome',
-          to: this.localePath({ name: 'index'})
+          to: this.localePath({ name: 'index' }),
         },
         {
           icon: 'mdi-table',
           title: 'table',
-          to: this.localePath({ name: 'table'})
+          to: this.localePath({ name: 'table' }),
+        },
+        {
+          icon: 'mdi-magnify',
+          title: 'テーブルテスト2',
+          to: this.localePath({ name: 'table2' }),
         },
         {
           icon: 'mdi-network',
           title: 'Network',
-          to: this.localePath({ name: 'network'})
+          to: this.localePath({ name: 'network' }),
         },
         {
           icon: 'mdi-dabase',
           title: 'Snorql',
-          href: process.env.BASE_URL + "/snorql"
+          href: process.env.BASE_URL + '/snorql',
         },
       ],
-      title: '小川さんプロジェクト'
+      title: '小川さんプロジェクト',
     }
-  }
+  },
 }
 </script>

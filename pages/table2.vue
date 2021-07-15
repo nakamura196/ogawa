@@ -28,7 +28,7 @@ export default {
         },
       ],
       items: [],
-      title: this.$t('table'),
+      title: 'テーブル2',
     }
   },
 
@@ -54,7 +54,7 @@ select ?fac(COUNT(?ent_name) AS ?ent) where {
 {?fac a ex:Action} UNION {?fac a ex:Contact} UNION {?fac a ex:Thought} UNION {?fac a ex:Situation}
 ?fac (ex:subject|ex:whom|ex:what)/ex:referencesEntity/ex:name ?ent_name.
 } GROUP BY ?fac
-HAVING (COUNT(?ent_name) > 1)`
+HAVING (COUNT(?ent_name) > 0)`
 
     const data = (
       await this.$axios.get(`${url}?query=${encodeURIComponent(query)}`)
