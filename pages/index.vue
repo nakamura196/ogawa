@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    aaa
+    小川プロジェクト
     </v-container>
   
 </template>
