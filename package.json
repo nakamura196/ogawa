@@ -10,7 +10,6 @@
     "generate:gh-pages": "DEPLOY_ENV=GH_PAGES NODE_ENV=\"production\" nuxt generate",
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lint:style": "stylelint \"**/*.{vue,css}\" --ignore-path .gitignore",
-    "prepare": "husky install",
     "lint": "yarn lint:js && yarn lint:style"
   },
   "lint-staged": {
@@ -24,10 +23,7 @@
     "core-js": "^3.15.1",
     "nuxt": "^2.15.7",
     "nuxt-i18n": "^6.27.2",
-    "vis-data": "^7.1.2",
-    "vis-network": "^9.0.4",
-    "vis-util": "^5.0.2",
-    "vue-vis-network": "^1.0.2",
+    "vue-visjs": "^0.6.0",
     "vuetify": "^2.5.5"
   },
   "devDependencies": {
@@ -40,7 +36,6 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-vue": "^7.12.1",
-    "husky": "^6.0.0",
     "lint-staged": "^10.5.4",
     "prettier": "^2.3.2",
     "stylelint": "^13.13.1",

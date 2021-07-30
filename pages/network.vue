@@ -25,7 +25,7 @@
   </v-container>
 </template>
 <script>
-const { Network } = require('vue-vis-network')
+import { Network } from 'vue-visjs'
 
 export default {
   components: {

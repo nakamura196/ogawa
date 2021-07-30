@@ -49,6 +49,11 @@ export default {
           to: this.localePath({ name: 'index' }),
         },
         {
+          icon: 'mdi-calendar',
+          title: 'Timeline',
+          to: this.localePath({ name: 'timeline' }),
+        },
+        {
           icon: 'mdi-table',
           title: 'table',
           to: this.localePath({ name: 'table' }),
