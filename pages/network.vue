@@ -75,7 +75,7 @@ export default {
     },
     async updateFact() {
       this.loading = true
-      const url = 'https://dydra.com/junjun7613/roman-factoid/sparql'
+      const url = 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
 
       const fact = this.fact
 
