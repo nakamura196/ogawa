@@ -75,14 +75,26 @@ export default {
   },
 
   async mounted() {
-    const url = 'https://dydra.com/junjun7613/roman-factoid/sparql'
+    const url = 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
+
+    const endpoint4hutimeperiod = "https://dydra.com/junjun7613/hutimeperiod/sparql"
 
     const query = `
-      prefix ex: <https://junjun7613.github.io/roman_factoid/Roman_Contextual_Factoid.owl#>
+      prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
       select distinct *  where {
         ?s ex:mentionedAsPrecedent ?o .
-        optional { ?s ex:when ?when_s . }
-        optional { ?o ex:when ?when_o . }
+        optional { 
+          ?s ex:when ?when_s . 
+          SERVICE SILENT <${endpoint4hutimeperiod}> {
+            optional { ?when_s ex:begin ?when_s_begin; ex:end ?when_s_end. }
+          }
+        }
+        optional { 
+          ?o ex:when ?when_o . 
+          SERVICE SILENT <${endpoint4hutimeperiod}> {
+            optional { ?when_o ex:begin ?when_o_begin; ex:end ?when_o_end. }
+          }
+        }
       }
     `
 
@@ -124,6 +136,7 @@ function createItems(data) {
           const uriWhen = obj[keyWhen]
           item.when = uriWhen
 
+          /*
           // 応急処置的に、uriをisoの日付表記に直す
           const rangeWhen = convertHuTimeUri2DateRange(uriWhen)
           item.start = rangeWhen.start
@@ -131,6 +144,19 @@ function createItems(data) {
           // 日まで指定されている場合は、endを与えない。
           if (rangeWhen.end) {
             item.end = rangeWhen.end
+          }
+          */
+         
+          const begin = obj[`when_${key}_begin`]
+          const end = obj[`when_${key}_end`]
+
+          if(begin){
+            item.start = begin.replace("00", "0000") // 要修正
+          }
+
+          // begin と end が同じ場合には、endは不要
+          if(end && begin !== end){
+            item.end = end.replace("00", "0000") // 要修正
           }
         }
       }
@@ -146,6 +172,8 @@ function createItems(data) {
   return items
 }
 
+/*
+// 未使用
 function convertHuTimeUri2DateRange(uri) {
   switch (uri) {
     case 'http://www.example.com/roman-ontology/resource/dateRange/dateRange_abc61':
@@ -167,6 +195,7 @@ function convertHuTimeUri2DateRange(uri) {
       }
   }
 }
+*/
 
 // timeline用の形式に変換
 function createItemsVis(items) {

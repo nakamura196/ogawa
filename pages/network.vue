@@ -81,7 +81,7 @@ export default {
 
       const query = `
       select * where {
-        ?s <https://junjun7613.github.io/roman_factoid/Roman_Contextual_Factoid.owl#mentionedAsPrecedent> ?o . 
+        ?s <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#mentionedAsPrecedent> ?o . 
         ${fact ? ` filter (?s = <${fact}> || ?o = <${fact}>) ` : ``}
       }`
 
