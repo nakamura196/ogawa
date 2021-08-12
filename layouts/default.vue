@@ -69,6 +69,16 @@ export default {
           to: this.localePath({ name: 'network' }),
         },
         {
+          icon: 'mdi-network',
+          title: 'Network Static',
+          to: this.localePath({ name: 'network_static' }),
+        },
+        {
+          icon: 'mdi-network',
+          title: 'Network Dynamic',
+          to: this.localePath({ name: 'network_dynamic' }),
+        },
+        {
           icon: 'mdi-dabase',
           title: 'Snorql',
           href: process.env.BASE_URL + '/snorql',
