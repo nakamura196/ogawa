@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[4],{481:function(n,e,t){"use strict";t.r(e);var r=t(93),c=t(123),l=t.n(c),o=t(424),component=Object(r.a)({},(function(){var n=this,e=n.$createElement;return(n._self._c||e)("v-container",[n._v("\n  小川プロジェクト\n  ")])}),[],!1,null,null,null);e.default=component.exports;l()(component,{VContainer:o.a})}}]);
