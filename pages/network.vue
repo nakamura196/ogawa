@@ -19,8 +19,8 @@
       :nodes="nodes"
       :edges="edges"
       :options="options"
-      @click="onNodeSelected"
     >
+      <!--@click="onNodeSelected"-->
     </network>
   </v-container>
 </template>
