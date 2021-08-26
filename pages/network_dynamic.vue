@@ -2,6 +2,37 @@
   <v-container fluid>
     <h2>{{ title }}</h2>
 
+    <v-row align="center" class="mt-2">
+      <v-col
+        class="d-flex"
+        cols="12"
+        sm="6"
+      >
+        <v-select
+          v-model="nodeStart"
+          :items="nodeList"
+          label="始点"
+          filled
+          rounded
+          dense
+        ></v-select>
+      </v-col>
+      <v-col
+        class="d-flex"
+        cols="12"
+        sm="6"
+      >
+        <v-select
+          v-model="nodeEnd"
+          :items="nodeList"
+          label="終点"
+          filled
+          rounded
+          dense
+        ></v-select>
+      </v-col>
+    </v-row>
+
     <network
       id="mynetwork"
       ref="network"
@@ -10,12 +41,17 @@
       :nodes="nodes"
       :edges="edges"
       :options="options"
+      @click="onNodeSelected"
     >
     </network>
   </v-container>
 </template>
 <script>
 import { Network } from 'vue-visjs'
+
+const url = 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
+const endpoint4hutimeperiod =
+        'https://dydra.com/junjun7613/hutimeperiod/sparql'
 
 export default {
   components: {
@@ -36,6 +72,10 @@ export default {
         },
       },
       title: this.$t('network'),
+      nodeList: [],
+      nodeStart: "",
+      nodeEnd: "",
+      nodeEntity: "", // entityInContext の URI
     }
   },
 
@@ -44,58 +84,101 @@ export default {
       title: this.title,
     }
   },
+  watch: {
+    nodeStart () {
+      this.drawNetwork()
+    },
+    nodeEnd () {
+      this.drawNetwork()
+    },
+    nodeEntity () {
+      this.drawNetwork()
+    }
+  },
   mounted() {
-    this.init()
+    // factNodeの一覧を取得する
+    this.getFactList()
+
+    // 描画
+    this.drawNetwork()
   },
   methods: {
-    async init() {
-      this.loading = true
-      const url = 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
+    onNodeSelected(value) {
+      const nodes = value.nodes
+      if (nodes.length > 0) {
+        const nodeUri = nodes[0]
+        if(nodeUri.includes("pers_") || nodeUri.includes("place_")){
+          this.nodeEntity = nodeUri
+        }
+      }
+    },
 
-      const query4Person = `
+    // 描画
+    async drawNetwork() {
+      this.loading = true
+
+      const nodeEntity = this.nodeEntity
+
+      const query4Entity = `
       prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
+      prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
       select * where {
         ?p a ?type;
           ex:eventSince ?since;
           ex:eventUntil ?until .
-        filter(?type = ex:PersonInContext || ?type = ex:CommunityInContext)
+        
+        ` + (nodeEntity ? `filter (?p = <${nodeEntity}>) . ` : '') + `
+        ?type rdfs:subClassOf ex:EntityInContext . 
       }`
 
-      const data4Person = (
+      const data4Entity = (
         await this.$axios.get(
-          `${url}?query=${encodeURIComponent(query4Person)}`
+          `${url}?query=${encodeURIComponent(query4Entity)}`
         )
       ).data
+    
+      let nodeStart = "" // 始点のノード
+      let nodeEnd = "" // 終点のノード
 
-      const endpoint4hutimeperiod =
-        'https://dydra.com/junjun7613/hutimeperiod/sparql'
+      if(nodeEntity && data4Entity.length === 1){
+        const selectedNode = data4Entity[0]
+        nodeStart = selectedNode.since
+        nodeEnd = selectedNode.until
+      } else {
+        nodeStart = this.nodeStart
+        nodeEnd = this.nodeEnd
+      }
+      
+      const link = "ex:mentionedAsPrecedent" // "(ex:mentionedAsPrecedent|ex:therefore)"
 
       const query4Fact = `
       prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
       prefix ex2: <http://www.example.com/roman-ontology/resource/fact/>
       select distinct * where {
-         ex2:fact_1 (ex:mentionedAsPrecedent|ex:therefore)* ?s .
+         ?startNode ${link}* ?s . 
+         filter (?startNode = <`+(nodeStart || 'http://www.example.com/roman-ontology/resource/fact/fact_2' /* 1 */)+`>)
          optional {
           ?s ex:when ?when_s .
           SERVICE SILENT <${endpoint4hutimeperiod}> {
             optional { ?when_s ex:begin ?when_s_begin; ex:end ?when_s_end. }
           }
          }
-         ?s (ex:mentionedAsPrecedent|ex:therefore) ?o .
+         ?s ${link} ?o .
          optional {
            ?o ex:when ?when_o .
            SERVICE SILENT <${endpoint4hutimeperiod}> {
             optional { ?when_o ex:begin ?when_o_begin; ex:end ?when_o_end. }
            }
          }
-         ?o (ex:mentionedAsPrecedent|ex:therefore)* ex2:fact_40 .
+         ?o ${link}* ?endNode .
+         filter (?endNode = <`+(nodeEnd || 'http://www.example.com/roman-ontology/resource/fact/fact_14'/* 40 */)+`>)
       }`
 
       const data4Fact = (
         await this.$axios.get(`${url}?query=${encodeURIComponent(query4Fact)}`)
       ).data
 
-      console.log({ data4Person, data4Fact })
+      console.log({ data4Entity, data4Fact })
 
       const edges = []
       const existsNodes = {}
@@ -105,7 +188,7 @@ export default {
       handleFactNodes(nodes, edges, data4Fact, existsNodes)
 
       // contextNodesの取り扱い
-      handleContextNodes(nodes, edges, data4Person, existsNodes)
+      handleContextNodes(nodes, edges, data4Entity, existsNodes)
 
       // inとoutが同じ（重なってしまう）factNodeの位置を調整する
       arrangeNodesY(existsNodes)
@@ -114,6 +197,43 @@ export default {
       this.edges = edges
       this.loading = false
     },
+
+    // factNodeの一覧を取得する
+    async getFactList() {
+      const query4Fact = `
+      prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
+      select distinct * where {
+         ?s ex:mentionedAsPrecedent ?o
+      }`
+
+      const data4Fact = (
+        await this.$axios.get(`${url}?query=${encodeURIComponent(query4Fact)}`)
+      ).data
+
+      const nodeList = [
+        {
+          "text": "",
+          "value" : ""
+        }
+      ]
+      const nodeUris = []
+
+      for(const data of data4Fact){
+        const keys = ["s", "o"]
+        for(const key of keys){
+          const uri = data[key]
+          if(!nodeUris.includes(uri)){
+            nodeList.push({
+              "text" : getLabelFromUri(uri),
+              "value" : uri
+            })
+            nodeUris.push(uri)
+          }
+        }
+      }
+
+      this.nodeList = nodeList
+    }
   },
 }
 
@@ -125,9 +245,14 @@ function getLabelFromUri(uri) {
 function handleFactNodes(nodes, edges, data4Fact, existsNodes) {
   const step4factNode = 200
   const keys = ['s', 'o']
+
+  console.log({data4Fact})
+
   for (const obj of data4Fact) {
     for (const key of keys) {
       const uri = obj[key]
+
+      console.log({obj})
 
       const label = getLabelFromUri(uri)
       if (!existsNodes[uri]) {
@@ -176,6 +301,8 @@ function handleFactNodes(nodes, edges, data4Fact, existsNodes) {
     if (!toInNodes.includes(from)) {
       toInNodes.push(from)
     }
+
+    // console.log({nodes})
   }
 }
 
@@ -216,13 +343,13 @@ function handleDateNode(nodes, edges, obj, key, existsNodes, x) {
   }
 }
 
-function handleContextNodes(nodes, edges, data4Person, existsNodes) {
+function handleContextNodes(nodes, edges, data4Entity, existsNodes) {
   // x座標ごとのcontextNodeを格納する
   const contextXList = {}
 
   const step4y = 100
 
-  for (const obj of data4Person) {
+  for (const obj of data4Entity) {
     const sinceUri = obj.since
     const untilUri = obj.until
 
