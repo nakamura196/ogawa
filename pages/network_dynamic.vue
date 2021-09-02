@@ -3,11 +3,7 @@
     <h2>{{ title }}</h2>
 
     <v-row align="center" class="mt-2">
-      <v-col
-        class="d-flex"
-        cols="12"
-        sm="6"
-      >
+      <v-col class="d-flex" cols="12" sm="6">
         <v-select
           v-model="nodeStart"
           :items="nodeList"
@@ -17,11 +13,7 @@
           dense
         ></v-select>
       </v-col>
-      <v-col
-        class="d-flex"
-        cols="12"
-        sm="6"
-      >
+      <v-col class="d-flex" cols="12" sm="6">
         <v-select
           v-model="nodeEnd"
           :items="nodeList"
@@ -50,8 +42,7 @@
 import { Network } from 'vue-visjs'
 
 const url = 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
-const endpoint4hutimeperiod =
-        'https://dydra.com/junjun7613/hutimeperiod/sparql'
+const endpoint4hutimeperiod = 'https://dydra.com/junjun7613/hutimeperiod/sparql'
 
 export default {
   components: {
@@ -73,9 +64,9 @@ export default {
       },
       title: this.$t('network'),
       nodeList: [],
-      nodeStart: "",
-      nodeEnd: "",
-      nodeEntity: "", // entityInContext の URI
+      nodeStart: '',
+      nodeEnd: '',
+      nodeEntity: '', // entityInContext の URI
     }
   },
 
@@ -85,15 +76,15 @@ export default {
     }
   },
   watch: {
-    nodeStart () {
+    nodeStart() {
       this.drawNetwork()
     },
-    nodeEnd () {
+    nodeEnd() {
       this.drawNetwork()
     },
-    nodeEntity () {
+    nodeEntity() {
       this.drawNetwork()
-    }
+    },
   },
   mounted() {
     // factNodeの一覧を取得する
@@ -107,7 +98,7 @@ export default {
       const nodes = value.nodes
       if (nodes.length > 0) {
         const nodeUri = nodes[0]
-        if(nodeUri.includes("pers_") || nodeUri.includes("place_")){
+        if (nodeUri.includes('pers_') || nodeUri.includes('place_')) {
           this.nodeEntity = nodeUri
         }
       }
@@ -119,16 +110,19 @@ export default {
 
       const nodeEntity = this.nodeEntity
 
-      const query4Entity = `
+      const query4Entity =
+        `
       prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
       prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
       select * where {
         ?p a ?type;
           ex:eventSince ?since;
           ex:eventUntil ?until .
-        
-        ` + (nodeEntity ? `filter (?p = <${nodeEntity}>) . ` : '') + `
-        ?type rdfs:subClassOf ex:EntityInContext . 
+
+        ` +
+        (nodeEntity ? `filter (?p = <${nodeEntity}>) . ` : '') +
+        `
+        ?type rdfs:subClassOf ex:EntityInContext .
       }`
 
       const data4Entity = (
@@ -136,11 +130,11 @@ export default {
           `${url}?query=${encodeURIComponent(query4Entity)}`
         )
       ).data
-    
-      let nodeStart = "" // 始点のノード
-      let nodeEnd = "" // 終点のノード
 
-      if(nodeEntity && data4Entity.length === 1){
+      let nodeStart = '' // 始点のノード
+      let nodeEnd = '' // 終点のノード
+
+      if (nodeEntity && data4Entity.length === 1) {
         const selectedNode = data4Entity[0]
         nodeStart = selectedNode.since
         nodeEnd = selectedNode.until
@@ -148,15 +142,22 @@ export default {
         nodeStart = this.nodeStart
         nodeEnd = this.nodeEnd
       }
-      
-      const link = "ex:mentionedAsPrecedent" // "(ex:mentionedAsPrecedent|ex:therefore)"
 
-      const query4Fact = `
+      const nodeInitial =
+        nodeStart ||
+        'http://www.example.com/roman-ontology/resource/fact/fact_2' /* 1 */
+
+      const link = 'ex:mentionedAsPrecedent' // "(ex:mentionedAsPrecedent|ex:therefore)"
+
+      const query4Fact =
+        `
       prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
       prefix ex2: <http://www.example.com/roman-ontology/resource/fact/>
       select distinct * where {
-         ?startNode ${link}* ?s . 
-         filter (?startNode = <`+(nodeStart || 'http://www.example.com/roman-ontology/resource/fact/fact_2' /* 1 */)+`>)
+         ?startNode ${link}* ?s .
+         filter (?startNode = <` +
+        nodeInitial +
+        `>)
          optional {
           ?s ex:when ?when_s .
           SERVICE SILENT <${endpoint4hutimeperiod}> {
@@ -171,21 +172,21 @@ export default {
            }
          }
          ?o ${link}* ?endNode .
-         filter (?endNode = <`+(nodeEnd || 'http://www.example.com/roman-ontology/resource/fact/fact_14'/* 40 */)+`>)
+         filter (?endNode = <` +
+        (nodeEnd ||
+          'http://www.example.com/roman-ontology/resource/fact/fact_40') /* 14 */ +
+        `>)
       }`
 
       const data4Fact = (
         await this.$axios.get(`${url}?query=${encodeURIComponent(query4Fact)}`)
       ).data
 
-      console.log({ data4Entity, data4Fact })
-
-      const edges = []
-      const existsNodes = {}
-      const nodes = []
-
       // factNodesの取り扱い
-      handleFactNodes(nodes, edges, data4Fact, existsNodes)
+      const res = handleFactNodes(data4Fact, nodeInitial)
+      const nodes = res.nodes
+      const edges = res.edges
+      const existsNodes = res.existsNodes
 
       // contextNodesの取り扱い
       handleContextNodes(nodes, edges, data4Entity, existsNodes)
@@ -212,20 +213,20 @@ export default {
 
       const nodeList = [
         {
-          "text": "",
-          "value" : ""
-        }
+          text: '',
+          value: '',
+        },
       ]
       const nodeUris = []
 
-      for(const data of data4Fact){
-        const keys = ["s", "o"]
-        for(const key of keys){
+      for (const data of data4Fact) {
+        const keys = ['s', 'o']
+        for (const key of keys) {
           const uri = data[key]
-          if(!nodeUris.includes(uri)){
+          if (!nodeUris.includes(uri)) {
             nodeList.push({
-              "text" : getLabelFromUri(uri),
-              "value" : uri
+              text: getLabelFromUri(uri),
+              value: uri,
             })
             nodeUris.push(uri)
           }
@@ -233,7 +234,7 @@ export default {
       }
 
       this.nodeList = nodeList
-    }
+    },
   },
 }
 
@@ -242,27 +243,30 @@ function getLabelFromUri(uri) {
   return spl[spl.length - 1]
 }
 
-function handleFactNodes(nodes, edges, data4Fact, existsNodes) {
+function handleFactNodes(data4Fact, nodeInitial) {
+  let nodes = []
+  const edges = []
+  const existsNodes = {}
+
   const step4factNode = 200
   const keys = ['s', 'o']
 
-  console.log({data4Fact})
+  // edgeのfromとtoの対応を格納するマップ
+  const edgeMap = {}
+
+  // factNodeとdateNodeの対応を格納するマップ
+  const dateNodes = {}
 
   for (const obj of data4Fact) {
     for (const key of keys) {
       const uri = obj[key]
 
-      console.log({obj})
-
       const label = getLabelFromUri(uri)
       if (!existsNodes[uri]) {
-        const x = nodes.length * step4factNode
         const factNode = {
           id: uri,
           label,
-          x,
           y: 0,
-          // fixed: true,
           physics: false,
           shape: 'box',
           color: '#F44336',
@@ -271,7 +275,7 @@ function handleFactNodes(nodes, edges, data4Fact, existsNodes) {
         }
         nodes.push(factNode)
 
-        handleDateNode(nodes, edges, obj, key, existsNodes, x)
+        handleDateNode(dateNodes, obj, key, existsNodes)
 
         existsNodes[uri] = factNode
       }
@@ -279,6 +283,12 @@ function handleFactNodes(nodes, edges, data4Fact, existsNodes) {
 
     const from = obj.s
     const to = obj.o
+
+    if (!edgeMap[from]) {
+      edgeMap[from] = []
+    }
+
+    edgeMap[from].push(to)
 
     edges.push({
       from,
@@ -301,12 +311,73 @@ function handleFactNodes(nodes, edges, data4Fact, existsNodes) {
     if (!toInNodes.includes(from)) {
       toInNodes.push(from)
     }
-
-    // console.log({nodes})
   }
+
+  const sortedNodeUris = sortNodes([], edgeMap, nodeInitial)
+
+  const sortedNodes = []
+
+  const dateNodesArray = []
+
+  for (const uri of sortedNodeUris) {
+    const node = existsNodes[uri]
+    node.x = sortedNodes.length * step4factNode
+    sortedNodes.push(node)
+
+    if (dateNodes[uri]) {
+      for (const dateNodeUri of dateNodes[uri]) {
+        const dateNode = existsNodes[dateNodeUri]
+        dateNode.x = node.x // dateNodeのx座標は、factNodeのものに合わせる
+
+        dateNodesArray.push(dateNode)
+
+        // factNodeとdateNodeの関連付け
+        edges.push({
+          from: uri,
+          to: dateNodeUri,
+          arrows: {
+            to: {
+              enabled: true,
+            },
+          },
+        })
+      }
+    }
+  }
+
+  // dateNodesをsortedNodesに加える
+  nodes = sortedNodes.concat(dateNodesArray)
+
+  return { nodes, edges, existsNodes }
 }
 
-function handleDateNode(nodes, edges, obj, key, existsNodes, x) {
+function sortNodes(sortedNodes, edgeMap, fromNode) {
+  if (!edgeMap[fromNode]) {
+    return sortedNodes
+  }
+
+  if (!sortedNodes.includes(fromNode)) {
+    sortedNodes.push(fromNode)
+  }
+
+  const toNodes = edgeMap[fromNode]
+
+  // まず入れる
+  for (const toNode of toNodes) {
+    if (!sortedNodes.includes(toNode)) {
+      sortedNodes.push(toNode)
+    }
+  }
+
+  // 各出ていくノードの先を再帰的処理
+  for (const toNode of toNodes) {
+    sortedNodes = sortNodes(sortedNodes, edgeMap, toNode)
+  }
+
+  return sortedNodes
+}
+
+function handleDateNode(dateNodes, obj, key, existsNodes) {
   const step4y = 100
 
   // when情報を持つ場合
@@ -318,28 +389,23 @@ function handleDateNode(nodes, edges, obj, key, existsNodes, x) {
       const whenNode = {
         id: uriWhen,
         label: labelWhen,
-        x, // factNodeと同じx座標
+        // x, // factNodeと同じx座標
         y: -1 * step4y, // factNodeの上側（-100 y座標）
         // fixed: true,
         physics: false,
         shape: 'box',
         color: '#4CAF50',
       }
-      nodes.push(whenNode)
 
       existsNodes[uriWhen] = whenNode
     }
 
-    // factNodeとdateNodeを繋ぐ
-    edges.push({
-      from: obj[key],
-      to: uriWhen,
-      arrows: {
-        to: {
-          enabled: true,
-        },
-      },
-    })
+    // factNodeとdateNodeの関連付け
+    const factNodeUri = obj[key]
+    if (!dateNodes[factNodeUri]) {
+      dateNodes[factNodeUri] = []
+    }
+    dateNodes[factNodeUri].push(uriWhen)
   }
 }
 
