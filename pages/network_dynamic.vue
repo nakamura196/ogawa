@@ -112,7 +112,7 @@ export default {
 
       const query4Entity =
         `
-      prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid_v2.owl#>
+      prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
       prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
       select * where {
         ?p a ?type;
@@ -151,7 +151,7 @@ export default {
 
       const query4Fact =
         `
-      prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid_v2.owl#>
+      prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
       prefix ex2: <http://www.example.com/roman-ontology/resource/fact/>
       select distinct * where {
          ?startNode ${link}* ?s .
@@ -202,7 +202,7 @@ export default {
     // factNodeの一覧を取得する
     async getFactList() {
       const query4Fact = `
-      prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid_v2.owl#>
+      prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
       select distinct * where {
          ?s ex:mentionedAsPrecedent ?o
       }`
@@ -330,7 +330,7 @@ function handleFactNodes(data4Fact, nodeInitial) {
         const dateNode = existsNodes[dateNodeUri]
         dateNode.x = node.x // dateNodeのx座標は、factNodeのものに合わせる
 
-        if(!existsDateNodes.includes(dateNodeUri)){
+        if (!existsDateNodes.includes(dateNodeUri)) {
           dateNodesArray.push(dateNode)
           existsDateNodes.push(dateNodeUri)
         }

@@ -9,6 +9,7 @@
         :center="center"
       >
         <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
+        <l-geo-json :geojson="geojson" :options="options" />
         <l-marker
           v-for="(marker, key) in markers"
           :key="key"
@@ -79,6 +80,7 @@ export default {
       markers: [],
       factoids: [],
       personInContexts: [],
+      geojson: {},
     }
   },
 
@@ -88,28 +90,66 @@ export default {
     }
   },
 
+  computed: {
+    options() {
+      return {
+        onEachFeature: this.onEachFeatureFunction,
+      }
+    },
+    onEachFeatureFunction() {
+      return (feature, layer) => {
+        layer.bindPopup(
+          `<div><a @click="search(${feature.properties.uri})">${feature.properties.label}</a></div>`
+        )
+      }
+    },
+  },
+
   async mounted() {
     const endpoint =
       'https://triplydb.com/_api/datasets/wouter/pleiades/services/pleiades/sparql'
 
     const filterCriteria = await this.getFilterCriteria()
 
-    const query = `PREFIX dct: <http://purl.org/dc/terms/>
+    const query = `PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+      PREFIX dct: <http://purl.org/dc/terms/>
       PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+
+      PREFIX pleiades: <https://pleiades.stoa.org/places/vocab#>
+      PREFIX osspatial: <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/>
+      PREFIX osgeo: <http://data.ordnancesurvey.co.uk/ontology/geometry/>
+
       SELECT * WHERE {
         ?placeUri dct:title ?title .
-        optional { ?placeUri wgs84:lat ?lat; wgs84:long ?long .  }
+        optional {
+          { ?placeUri wgs84:lat ?lat; wgs84:long ?long . } 
+          UNION 
+          { ?placeUri pleiades:hasLocation/osspatial:partiallyOverlaps/geo:hasGeometry/osgeo:asGeoJSON ?geo }
+        }
         filter(${filterCriteria})
       }`
+
+    console.log(query)
 
     const url = `${endpoint}?query=${encodeURIComponent(query)}`
 
     const data = (await this.$axios.get(url)).data
 
     const markers = []
+
+    const features = []
+
     for (const item of data) {
       // 緯度・経度がない場合はスキップ
       if (!item.lat) {
+        features.push({
+          type: 'Feature',
+          geometry: JSON.parse(item.geo),
+          properties: {
+            label: item.title,
+            uri: item.placeUri,
+          },
+        })
         continue
       }
       markers.push({
@@ -118,6 +158,12 @@ export default {
         latLng: [item.lat, item.long],
       })
     }
+
+    const geojson = {
+      type: 'FeatureCollection',
+      features,
+    }
+    this.geojson = geojson
 
     this.markers = markers
   },
@@ -153,7 +199,7 @@ export default {
       const endpoint = 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
 
       const query = `prefix owl: <http://www.w3.org/2002/07/owl#>
-      prefix ex2: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid_v2.owl#>
+      prefix ex2: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
 
       SELECT DISTINCT * WHERE {
       ?place owl:sameAs <${placeUri}> .
@@ -178,7 +224,7 @@ export default {
       const endpoint = 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
 
       const query = `prefix owl: <http://www.w3.org/2002/07/owl#>
-      prefix ex2: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid_v2.owl#>
+      prefix ex2: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
 
       SELECT DISTINCT * WHERE {
       ?place owl:sameAs <${placeUri}> .
