@@ -204,7 +204,7 @@ export default {
       const query4Fact = `
       prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
       select distinct * where {
-         ?s ex:mentionedAsPrecedent ?o
+         ?s (ex:mentionedAsPrecedent | ex:therefore) ?o
       }`
 
       const data4Fact = (
