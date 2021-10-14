@@ -1,50 +1,73 @@
 <template>
-  <v-container class="my-5">
-    <h2>{{ title }}</h2>
+  <div>
+    <Breadcrumbs :items="bh" />
+    <v-container class="my-5">
+      <h2>{{ title }}</h2>
 
-    <div class="pa-2" style="height: 400px; overflow-y: auto">
-      <v-card
-        v-for="(factoid, key) in factoids"
-        :key="key"
-        outlined
-        flat
-        class="mt-5 pa-4"
-      >
-        <h3>
-          <nuxt-link
-            :to="
-              localePath({
-                name: 'item-id',
-                params: { id: factoid.s.split('fact_')[1] },
-              })
-            "
-            >{{ getFactoidName(factoid.s) }}
-          </nuxt-link>
-        </h3>
-        <div class="mt-2">
-          {{ factoid.description }}
-        </div>
-        <template
-          v-for="(type, key2) in ['follow', 'precedent', 'parallel', 'because']"
+      <div class="pa-2" style="height: 400px; overflow-y: auto">
+        <v-card
+          v-for="(factoid, key) in factoids"
+          :key="key"
+          outlined
+          flat
+          class="mt-5 pa-4"
         >
-          <div v-if="factoid[type]" :key="key2">
-            {{ type }}: {{ getFactoidName(factoid[type]) }}
+          <h3>
+            <nuxt-link
+              :to="
+                localePath({
+                  name: 'item-id',
+                  params: { id: factoid.s.split('fact_')[1] },
+                })
+              "
+              >{{ getFactoidName(factoid.s) }}
+            </nuxt-link>
+          </h3>
+          <div class="mt-2">
+            {{ factoid.description }}
           </div>
-        </template>
-      </v-card>
-    </div>
-  </v-container>
+          <template
+            v-for="(type, key2) in [
+              'follow',
+              'precedent',
+              'parallel',
+              'because',
+            ]"
+          >
+            <div v-if="factoid[type]" :key="key2">
+              {{ type }}: {{ getFactoidName(factoid[type]) }}
+            </div>
+          </template>
+        </v-card>
+      </div>
+    </v-container>
+  </div>
 </template>
 <script>
+import Breadcrumbs from '~/components/layout/Breadcrumbs.vue'
 const url = 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
 
 export default {
-  components: {},
+  components: {
+    Breadcrumbs,
+  },
 
   data() {
     return {
       title: this.$t('search'),
       factoids: [],
+
+      bh: [
+        {
+          text: this.$t('top'),
+          disabled: false,
+          to: this.localePath({ name: 'index' }),
+          exact: true,
+        },
+        {
+          text: this.$t('search'),
+        },
+      ],
     }
   },
 

@@ -1,5 +1,3 @@
-import colors from 'vuetify/es5/util/colors'
-
 const environment = process.env.NODE_ENV
 const env = require(`./env/${environment}.ts`)
 
@@ -12,6 +10,17 @@ const routerBase =
         },
       }
     : {}
+
+// path
+const baseUrl = env.BASE_URL || ''
+const baseDir = env.BASE_DIR || '/'
+const basePath = baseUrl + baseDir
+
+// images
+// const iconImages = baseDir + 'img/icons/'
+// const ogpImages = basePath + 'img/ogp/' // cdnPath + 'img/ogp/'
+
+env.top = basePath + 'img/ogp/home.jpg'
 
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
