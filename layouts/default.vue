@@ -28,8 +28,12 @@
       <Nuxt />
     </v-main>
 
-    <v-footer class="py-10">
-      <span>&copy; {{ new Date().getFullYear() }}</span>
+    <v-footer :dark="true" class="mt-5">
+      <v-container>
+        <p class="text-center my-5">
+          <span>&copy; {{ new Date().getFullYear() }}</span>
+        </p>
+      </v-container>
     </v-footer>
   </v-app>
 </template>
@@ -92,7 +96,7 @@ export default {
           href: process.env.BASE_URL + '/snorql',
         },
       ],
-      title: '小川さんプロジェクト',
+      title: 'Roman DB',
     }
   },
 }

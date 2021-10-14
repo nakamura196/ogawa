@@ -11,16 +11,13 @@
         class="mt-5 pa-4"
       >
         <h3>
-          <!-- 
           <nuxt-link
-            :to="{
-              name: 'item-id',
-              params: { id: factoid.s.split('fact_')[1] },
-            }"
-            >{{ getFactoidName(factoid.s) }}
-          </nuxt-link>
-          -->
-          <nuxt-link :to="`/item/${factoid.s.split('fact_')[1]}`"
+            :to="
+              localePath({
+                name: 'item-id',
+                params: { id: factoid.s.split('fact_')[1] },
+              })
+            "
             >{{ getFactoidName(factoid.s) }}
           </nuxt-link>
         </h3>
