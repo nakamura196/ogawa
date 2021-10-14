@@ -42,6 +42,11 @@ export default {
 
       items: [
         {
+          icon: 'mdi-magnify',
+          title: 'Search',
+          to: this.localePath({ name: 'search' }),
+        },
+        {
           icon: 'mdi-apps',
           title: 'Welcome',
           to: this.localePath({ name: 'index' }),
