@@ -24,7 +24,7 @@
             </nuxt-link>
           </h3>
           <div class="mt-2">
-            {{ factoid.description }}
+            {{ factoid.description.join() }}
           </div>
           <template
             v-for="(type, key2) in [
@@ -32,10 +32,14 @@
               'precedent',
               'parallel',
               'because',
+              'therefore',
             ]"
           >
-            <div v-if="factoid[type]" :key="key2">
-              {{ type }}: {{ getFactoidName(factoid[type]) }}
+            <div v-if="factoid[type].length > 0" :key="key2">
+              {{ type }}:
+              <span v-for="(value, key3) in factoid[type]" :key="key3">
+                {{ getFactoidName(value) }}
+              </span>
             </div>
           </template>
         </v-card>
@@ -95,14 +99,49 @@ export default {
           optional { ?s ex:mentionedAsFollow ?follow } .
           optional { ?s ex:mentionedAsPrecedent ?precedent } .
           optional { ?s ex:mentionedAsParallel ?parallel } .
-          optional { ?s ex:because ?because } .
+          optional { ?s ex:because ?because } . 
+          optional { ?s ex:therefore ?therefore } .
       }`
 
       const data4Fact = (
         await this.$axios.get(`${url}?query=${encodeURIComponent(query4Fact)}`)
       ).data
 
-      this.factoids = data4Fact
+      const map4Fact = {}
+
+      for (const factByQuery of data4Fact) {
+        // console.log({ factByQuery })
+        const uri = factByQuery.s
+        if (!map4Fact[uri]) {
+          map4Fact[uri] = {
+            s: uri,
+            description: [],
+            follow: [],
+            precedent: [],
+            parallel: [],
+            because: [],
+            therefore: [],
+          }
+        }
+
+        const existObj = map4Fact[uri]
+        for (const keyInQuery in factByQuery) {
+          const valueByQuery = factByQuery[keyInQuery]
+          if (existObj[keyInQuery]) {
+            const existValues = existObj[keyInQuery]
+            if (!existValues.includes(valueByQuery)) {
+              existValues.push(valueByQuery)
+            }
+          }
+        }
+      }
+
+      const factoids = []
+      for (const uri in map4Fact) {
+        factoids.push(map4Fact[uri])
+      }
+
+      this.factoids = factoids
     },
   },
 }
