@@ -16,19 +16,13 @@ const baseUrl = env.BASE_URL || ''
 const baseDir = env.BASE_DIR || '/'
 const basePath = baseUrl + baseDir
 
-// images
-// const iconImages = baseDir + 'img/icons/'
-// const ogpImages = basePath + 'img/ogp/' // cdnPath + 'img/ogp/'
-
 env.top = basePath + 'img/ogp/home.jpg'
+env.siteName = 'Roman DB'
 
 export default {
-  // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
-  ssr: false,
-
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
-
+  ssr: false,
   env,
 
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -60,8 +54,8 @@ export default {
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
-    // https://go.nuxtjs.dev/eslint
-    '@nuxtjs/eslint-module',
+    // https://go.nuxtjs.dev/typescript
+    '@nuxt/typescript-build',
     // https://go.nuxtjs.dev/stylelint
     '@nuxtjs/stylelint-module',
     // https://go.nuxtjs.dev/vuetify
@@ -109,9 +103,7 @@ export default {
   content: {},
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
-  vuetify: {
-    customVariables: ['~/assets/variables.scss'],
-  },
+  vuetify: {},
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},

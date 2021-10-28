@@ -12,7 +12,7 @@
 
       <hr class="my-10" />
 
-      {{ geo }}
+      <Map :markers="markers" :center="center" :geojson="geojson" />
 
       <hr class="mt-10" />
 
@@ -52,8 +52,8 @@ export default {
       prefix owl: <http://www.w3.org/2002/07/owl#>
       prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
       select distinct * where {
-          ?s ex:description ?description; 
-          ex:source/ex:ctsURI ?ctsURI . 
+          ?s ex:description ?description;
+          ex:source/ex:ctsURI ?ctsURI .
           filter (?s = <${uri}> ) .
           optional { ?s ex:atWhere/ex:referencesEntity/owl:sameAs ?placeUri . }
       }`
@@ -71,6 +71,9 @@ export default {
     return {
       xml: '',
       geo: {},
+      markers: [],
+      center: [51.505, -0.159],
+      geojson: null,
     }
   },
   computed: {
@@ -117,6 +120,7 @@ export default {
     // pleiadesから緯度・経度情報の取得
     async getPlaceInfo() {
       const item = this.item
+
       const filterCriteria = `?placeUri = <${item.placeUri}>`
       const endpoint =
         'https://triplydb.com/_api/datasets/wouter/pleiades/services/pleiades/sparql'
@@ -132,18 +136,50 @@ export default {
       SELECT * WHERE {
         ?placeUri dct:title ?title .
         optional {
-          { ?placeUri wgs84:lat ?lat; wgs84:long ?long . } 
-          UNION 
+          { ?placeUri wgs84:lat ?lat; wgs84:long ?long . }
+          UNION
           { ?placeUri pleiades:hasLocation/osspatial:partiallyOverlaps/geo:hasGeometry/osgeo:asGeoJSON ?geo }
         }
         filter(${filterCriteria})
       }`
+
       const url = `${endpoint}?query=${encodeURIComponent(query)}`
 
       const { data } = await this.$axios.get(url)
 
       if (data.length > 0) {
-        this.geo = data[0]
+        const geo = data[0]
+
+        if (!geo.lat) {
+          const features = []
+
+          features.push({
+            type: 'Feature',
+            geometry: JSON.parse(geo.geo),
+            properties: {
+              label: geo.title,
+              uri: geo.placeUri,
+            },
+          })
+          const geojson = {
+            type: 'FeatureCollection',
+            features,
+          }
+          this.geojson = geojson
+        } else {
+          const markers = []
+          let center = []
+
+          const marker = {
+            latLng: [geo.lat, geo.long],
+            label: geo.title,
+          }
+          markers.push(marker)
+          center = [geo.lat, geo.long]
+
+          this.markers = markers
+          this.center = center
+        }
       }
     },
   },

@@ -25,6 +25,7 @@ export default {
     return {
       baseUrl: process.env.BASE_URL,
       top: process.env.top,
+      siteName: process.env.siteName,
     }
   },
 }
