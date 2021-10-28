@@ -36,12 +36,12 @@ export default class License extends Vue {
     // 商品取得処理情報取得処理
     this.products = [
       {
-        id: 1,
+        id: '1',
         name: 'イヤホン',
         price: 5980,
       },
       {
-        id: 2,
+        id: '2',
         name: 'ドライヤー',
         price: 9250,
       },
