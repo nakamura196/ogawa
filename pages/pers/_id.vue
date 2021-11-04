@@ -2,39 +2,44 @@
   <div>
     <Breadcrumbs :items="bh" />
     <v-container class="my-5">
-      <h2>{{ item.description }} ({{ 'Fact ' + id }})</h2>
+      <h2>{{ item.name }} ({{ id }})</h2>
 
       <template v-if="xml">
-        <h3 class="mt-5">このFactoidの典拠</h3>
+        <h3 class="mt-5">このPersonの典拠</h3>
 
         <span v-html="xml" />
       </template>
 
-      <hr class="my-10" />
+      <div v-if="markers.length > 0 || geojson">
+        <hr class="my-10" />
 
-      <Map
-        v-if="markers.length > 0 || geojson"
-        :markers="markers"
-        :center="center"
-        :geojson="geojson"
-      />
+        <Map :markers="markers" :center="center" :geojson="geojson" />
+      </div>
 
-      <hr class="mt-10" />
+      <h3 class="mt-5">Context Information</h3>
 
-      <h1 class="mt-10">以下はメモ</h1>
-
-      {{ item }}
-
-      <v-simple-table v-if="false">
+      <v-simple-table>
         <template #default>
           <tbody>
-            <tr v-for="(stmt, key) in item" :key="key">
-              <td>{{ stmt.v }}</td>
-              <td>{{ stmt.o }}</td>
+            <tr>
+              <td>ノート</td>
+              <td>{{ item.description }}</td>
+            </tr>
+            <tr>
+              <td>開始 Factoid</td>
+              <td>{{ item.eventSinceDescription }}</td>
+            </tr>
+            <tr>
+              <td>終了 Factoid</td>
+              <td>{{ item.eventUntilDescription }}</td>
             </tr>
           </tbody>
         </template>
       </v-simple-table>
+
+      <hr class="my-10" />
+
+      {{ relations }}
     </v-container>
   </div>
 </template>
@@ -50,33 +55,27 @@ export default {
   async asyncData({ params, $axios }) {
     const id = await params.id
 
-    const uri = 'http://www.example.com/roman-ontology/resource/fact/fact_' + id
+    const uri = 'http://www.example.com/roman-ontology/resource/persCont/' + id
 
-    const query4Fact = `
+    const query4Pers = `
       prefix fpo: <https://github.com/johnBradley501/FPO/raw/master/fpo.owl#>
       prefix owl: <http://www.w3.org/2002/07/owl#>
       prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
       select distinct * where {
-          ?s ex:description ?description;
-          ex:source/ex:ctsURI ?ctsURI .
+          ?s ex:sourceDescription ?description; ex:eventSince ?eventSince; ex:eventUntil ?eventUntil; 
+            ex:contextualAspectOf/ex:name ?name . 
           filter (?s = <${uri}> ) .
-          
-          optional { 
-            { ?s ex:atWhere/ex:referencesEntity/owl:sameAs ?placeUri . }
-            UNION
-            { ?s ex:fromWhere/ex:referencesEntity/owl:sameAs ?placeUri . }
-            UNION
-            { ?s ex:toWhere/ex:referencesEntity/owl:sameAs ?placeUri . }
-            UNION
-            { ?s ex:nearWhere/ex:referencesEntity/owl:sameAs ?placeUri . }
-          }
+          ?eventSince ex:description ?eventSinceDescription . 
+          ?eventUntil ex:description ?eventUntilDescription . 
+          optional { ?s ex:hasLocation/ex:sourceDescritpion ?locationDescription . } 
       }`
 
-    const data4Fact = (
-      await $axios.get(`${url}?query=${encodeURIComponent(query4Fact)}`)
+    const data4Pers = (
+      await $axios.get(`${url}?query=${encodeURIComponent(query4Pers)}`)
     ).data
 
-    const item = {}
+    // const item = {}
+    /*
     for (let i = 0; i < data4Fact.length; i++) {
       const eachData4Fact = data4Fact[i]
       if (i === 0) {
@@ -88,6 +87,10 @@ export default {
 
       item.placeUri.push(eachData4Fact.placeUri)
     }
+    */
+
+    const item = data4Pers[0]
+    console.log({ item })
 
     return {
       id,
@@ -101,6 +104,7 @@ export default {
       markers: [],
       center: [51.505, -0.159],
       geojson: null,
+      relations: [],
     }
   },
   computed: {
@@ -119,18 +123,47 @@ export default {
           exact: true,
         },
         {
-          text: 'Facet ' + this.id,
+          text: this.id,
         },
       ]
     },
   },
   mounted() {
+    /*
     // CTSからテキストを取得
     this.getCTS()
     // pleiadesから緯度・経度情報の取得
     this.getPlaceInfo()
+    */
+    this.getRelations()
   },
   methods: {
+    // pleiadesから緯度・経度情報の取得
+    async getRelations() {
+      const item = this.item
+
+      const endpoint = 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
+
+      const query = `prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
+      SELECT DISTINCT *  
+      WHERE {
+        ?entityReference ex:referencesEntityInContext ?entityInContext . 
+        filter (?entityInContext = <${item.s}>) . 
+        ?factoid ?hasReference ?entityReference . 
+        ?hasReference rdfs:subPropertyOf* ?propertyClass . 
+        filter (?propertyClass = ex:sceneObjectProperty || ?propertyClass = ex:sceneProperty). 
+        ?factoid ?hasReference2 ?entityReference2 . 
+        filter (?entityReference != ?entityReference2)
+        ?hasReference2 rdfs:subPropertyOf* ?propertyClass . 
+        ?entityReference2 ex:referencesEntity/ex:name ?name . 
+      }`
+
+      const url = `${endpoint}?query=${encodeURIComponent(query)}`
+
+      const { data } = await this.$axios.get(url)
+
+      this.relations = data
+    },
     // CTSからテキストを取得
     async getCTS() {
       const ctsURI = this.item.ctsURI

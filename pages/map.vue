@@ -4,7 +4,7 @@
       <h2>{{ title }}</h2>
       <l-map
         v-if="markers.length > 0"
-        style="height: 600px; width: 100%"
+        style="z-index: 0; height: 400px; width: 100%"
         :zoom="zoom"
         :center="center"
       >
@@ -32,7 +32,19 @@
               </thead>
               <tbody>
                 <tr v-for="(factoid, key) in factoids" :key="key">
-                  <td>{{ factoid }}</td>
+                  <td>
+                    <nuxt-link
+                      :to="
+                        localePath({
+                          name: 'item-id',
+                          params: {
+                            id: $utils.getIdFromUriOld(factoid),
+                          },
+                        })
+                      "
+                      >{{ factoid }}</nuxt-link
+                    >
+                  </td>
                 </tr>
               </tbody>
             </template>
@@ -53,7 +65,19 @@
                   v-for="(personInContext, key) in personInContexts"
                   :key="key"
                 >
-                  <td>{{ personInContext }}</td>
+                  <td>
+                    <nuxt-link
+                      :to="
+                        localePath({
+                          name: 'pers-id',
+                          params: {
+                            id: $utils.getIdFromUri(personInContext),
+                          },
+                        })
+                      "
+                      >{{ personInContext }}</nuxt-link
+                    >
+                  </td>
                 </tr>
               </tbody>
             </template>
@@ -128,8 +152,6 @@ export default {
         }
         filter(${filterCriteria})
       }`
-
-    console.log(query)
 
     const url = `${endpoint}?query=${encodeURIComponent(query)}`
 
@@ -227,9 +249,9 @@ export default {
       prefix ex2: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
 
       SELECT DISTINCT * WHERE {
-      ?place owl:sameAs <${placeUri}> .
-      ?placeRef ex2:contextualAspectOf ?place .
-      ?personInContext ex2:hasLocation ?placeRef .
+        ?place owl:sameAs <${placeUri}> .
+        ?placeRef ex2:contextualAspectOf ?place .
+        ?personInContext ex2:hasLocation ?placeRef .
       }`
 
       const url = `${endpoint}?query=${encodeURIComponent(query)}`
