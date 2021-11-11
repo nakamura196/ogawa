@@ -37,20 +37,20 @@
         </template>
       </v-simple-table>
 
-      <hr class="my-10" />
-
-      {{ relations }}
+      <Network :item="item" />
     </v-container>
   </div>
 </template>
 <script>
 import axios from 'axios'
 import Breadcrumbs from '~/components/layout/Breadcrumbs.vue'
+import Network from '~/components/Network.vue'
 const url = 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
 
 export default {
   components: {
     Breadcrumbs,
+    Network,
   },
   async asyncData({ params, $axios }) {
     const id = await params.id
@@ -74,21 +74,6 @@ export default {
       await $axios.get(`${url}?query=${encodeURIComponent(query4Pers)}`)
     ).data
 
-    // const item = {}
-    /*
-    for (let i = 0; i < data4Fact.length; i++) {
-      const eachData4Fact = data4Fact[i]
-      if (i === 0) {
-        for (const key in eachData4Fact) {
-          item[key] = eachData4Fact[key]
-        }
-        item.placeUri = []
-      }
-
-      item.placeUri.push(eachData4Fact.placeUri)
-    }
-    */
-
     const item = data4Pers[0]
     console.log({ item })
 
@@ -104,7 +89,6 @@ export default {
       markers: [],
       center: [51.505, -0.159],
       geojson: null,
-      relations: [],
     }
   },
   computed: {
@@ -135,35 +119,8 @@ export default {
     // pleiadesから緯度・経度情報の取得
     this.getPlaceInfo()
     */
-    this.getRelations()
   },
   methods: {
-    // pleiadesから緯度・経度情報の取得
-    async getRelations() {
-      const item = this.item
-
-      const endpoint = 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
-
-      const query = `prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
-      SELECT DISTINCT *  
-      WHERE {
-        ?entityReference ex:referencesEntityInContext ?entityInContext . 
-        filter (?entityInContext = <${item.s}>) . 
-        ?factoid ?hasReference ?entityReference . 
-        ?hasReference rdfs:subPropertyOf* ?propertyClass . 
-        filter (?propertyClass = ex:sceneObjectProperty || ?propertyClass = ex:sceneProperty). 
-        ?factoid ?hasReference2 ?entityReference2 . 
-        filter (?entityReference != ?entityReference2)
-        ?hasReference2 rdfs:subPropertyOf* ?propertyClass . 
-        ?entityReference2 ex:referencesEntity/ex:name ?name . 
-      }`
-
-      const url = `${endpoint}?query=${encodeURIComponent(query)}`
-
-      const { data } = await this.$axios.get(url)
-
-      this.relations = data
-    },
     // CTSからテキストを取得
     async getCTS() {
       const ctsURI = this.item.ctsURI
