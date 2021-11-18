@@ -95,13 +95,16 @@ export default {
       const query4Fact = `
       prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
       select distinct * where {
-          ?s rdf:type/rdfs:subClassOf* ex:Factoid; ex:description ?description . 
+          ?s rdf:type/rdfs:subClassOf* ex:Factoid; ex:description ?description .
           optional { ?s ex:mentionedAsFollow ?follow } .
           optional { ?s ex:mentionedAsPrecedent ?precedent } .
-          optional { ?s ex:mentionedAsParallel ?parallel } .
-          optional { ?s ex:because ?because } . 
-          optional { ?s ex:therefore ?therefore } .
       }`
+
+      /*
+      optional { ?s ex:mentionedAsParallel ?parallel } .
+      optional { ?s ex:because ?because } .
+      optional { ?s ex:therefore ?therefore } .
+      */
 
       const data4Fact = (
         await this.$axios.get(`${url}?query=${encodeURIComponent(query4Fact)}`)
@@ -109,8 +112,13 @@ export default {
 
       const map4Fact = {}
 
+      // ソート用
+      const edgeMap = {}
+
       for (const factByQuery of data4Fact) {
         // console.log({ factByQuery })
+
+        // 主語
         const uri = factByQuery.s
         if (!map4Fact[uri]) {
           map4Fact[uri] = {
@@ -133,8 +141,36 @@ export default {
               existValues.push(valueByQuery)
             }
           }
+
+          let fromUri = ''
+          let toUri = ''
+
+          // edgeMap用
+          if (keyInQuery === 'follow') {
+            fromUri = valueByQuery
+            toUri = uri
+          } else if (keyInQuery === 'precedent') {
+            fromUri = uri
+            toUri = valueByQuery
+          }
+
+          if (fromUri) {
+            if (!edgeMap[fromUri]) {
+              edgeMap[fromUri] = []
+            }
+            const arrayOfTo = edgeMap[fromUri]
+            if (!arrayOfTo.includes(toUri)) {
+              arrayOfTo.push(toUri)
+            }
+          }
         }
       }
+
+      const startNodeUri =
+        'http://www.example.com/roman-ontology/resource/fact/fact_5'
+      const sortedFactoids = this.$utils.sortNodes([], edgeMap, startNodeUri)
+
+      console.log({ sortedFactoids })
 
       const factoids = []
       for (const uri in map4Fact) {

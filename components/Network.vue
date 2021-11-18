@@ -1,15 +1,50 @@
 <template>
-  <network
-    id="mynetwork"
-    ref="network"
-    class="mt-5"
-    style="width: 100%; height: 650px; background-color: lightyellow"
-    :nodes="nodes"
-    :edges="edges"
-    :options="options"
-    @click="onNodeSelected"
-  >
-  </network>
+  <div>
+    <network
+      id="mynetwork"
+      ref="network"
+      class="mt-5"
+      style="width: 100%; height: 650px; background-color: lightyellow"
+      :nodes="nodes"
+      :edges="edges"
+      :options="options"
+      @click="onNodeSelected"
+    >
+    </network>
+
+    <v-dialog v-model="dialog" persistent max-width="500">
+      <v-card>
+        <v-card-title class="text-h5"> Contexts </v-card-title>
+        <v-card-text>
+          <ul>
+            <li
+              v-for="(context, key) in selectedContexts"
+              :key="key"
+              class="mt-4"
+            >
+              <nuxt-link
+                :to="
+                  localePath({
+                    name: 'entity-id',
+                    params: {
+                      id: $utils.getIdFromUri(key),
+                    },
+                  })
+                "
+                >{{ context.descriptionOfEntityInContext2 }}</nuxt-link
+              >
+            </li>
+          </ul>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="dialog = false">
+            Close
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
 </template>
 
 <script>
@@ -58,6 +93,9 @@ export default {
           color: 'lightgray',
         },
       },
+      contexts: {},
+      dialog: false,
+      selectedContexts: {},
     }
   },
   computed: {},
@@ -67,6 +105,7 @@ export default {
   methods: {
     // pleiadesから緯度・経度情報の取得
     async getRelations() {
+      // 起点となっているノード
       const item = this.item
 
       const endpoint = 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
@@ -74,7 +113,7 @@ export default {
       const query = `prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
       SELECT DISTINCT *
       WHERE {
-        ?entityReference ex:referencesEntityInContext ?entityInContext .
+        ?entityReference ex:referencesEntityInContext ?entityInContext; ex:referencesEntity/rdf:type ?typeOfEntity . 
         filter (?entityInContext = <${item.s}>) .
         ?factoid ?hasReference ?entityReference .
         ?hasReference rdfs:subPropertyOf* ?propertyClass .
@@ -83,8 +122,10 @@ export default {
         filter (?entityReference != ?entityReference2)
         ?hasReference2 rdfs:subPropertyOf* ?propertyClass .
         ?entityReference2 ex:referencesEntity ?entity; rdf:type ?typeOfEntityReference .
-        optional { ?entityReference2 ex:referencesEntityInContext ?entityInContext2 . ?entityInContext2 rdf:type ?typeOfEntityInContext }
-        ?entity ex:name ?name .
+        optional { 
+          ?entityReference2 ex:referencesEntityInContext ?entityInContext2 . 
+          ?entityInContext2 rdf:type ?typeOfEntityInContext; ex:sourceDescription ?descriptionOfEntityInContext2 }
+        ?entity ex:name ?name; rdf:type ?typeOfEntity2 . 
       }`
 
       const url = `${endpoint}?query=${encodeURIComponent(query)}`
@@ -102,19 +143,32 @@ export default {
       const edgesMap = {}
       const nodesMap = {}
 
+      // entityとentityInContextの関係を保持
+      const contexts = {}
+      this.contexts = contexts
+
       for (const relation of data) {
         const factoid = relation.factoid
         if (!relationsByFactoid[factoid]) {
           relationsByFactoid[factoid] = [item.s]
         }
         const relationByFactoid = relationsByFactoid[factoid]
-        const entityUri = relation.entityInContext2 || relation.entity
+
+        // 起点のノードとentityのつなぐ（entityInContextをつないでいたものから修正）
+        const entityUri = /* relation.entityInContext2 || */ relation.entity
         if (!relationByFactoid.includes(entityUri)) {
           relationByFactoid.push(entityUri)
         }
         entities[entityUri] = relation
 
+        // entityInContextとentityの繋いでいる
         if (relation.entityInContext2) {
+          const entityInContextUri = relation.entityInContext2
+          if (!contexts[entityUri]) {
+            contexts[entityUri] = {}
+          }
+          contexts[entityUri][entityInContextUri] = relation
+          /*
           const edgeId = relation.entityInContext2 + ' - ' + relation.entity
           if (!edgesMap[edgeId]) {
             edgesMap[edgeId] = {
@@ -131,11 +185,13 @@ export default {
               shape: 'diamond',
             }
           }
+          */
         }
       }
 
       for (const factoid in relationsByFactoid) {
         const relationByFactoid = relationsByFactoid[factoid]
+        // 組み合わせを取得
         const combis = combination(relationByFactoid, 2)
 
         for (const combi of combis) {
@@ -155,10 +211,19 @@ export default {
             let color = null
             let shape = null
             let nodeType = null
+
             const typeOfEntityReference =
               entities[entityUri].typeOfEntityReference
-            const typeOfEntityInContext =
-              entities[entityUri].typeOfEntityInContext
+
+            let typeOfEntity1And2 = ''
+
+            // 起点となるノードだったら
+            if (entityUri === item.s) {
+              typeOfEntity1And2 = entities[entityUri].typeOfEntity
+            } else {
+              typeOfEntity1And2 = entities[entityUri].typeOfEntity2
+            }
+
             if (
               [
                 'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#ConceptualObjectReference',
@@ -169,18 +234,35 @@ export default {
               shape = 'diamond'
             } else if (
               [
-                'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#CommunityInContext',
-              ].includes(typeOfEntityInContext)
+                'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#Community',
+              ].includes(typeOfEntity1And2)
             ) {
               color = 'red'
               shape = 'square'
-              nodeType = typeOfEntityInContext
+              nodeType = typeOfEntity1And2
             } else if (
+              // Person
               [
-                'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#PersonInContext',
-              ].includes(typeOfEntityInContext)
+                'https://github.com/johnBradley501/FPO/raw/master/fpo.owl#Person',
+              ].includes(typeOfEntity1And2)
             ) {
-              nodeType = typeOfEntityInContext
+              nodeType = typeOfEntity1And2
+            } else if (
+              // Location
+              [
+                'https://github.com/johnBradley501/FPO/raw/master/fpo.owl#Location',
+              ].includes(typeOfEntity1And2)
+            ) {
+              color = 'green'
+              nodeType = typeOfEntity1And2
+            } else if (
+              // Group
+              [
+                'https://github.com/johnBradley501/FPO/raw/master/fpo.owl#Group',
+              ].includes(typeOfEntity1And2)
+            ) {
+              color = 'orange' // '#E65100' // orange
+              nodeType = typeOfEntity1And2
             }
 
             if (!nodesMap[entityUri]) {
@@ -216,29 +298,23 @@ export default {
       this.relations = data
     },
 
+    // クリックした時の処理
     onNodeSelected(value) {
       const nodes = value.nodes
       if (nodes.length > 0) {
         const uri = nodes[0]
         const node = this.nodesMap[uri]
         if (
-          node.type ===
-          'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#CommunityInContext'
+          [
+            'https://github.com/johnBradley501/FPO/raw/master/fpo.owl#Person',
+            'https://github.com/johnBradley501/FPO/raw/master/fpo.owl#Location',
+            'https://github.com/johnBradley501/FPO/raw/master/fpo.owl#Group',
+            'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#Community',
+          ].includes(node.type)
         ) {
-          alert('今後対応予定')
-        } else if (
-          node.type ===
-          'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#PersonInContext'
-        ) {
-          const id = this.$utils.getIdFromUri(uri)
-          this.$router.push(
-            this.localePath({
-              name: 'pers-id',
-              params: {
-                id,
-              },
-            })
-          )
+          this.dialog = true
+
+          this.selectedContexts = this.contexts[node.id]
         }
       }
     },

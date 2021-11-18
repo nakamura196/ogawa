@@ -8,6 +8,32 @@ export class Utils {
     const tmp = uri.split('/')
     return tmp[tmp.length - 1]
   }
+
+  sortNodes(sortedNodes: any[], edgeMap: any, fromNode: string) {
+    if (!edgeMap[fromNode]) {
+      return sortedNodes
+    }
+
+    if (!sortedNodes.includes(fromNode)) {
+      sortedNodes.push(fromNode)
+    }
+
+    const toNodes = edgeMap[fromNode]
+
+    // まず入れる
+    for (const toNode of toNodes) {
+      if (!sortedNodes.includes(toNode)) {
+        sortedNodes.push(toNode)
+      }
+    }
+
+    // 各出ていくノードの先を再帰的処理
+    for (const toNode of toNodes) {
+      sortedNodes = this.sortNodes(sortedNodes, edgeMap, toNode)
+    }
+
+    return sortedNodes
+  }
 }
 
 export default (_: any, inject: any) => {
