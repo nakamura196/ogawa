@@ -19,6 +19,17 @@
         :geojson="geojson"
       />
 
+      <network
+        id="mynetwork"
+        ref="network"
+        class="mt-5"
+        style="width: 100%; height: 650px; background-color: lightyellow"
+        :nodes="nodes"
+        :edges="edges"
+        :options="options"
+      >
+      </network>
+
       <hr class="mt-10" />
 
       <h1 class="mt-10">以下はメモ</h1>
@@ -40,12 +51,14 @@
 </template>
 <script>
 import axios from 'axios'
+import { Network } from 'vue-visjs'
 import Breadcrumbs from '~/components/layout/Breadcrumbs.vue'
 const url = 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
 
 export default {
   components: {
     Breadcrumbs,
+    network: Network,
   },
   async asyncData({ params, $axios }) {
     const id = await params.id
@@ -60,8 +73,8 @@ export default {
           ?s ex:description ?description;
           ex:source/ex:ctsURI ?ctsURI .
           filter (?s = <${uri}> ) .
-          
-          optional { 
+
+          optional {
             { ?s ex:atWhere/ex:referencesEntity/owl:sameAs ?placeUri . }
             UNION
             { ?s ex:fromWhere/ex:referencesEntity/owl:sameAs ?placeUri . }
@@ -101,6 +114,28 @@ export default {
       markers: [],
       center: [51.505, -0.159],
       geojson: null,
+
+      nodes: [],
+      edges: [],
+      options: {
+        edges: {
+          length: 400, // Longer edges between nodes.
+        },
+        layout: {
+          randomSeed: 2,
+        },
+        physics: {
+          // enabled: false,
+          // Even though it's disabled the options still apply to network.stabilize().
+          /*
+          enabled: false,
+          solver: 'repulsion',
+          repulsion: {
+            nodeDistance: 4000, // Put more distance between the nodes.
+          },
+          */
+        },
+      },
     }
   },
   computed: {
@@ -129,6 +164,8 @@ export default {
     this.getCTS()
     // pleiadesから緯度・経度情報の取得
     this.getPlaceInfo()
+
+    this.getRelatedFactoids()
   },
   methods: {
     // CTSからテキストを取得
@@ -219,6 +256,78 @@ export default {
           this.center = center
         }
       }
+    },
+    async getRelatedFactoids() {
+      const item = this.item
+
+      const endpoint = 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
+
+      const query = `prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
+      prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+      SELECT * WHERE {
+        ?s ?p ?o; ex:description ?desc_s . 
+        optional { ?s ?related_o ?s_o . ?s_o ex:referencesEntityInContext ?entityInContext_s } 
+        ?o a/rdfs:subClassOf* ex:Factoid
+        filter (?s = <${item.s}> || ?o = <${item.s}>)
+        ?o ex:description ?desc_o .
+        optional { ?o ?related_o ?r_o . ?r_o ex:referencesEntityInContext ?entityInContext_o }
+      }`
+
+      const url = `${endpoint}?query=${encodeURIComponent(query)}`
+
+      const { data } = await this.$axios.get(url)
+
+      const nodesMap = {}
+      const edgesMap = {}
+
+      for (const obj of data) {
+        const keys = ['s', 'o']
+        for (const key of keys) {
+          const nodeUri = obj[key]
+
+          const rna = obj[`desc_${key}`]
+          const cdn2 = []
+          const size = 20
+          for (let i = 0; i < rna.length / size; i++) {
+            cdn2.push(rna.substr(i * size, size))
+          }
+
+          if (!nodesMap[nodeUri]) {
+            nodesMap[nodeUri] = {
+              id: nodeUri,
+              label: cdn2.join('\n'),
+              shape: 'box',
+            }
+          }
+        }
+
+        if (
+          ![
+            'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#mentionedAsFollow',
+          ].includes(obj.p)
+        ) {
+          edgesMap[`${obj.s}-${obj.o}`] = {
+            from: obj.s,
+            to: obj.o,
+            label: this.$utils.getIdFromUri(obj.p, '#'),
+            arrows: 'to',
+            // font: { align: 'middle' },
+          }
+        }
+      }
+
+      const nodes = []
+      for (const nodeUri in nodesMap) {
+        nodes.push(nodesMap[nodeUri])
+      }
+
+      const edges = []
+      for (const edgeUri in edgesMap) {
+        edges.push(edgesMap[edgeUri])
+      }
+
+      this.edges = edges
+      this.nodes = nodes
     },
   },
 }

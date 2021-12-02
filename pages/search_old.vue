@@ -27,23 +27,17 @@
     </v-row>
 
     <!-- ネットワーク -->
-    <v-row>
-      <v-col>
-        <network
-          id="mynetwork"
-          ref="network"
-          style="width: 100%; height: 650px"
-          :nodes="nodes"
-          :edges="edges"
-          :options="options"
-          @click="onNodeSelected"
-        >
-        </network>
-      </v-col>
-      <v-col>
-        <v-card flat outlined class="pa-10"> テキスト </v-card>
-      </v-col>
-    </v-row>
+    <network
+      id="mynetwork"
+      ref="network"
+      class="mt-5"
+      style="width: 100%; height: 650px"
+      :nodes="nodes"
+      :edges="edges"
+      :options="options"
+      @click="onNodeSelected"
+    >
+    </network>
   </v-container>
 </template>
 <script>
@@ -68,34 +62,7 @@ export default {
         },
         edges: {
           color: 'lightgray',
-          smooth: {
-            // type: 'cubicBezier',
-            forceDirection: 'vertical',
-            // roundness: 0.4,
-          },
         },
-        layout: {
-          hierarchical: {
-            direction: 'UD',
-            sortMethod: 'directed',
-            shakeTowards: 'roots',
-          },
-        },
-        /*
-        physics: {
-          hierarchicalRepulsion: {
-            avoidOverlap: 0.5,
-          },
-        },
-        */
-        /*
-        physics: {
-          hierarchicalRepulsion: {
-            avoidOverlap: 1,
-          },
-        },
-        */
-        physics: false,
       },
       title: this.$t('network'),
       nodeList: [],
@@ -135,21 +102,8 @@ export default {
       const nodes = value.nodes
       if (nodes.length > 0) {
         const nodeUri = nodes[0]
-        /*
         if (nodeUri.includes('pers_') || nodeUri.includes('place_')) {
           this.nodeEntity = nodeUri
-        }
-        */
-        // http://www.example.com/roman-ontology/resource/fact/fact_108
-        if (nodeUri.includes('fact_')) {
-          this.$router.push(
-            this.localePath({
-              name: 'item-id',
-              params: {
-                id: this.$utils.getIdFromUri(nodeUri).replace('fact_', ''),
-              },
-            })
-          )
         }
       }
     },
@@ -204,11 +158,11 @@ export default {
       prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
       prefix ex2: <http://www.example.com/roman-ontology/resource/fact/>
       select distinct * where {
-         ?startNode ${link}* ?s; ex:description ?descOfStartNode .
+         ?startNode ${link}* ?s; ex:description ?descOfStartNode . 
          filter (?startNode = <` +
         nodeInitial +
         `>)
-         ?s ex:description ?descOfS .
+         ?s ex:description ?descOfS . 
          optional {
           ?s ex:when ?when_s .
           SERVICE SILENT <${endpoint4hutimeperiod}> {
@@ -216,14 +170,14 @@ export default {
           }
          }
          ?s ${link} ?o .
-         ?o ex:description ?descOfO .
+         ?o ex:description ?descOfO . 
          optional {
            ?o ex:when ?when_o .
            SERVICE SILENT <${endpoint4hutimeperiod}> {
             optional { ?when_o ex:begin ?when_o_begin; ex:end ?when_o_end. }
            }
          }
-         ?o ${link}* ?endNode; ex:description ?descOfEndNode .
+         ?o ${link}* ?endNode; ex:description ?descOfEndNode . 
          filter (?endNode = <` +
         (nodeEnd ||
           'http://www.example.com/roman-ontology/resource/fact/fact_40') /* 14 */ +
@@ -238,13 +192,13 @@ export default {
       const res = handleFactNodes(data4Fact, nodeInitial)
       const nodes = res.nodes
       const edges = res.edges
-      // const existsNodes = res.existsNodes
+      const existsNodes = res.existsNodes
 
       // contextNodesの取り扱い
-      // handleContextNodes(nodes, edges, data4Entity, existsNodes)
+      handleContextNodes(nodes, edges, data4Entity, existsNodes)
 
       // inとoutが同じ（重なってしまう）factNodeの位置を調整する
-      // arrangeNodesX(existsNodes)
+      arrangeNodesX(existsNodes)
 
       this.nodes = nodes
       this.edges = edges
@@ -319,8 +273,8 @@ function handleFactNodes(data4Fact, nodeInitial) {
         const factNode = {
           id: uri,
           label,
-          // x: 0,
-          // physics: false,
+          x: 0,
+          physics: false,
           shape: 'box',
           color: '#F44336',
           in: [], // 当該Nodeに入っているNodes。重なってしまうことへの対応用。
@@ -328,7 +282,7 @@ function handleFactNodes(data4Fact, nodeInitial) {
         }
         nodes.push(factNode)
 
-        // handleDateNode(dateNodes, obj, key, existsNodes)
+        handleDateNode(dateNodes, obj, key, existsNodes)
 
         existsNodes[uri] = factNode
       }
@@ -433,9 +387,9 @@ function sortNodes(sortedNodes, edgeMap, fromNode) {
 
   return sortedNodes
 }
-/*
+
 function handleDateNode(dateNodes, obj, key, existsNodes) {
-  // const step4x = 200
+  const step4x = 200
 
   // when情報を持つ場合
   if (obj['when_' + key]) {
@@ -447,9 +401,9 @@ function handleDateNode(dateNodes, obj, key, existsNodes) {
         id: uriWhen,
         label: labelWhen,
         // y, // factNodeと同じy座標
-        // x: -1 * step4x, // factNodeの左側（-100 x座標）
+        x: -1 * step4x, // factNodeの左側（-100 x座標）
         // fixed: true,
-        // physics: false,
+        physics: false,
         shape: 'box',
         color: '#4CAF50',
       }
@@ -470,7 +424,7 @@ function handleContextNodes(nodes, edges, data4Entity, existsNodes) {
   // y座標ごとのcontextNodeを格納する
   const contextYList = {}
 
-  // const step4x = 200
+  const step4x = 200
 
   for (const obj of data4Entity) {
     const sinceUri = obj.since
@@ -498,10 +452,10 @@ function handleContextNodes(nodes, edges, data4Entity, existsNodes) {
     const contextNode = {
       id: uri,
       label,
-      // y: contextY,
-      // x: step4x * (contextYList[contextY].length + 1), // 同じy座標の場合、xにずらす
+      y: contextY,
+      x: step4x * (contextYList[contextY].length + 1), // 同じy座標の場合、xにずらす
       // fixed: true,
-      // physics: false,
+      physics: false,
       shape: 'box',
       color: label.includes('pers') ? '#2196F3' : '#9C27B0',
     }
@@ -534,9 +488,8 @@ function handleContextNodes(nodes, edges, data4Entity, existsNodes) {
   }
 }
 
-
 function arrangeNodesX(existsNodes) {
-  // const step4x = 30
+  const step4x = 30
   const inOutIdMap = {}
 
   for (const nodeUri in existsNodes) {
@@ -550,7 +503,7 @@ function arrangeNodesX(existsNodes) {
             inOutIdMap[inOutId] = []
           }
 
-          // node.x -= step4x * inOutIdMap[inOutId].length
+          node.x -= step4x * inOutIdMap[inOutId].length
 
           inOutIdMap[inOutId].push(nodeUri)
         }
@@ -558,7 +511,6 @@ function arrangeNodesX(existsNodes) {
     }
   }
 }
-*/
 </script>
 <style>
 #mynetwork {

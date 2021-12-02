@@ -4,8 +4,8 @@ export class Utils {
     return uri.split('fact_')[1]
   }
 
-  getIdFromUri(uri: string): string {
-    const tmp = uri.split('/')
+  getIdFromUri(uri: string, delimiter: string = '/'): string {
+    const tmp = uri.split(delimiter)
     return tmp[tmp.length - 1]
   }
 
