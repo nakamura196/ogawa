@@ -253,7 +253,7 @@ export default {
                 'https://github.com/johnBradley501/FPO/raw/master/fpo.owl#Location',
               ].includes(typeOfEntity1And2)
             ) {
-              color = 'green'
+              color = '#98fb98' //'green'
               nodeType = typeOfEntity1And2
             } else if (
               // Group
