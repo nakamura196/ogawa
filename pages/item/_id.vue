@@ -185,8 +185,6 @@ export default {
         },
       }
 
-      console.log({ option })
-
       return option
     },
   },
@@ -298,12 +296,14 @@ export default {
       SELECT * WHERE {
         ?s ?p ?o; ex:description ?desc_s .
         optional {
-          ?s ex:referencesEntityInContext ?entityInContext_s0; ex:referencesEntity ?referencesEntity_s0 .
-          ?referencesEntity_s0 ex:name ?referencesEntityName_s0; rdf:type ?referencesEntityType_s0
-        }
-        optional {
           ?s ?related_so ?s_o .
-          ?s_o ex:referencesEntityInContext ?entityInContext_s; ex:referencesEntity ?referencesEntity_s .
+          { 
+            ?s_o ex:referencesEntityInContext ?entityInContext_s; ex:referencesEntity ?referencesEntity_s .           
+          } 
+          UNION
+          {
+            ?s_o ex:referencesEntity ?referencesEntity_s .
+          }
           ?referencesEntity_s ex:name ?referencesEntityName_s; rdf:type ?referencesEntityType_s
         }
         ?o a/rdfs:subClassOf* ex:Factoid
@@ -311,7 +311,13 @@ export default {
         ?o ex:description ?desc_o .
         optional {
           ?o ?related_oo ?o_o .
-          ?o_o ex:referencesEntityInContext ?entityInContext_o; ex:referencesEntity ?referencesEntity_o .
+          { 
+            ?o_o ex:referencesEntityInContext ?entityInContext_o; ex:referencesEntity ?referencesEntity_o .            
+          } 
+          UNION
+          {
+            ?o_o ex:referencesEntity ?referencesEntity_o .
+          }
           ?referencesEntity_o ex:name ?referencesEntityName_o; rdf:type ?referencesEntityType_o
         }
       }`
@@ -368,6 +374,7 @@ export default {
                 color = 'red'
                 shape = 'square'
                 break
+              /*
               case 'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#ConceptualObjectReference':
                 // 式の結果が value1 に一致する場合に実行する文
                 color = 'yellow'
@@ -377,6 +384,21 @@ export default {
                 // 式の結果が value1 に一致する場合に実行する文
                 color = 'yellow'
                 shape = 'diamond'
+                break
+              */
+              case 'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#ConceptualObject':
+                // 式の結果が value1 に一致する場合に実行する文
+                color = 'yellow'
+                shape = 'diamond'
+                break
+              case 'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#PhysicalObject':
+                // 式の結果が value1 に一致する場合に実行する文
+                color = 'yellow'
+                shape = 'diamond'
+                break
+              case 'https://github.com/johnBradley501/FPO/raw/master/fpo.owl#Group':
+                // 式の結果が value1 に一致する場合に実行する文
+                color = 'orange'
                 break
               /*
               case value2:
@@ -397,9 +419,15 @@ export default {
               // shape: 'box',
               color,
               shape,
-              context: obj[`entityInContext_${key}`],
+              // context: obj[`entityInContext_${key}`],
               type: entityType,
             }
+          }
+
+          // [注意] nodesMapに登録済みのnodeについて、contextがnullの場合、当該node URIが2回目以降の出現であっても、登録済みのnodeのcontextを更新する。
+          const nodeObj = nodesMap[entityNodeUri]
+          if (!nodeObj.context && obj[`entityInContext_${key}`]) {
+            nodeObj.context = obj[`entityInContext_${key}`]
           }
 
           // factoid と entity をつなぐ edge
@@ -443,8 +471,6 @@ export default {
       this.edges = edges
       this.nodes = nodes
 
-      console.log({ edges, nodes })
-
       this.nodesMap = nodesMap
     },
 
@@ -466,6 +492,10 @@ export default {
             })
           )
         } else {
+          if (!node.context) {
+            alert('contextがありません。')
+            return
+          }
           this.$router.push(
             this.localePath({
               name: 'entity-id',

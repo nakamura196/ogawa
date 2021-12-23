@@ -28,7 +28,8 @@
     "nuxt-property-decorator": "^2.9.1",
     "vue-visjs": "^0.6.0",
     "vue2-leaflet": "^2.7.1",
-    "vuetify": "^2.5.5"
+    "vuetify": "^2.5.5",
+    "xml-js": "^1.6.11"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.14.7",
