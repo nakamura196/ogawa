@@ -11,10 +11,11 @@
               <template v-for="(e, key) in element.elements">
                 <TEI :key="key" :element="e"> </TEI>
               </template>
+              &nbsp;
               <div
                 v-for="(e, key2) in getSpanId(element)"
                 :key="`l-${key2}`"
-                style="margin-top: 2px; height: 4px"
+                style="margin-bottom: 2px; height: 4px"
                 :style="`background-color: ${getTypeColor(e.type)}`"
               ></div>
             </span>
@@ -23,13 +24,12 @@
         </v-tooltip>
       </template>
       <template v-else>
-        <span style="display: inline-block">
+        <span>
           <template v-for="(e, key) in element.elements">
             <TEI :key="key" :element="e"> </TEI>
           </template>
         </span>
       </template>
-      &nbsp;
     </template>
     <template v-else-if="element.name === 'persName'">
       <span style="color: red">
