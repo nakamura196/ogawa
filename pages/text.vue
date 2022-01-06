@@ -19,13 +19,23 @@ export default {
       element: null,
     }
   },
+  computed: {
+    wordAttributes: {
+      // getter 関数
+      get() {
+        return this.$store.getters.getWordAttributes
+      },
+      // setter 関数
+      set(value) {
+        this.$store.commit('setWordAttributes', value)
+      },
+    },
+  },
   async mounted() {
     const res = await axios.get(this.baseUrl + '/xml/BG_1_TEI.xml')
 
     const parser = new window.DOMParser()
     const xmlData = parser.parseFromString(res.data, 'text/xml')
-    // this.xml = xmlData
-    // console.log({ xmlData })
 
     const df = JSON.parse(
       convert.xml2json(xmlData.querySelector('text').outerHTML, {
@@ -34,7 +44,42 @@ export default {
       })
     )
 
-    // console.log({ df })
+    // idの一覧を取得する
+    const ws = xmlData.querySelectorAll('w')
+    const wids = []
+    for (const w of ws) {
+      const id = w.getAttribute('xml:id')
+      wids.push(id)
+    }
+
+    // span毎に処理を加える
+    const spans = xmlData.querySelector('spanGrp').querySelectorAll('span')
+
+    const metadata = {}
+
+    for (const span of spans) {
+      const spanId = span.getAttribute('xml:id')
+      const type = span.getAttribute('type')
+
+      const from = span.getAttribute('from').slice(1)
+      const to = span.getAttribute('to').slice(1)
+
+      const indexFrom = wids.indexOf(from)
+      const indexTo = wids.indexOf(to)
+
+      for (let index = indexFrom; index <= indexTo; index++) {
+        const id = wids[index]
+        if (!metadata[id]) {
+          metadata[id] = []
+        }
+        metadata[id].push({
+          id: spanId,
+          type,
+        })
+      }
+    }
+
+    this.wordAttributes = metadata
     this.element = df
   },
 }
