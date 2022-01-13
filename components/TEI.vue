@@ -5,6 +5,7 @@
     </template>
     <template v-else-if="element.name === 'w'">
       <template v-if="hasSpanId(element)">
+        <!--
         <v-tooltip bottom>
           <template #activator="{ on, attrs }">
             <span style="display: inline-block" v-bind="attrs" v-on="on">
@@ -22,6 +23,30 @@
           </template>
           <span>{{ getSpanId(element) }}</span>
         </v-tooltip>
+        -->
+
+        <span style="display: inline-block">
+          <template v-for="(e, key) in element.elements">
+            <TEI :key="key" :element="e"> </TEI>
+          </template>
+          &nbsp;
+          <v-tooltip
+            v-for="(factoid, key2) in getSpanId(element)"
+            :key="`l-${key2}`"
+            bottom
+          >
+            <template #activator="{ on, attrs }">
+              <div
+                v-bind="attrs"
+                style="margin-bottom: 4px; height: 8px; cursor: pointer"
+                :style="`background-color: ${getTypeColor(factoid.type)}`"
+                @click="clickFactoid(factoid.id)"
+                v-on="on"
+              ></div>
+            </template>
+            <span>{{ factoid.note }}</span>
+          </v-tooltip>
+        </span>
       </template>
       <template v-else>
         <span>
@@ -122,6 +147,17 @@ export default class TEIElements extends Vue {
       color = '#BDBDBD' // grey lighten-1
     }
     return color
+  }
+
+  clickFactoid(factoidId: string) {
+    this.$router.push(
+      (this as any).localePath({
+        name: 'item-id',
+        params: {
+          id: factoidId,
+        },
+      })
+    )
   }
 }
 </script>

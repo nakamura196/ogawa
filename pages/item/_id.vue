@@ -2,7 +2,7 @@
   <div>
     <Breadcrumbs :items="bh" />
     <v-container class="my-5">
-      <h2>{{ item.description }} ({{ 'Fact ' + id }})</h2>
+      <h2>{{ item.description }} ({{ getTitle(id) }})</h2>
 
       <template v-if="xml">
         <h3 class="mt-5">このFactoidの典拠</h3>
@@ -32,14 +32,26 @@
       </network>
 
       <div class="mt-4">
-        <v-btn @click="hierarchical = false">hierarchicalを使用しない</v-btn>
-        <v-btn @click="hierarchical = true">hierarchicalを使用する</v-btn>
+        <v-btn small class="ma-1" @click="hierarchical = false"
+          >hierarchicalを使用しない</v-btn
+        >
+        <v-btn small class="ma-1" @click="hierarchical = true"
+          >hierarchicalを使用する</v-btn
+        >
 
-        <v-btn @click="sortMethod = 'directed'">directed</v-btn>
-        <v-btn @click="sortMethod = 'hubsize'">hubsize</v-btn>
+        <v-btn small class="ma-1" @click="sortMethod = 'directed'"
+          >directed</v-btn
+        >
+        <v-btn small class="ma-1" @click="sortMethod = 'hubsize'"
+          >hubsize</v-btn
+        >
 
-        <v-btn @click="physicsEnabled = true">physicsを使用する</v-btn>
-        <v-btn @click="physicsEnabled = false">physicsを使用しない</v-btn>
+        <v-btn small class="ma-1" @click="physicsEnabled = true"
+          >physicsを使用する</v-btn
+        >
+        <v-btn small class="ma-1" @click="physicsEnabled = false"
+          >physicsを使用しない</v-btn
+        >
       </div>
       <hr class="mt-10" />
 
@@ -64,7 +76,8 @@
 import axios from 'axios'
 import { Network } from 'vue-visjs'
 import Breadcrumbs from '~/components/layout/Breadcrumbs.vue'
-const url = 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
+
+const url = process.env.endpoint // 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
 
 export default {
   components: {
@@ -74,15 +87,14 @@ export default {
   async asyncData({ params, $axios }) {
     const id = await params.id
 
-    const uri = 'http://www.example.com/roman-ontology/resource/fact/fact_' + id
+    const uri = 'http://www.example.com/roman-ontology/resource/Factoid/' + id
 
     const query4Fact = `
       prefix fpo: <https://github.com/johnBradley501/FPO/raw/master/fpo.owl#>
       prefix owl: <http://www.w3.org/2002/07/owl#>
       prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
       select distinct * where {
-          ?s ex:description ?description;
-          ex:source/ex:ctsURI ?ctsURI .
+          ?s ex:description ?description .
           filter (?s = <${uri}> ) .
 
           optional {
@@ -151,7 +163,7 @@ export default {
           exact: true,
         },
         {
-          text: 'Facet ' + this.id,
+          text: this.getTitle(this.id),
         },
       ]
     },
@@ -289,12 +301,12 @@ export default {
     async getRelatedFactoids() {
       const item = this.item
 
-      const endpoint = 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
+      const endpoint = process.env.endpoint // 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
 
       const query = `prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
       prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
       SELECT * WHERE {
-        ?s ?p ?o; ex:description ?desc_s .
+        ?s ex:description ?desc_s .
         optional {
           ?s ?related_so ?s_o .
           { 
@@ -306,20 +318,23 @@ export default {
           }
           ?referencesEntity_s ex:name ?referencesEntityName_s; rdf:type ?referencesEntityType_s
         }
-        ?o a/rdfs:subClassOf* ex:Factoid
-        filter (?s = <${item.s}> || ?o = <${item.s}>)
-        ?o ex:description ?desc_o .
-        optional {
-          ?o ?related_oo ?o_o .
-          { 
-            ?o_o ex:referencesEntityInContext ?entityInContext_o; ex:referencesEntity ?referencesEntity_o .            
-          } 
-          UNION
-          {
-            ?o_o ex:referencesEntity ?referencesEntity_o .
+        optional { 
+          ?s ?p ?o . 
+          ?o a/rdfs:subClassOf* ex:Factoid .
+          ?o ex:description ?desc_o .
+          optional {
+            ?o ?related_oo ?o_o .
+            { 
+              ?o_o ex:referencesEntityInContext ?entityInContext_o; ex:referencesEntity ?referencesEntity_o .            
+            } 
+            UNION
+            {
+              ?o_o ex:referencesEntity ?referencesEntity_o .
+            }
+            ?referencesEntity_o ex:name ?referencesEntityName_o; rdf:type ?referencesEntityType_o
           }
-          ?referencesEntity_o ex:name ?referencesEntityName_o; rdf:type ?referencesEntityType_o
         }
+        filter (?s = <${item.s}> || ?o = <${item.s}>)
       }`
 
       const url = `${endpoint}?query=${encodeURIComponent(query)}`
@@ -443,6 +458,7 @@ export default {
         }
 
         if (
+          obj.p &&
           ![
             'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#mentionedAsFollow',
           ].includes(obj.p)
@@ -506,6 +522,10 @@ export default {
           )
         }
       }
+    },
+
+    getTitle(factoidId) {
+      return factoidId.replace('f_', 'Fact ')
     },
   },
 }

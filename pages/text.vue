@@ -67,6 +67,8 @@ export default {
       const indexFrom = wids.indexOf(from)
       const indexTo = wids.indexOf(to)
 
+      const note = span.querySelector('note').textContent
+
       for (let index = indexFrom; index <= indexTo; index++) {
         const id = wids[index]
         if (!metadata[id]) {
@@ -75,6 +77,7 @@ export default {
         metadata[id].push({
           id: spanId,
           type,
+          note,
         })
       }
     }
