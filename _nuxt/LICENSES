@@ -27,30 +27,6 @@ OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 
-/**
-  * vue-class-component v7.2.6
-  * (c) 2015-present Evan You
-  * @license MIT
-  */
-
-
-/* @preserve
- * Leaflet 1.7.1, a JS library for interactive maps. http://leafletjs.com
- * (c) 2010-2019 Vladimir Agafonkin, (c) 2010-2011 CloudMade
- */
-
-/*!
- * vue-client-only v0.0.0-semantic-release
- * (c) 2021-present egoist <0x142857@gmail.com>
- * Released under the MIT License.
- */
-
-/*!
- * vue-no-ssr v1.1.1
- * (c) 2018-present egoist <0x142857@gmail.com>
- * Released under the MIT License.
- */
-
 /*! Hammer.JS - v2.0.17-rc - 2019-12-16
  * http://naver.github.io/egjs
  *
@@ -112,6 +88,12 @@ PERFORMANCE OF THIS SOFTWARE.
 
 //! moment.js
 
+/**
+  * vue-class-component v7.2.6
+  * (c) 2015-present Evan You
+  * @license MIT
+  */
+
 
 /*!
   * vue-router v3.5.2
@@ -136,4 +118,22 @@ PERFORMANCE OF THIS SOFTWARE.
  * vuex v3.6.2
  * (c) 2021 Evan You
  * @license MIT
+ */
+
+
+/* @preserve
+ * Leaflet 1.7.1, a JS library for interactive maps. http://leafletjs.com
+ * (c) 2010-2019 Vladimir Agafonkin, (c) 2010-2011 CloudMade
+ */
+
+/*!
+ * vue-client-only v0.0.0-semantic-release
+ * (c) 2021-present egoist <0x142857@gmail.com>
+ * Released under the MIT License.
+ */
+
+/*!
+ * vue-no-ssr v1.1.1
+ * (c) 2018-present egoist <0x142857@gmail.com>
+ * Released under the MIT License.
  */
