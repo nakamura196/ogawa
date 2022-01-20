@@ -19,6 +19,10 @@
         :geojson="geojson"
       />
 
+      <div class="my-4">
+        <v-switch v-model="isLemma" :label="`Lemma`"></v-switch>
+      </div>
+
       <network
         id="mynetwork"
         ref="network"
@@ -138,6 +142,9 @@ export default {
       center: [51.505, -0.159],
       geojson: null,
 
+      orgNodes: [],
+      orgEdges: [],
+
       nodes: [],
       edges: [],
       nodesMap: {},
@@ -145,6 +152,8 @@ export default {
       sortMethod: 'directed',
       hierarchical: false,
       physicsEnabled: true,
+
+      isLemma: true,
     }
   },
   computed: {
@@ -200,9 +209,14 @@ export default {
       return option
     },
   },
+  watch: {
+    isLemma() {
+      this.drawNetwork()
+    },
+  },
   mounted() {
     // CTSからテキストを取得
-    this.getCTS()
+    // this.getCTS()
     // pleiadesから緯度・経度情報の取得
     this.getPlaceInfo()
 
@@ -309,24 +323,24 @@ export default {
         ?s ex:description ?desc_s .
         optional {
           ?s ?related_so ?s_o .
-          { 
-            ?s_o ex:referencesEntityInContext ?entityInContext_s; ex:referencesEntity ?referencesEntity_s .           
-          } 
+          {
+            ?s_o ex:referencesEntityInContext ?entityInContext_s; ex:referencesEntity ?referencesEntity_s .
+          }
           UNION
           {
             ?s_o ex:referencesEntity ?referencesEntity_s .
           }
           ?referencesEntity_s ex:name ?referencesEntityName_s; rdf:type ?referencesEntityType_s
         }
-        optional { 
-          ?s ?p ?o . 
+        optional {
+          ?s ?p ?o .
           ?o a/rdfs:subClassOf* ex:Factoid .
           ?o ex:description ?desc_o .
           optional {
             ?o ?related_oo ?o_o .
-            { 
-              ?o_o ex:referencesEntityInContext ?entityInContext_o; ex:referencesEntity ?referencesEntity_o .            
-            } 
+            {
+              ?o_o ex:referencesEntityInContext ?entityInContext_o; ex:referencesEntity ?referencesEntity_o .
+            }
             UNION
             {
               ?o_o ex:referencesEntity ?referencesEntity_o .
@@ -341,8 +355,8 @@ export default {
 
       const { data } = await this.$axios.get(url)
 
-      const nodesMap = {}
-      const edgesMap = {}
+      let nodesMap = {}
+      let edgesMap = {}
 
       for (const obj of data) {
         const keys = ['s', 'o']
@@ -474,6 +488,13 @@ export default {
         }
       }
 
+      // objectの情報の追加
+      const res = await this.getAssociatedObjects(nodesMap, edgesMap)
+      nodesMap = res.nodesMap
+      edgesMap = res.edgesMap
+
+      // 以下、表示
+
       const nodes = []
       for (const nodeUri in nodesMap) {
         nodes.push(nodesMap[nodeUri])
@@ -484,10 +505,176 @@ export default {
         edges.push(edgesMap[edgeUri])
       }
 
-      this.edges = edges
-      this.nodes = nodes
+      // 全データの格納
+      this.orgEdges = edges
+      this.orgNodes = nodes
 
       this.nodesMap = nodesMap
+
+      // 描画
+      this.drawNetwork()
+    },
+
+    drawNetwork() {
+      // 全データ
+      const orgEdges = this.orgEdges
+      const orgNodes = this.orgNodes
+
+      // 表示するものだけ
+      const nodes = []
+      const edges = []
+      const nodesUris = []
+
+      // 表示条件
+      const isLemma = this.isLemma
+
+      // ノードについて
+      for (const node of orgNodes) {
+        if (!isLemma && node.type === 'lemma') {
+          continue
+        }
+
+        nodes.push(node)
+        nodesUris.push(node.id)
+      }
+
+      // エッジについて
+      for (const edge of orgEdges) {
+        const fromUri = edge.from
+        const toUri = edge.to
+        if (nodesUris.includes(fromUri) && nodesUris.includes(toUri)) {
+          edges.push(edge)
+        }
+      }
+
+      this.nodes = nodes
+      this.edges = edges
+    },
+
+    async getAssociatedObjects(nodesMap, edgesMap) {
+      const filters = []
+      for (const nodeUri in nodesMap) {
+        if (nodesMap[nodeUri].type === 'factoid') {
+          filters.push(`?s = <${nodeUri}>`)
+        }
+      }
+
+      const filter = filters.join(' || ')
+
+      const endpoint = process.env.endpoint // 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
+
+      const query = `prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
+      prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+      SELECT * WHERE {
+        ?s ex:associatedObject ?ao . ?ao ex:hasLemma/ex:referencesLemma ?lemma .
+        filter (${filter})
+        SERVICE SILENT <https://dydra.com/i2k/lemmabank/sparql> {
+          ?lemma rdfs:label ?label .
+        }
+      }`
+
+      const url = `${endpoint}?query=${encodeURIComponent(query)}`
+
+      const { data } = await this.$axios.get(url)
+
+      const factoidUri2labels = {}
+
+      for (const item of data) {
+        const label = item.label
+        const aoUri = item.ao
+        const factoidUri = item.s
+
+        if (!factoidUri2labels[factoidUri]) {
+          factoidUri2labels[factoidUri] = {}
+        }
+
+        if (!factoidUri2labels[factoidUri][aoUri]) {
+          factoidUri2labels[factoidUri][aoUri] = []
+        }
+
+        if (!factoidUri2labels[factoidUri][aoUri].includes(label)) {
+          factoidUri2labels[factoidUri][aoUri].push(label)
+        }
+
+        /*
+        const label = item.label
+        const factoidUri = item.s
+        const aoUri = item.ao
+
+        if (!nodesMap[label]) {
+          nodesMap[label] = {
+            id: label,
+            label,
+            // shape: 'box',
+            color: 'pink',
+            shape: 'box',
+            // context: obj[`entityInContext_${key}`],
+            type: 'lemma',
+          }
+        }
+
+        if (!nodesMap[aoUri]) {
+          nodesMap[aoUri] = {
+            id: aoUri,
+            label: '',
+            // shape: 'box',
+            color: 'yellow',
+            shape: 'box',
+            // context: obj[`entityInContext_${key}`],
+            type: 'ao',
+          }
+        }
+
+        edgesMap[`${factoidUri}-${aoUri}`] = {
+          from: factoidUri,
+          to: aoUri,
+          // label: this.$utils.getIdFromUri(obj.p, '#'),
+          arrows: 'to',
+          // font: { align: 'middle' },
+          color: 'gray',
+        }
+
+        edgesMap[`${aoUri}-${label}`] = {
+          from: aoUri,
+          to: label,
+          // label: this.$utils.getIdFromUri(obj.p, '#'),
+          arrows: 'to',
+          // font: { align: 'middle' },
+          color: 'gray',
+        }
+        */
+      }
+
+      for (const factoidUri in factoidUri2labels) {
+        for (const aoUri in factoidUri2labels[factoidUri]) {
+          const labels = factoidUri2labels[factoidUri][aoUri]
+          labels.sort()
+          const label = labels.join(' / ')
+
+          if (!nodesMap[label]) {
+            nodesMap[label] = {
+              id: label,
+              label,
+              // shape: 'box',
+              color: 'pink',
+              shape: 'box',
+              // context: obj[`entityInContext_${key}`],
+              type: 'lemma',
+            }
+          }
+
+          edgesMap[`${factoidUri}-${label}`] = {
+            from: factoidUri,
+            to: label,
+            // label: this.$utils.getIdFromUri(obj.p, '#'),
+            arrows: 'to',
+            // font: { align: 'middle' },
+            color: 'gray',
+          }
+        }
+      }
+
+      return { nodesMap, edgesMap }
     },
 
     // クリックした時の処理
