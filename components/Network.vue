@@ -108,7 +108,7 @@ export default {
       // 起点となっているノード
       const item = this.item
 
-      const endpoint = 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
+      const endpoint = process.env.endpoint
 
       const query = `prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
       SELECT DISTINCT *
@@ -122,7 +122,7 @@ export default {
         filter (?entityReference != ?entityReference2)
         ?hasReference2 rdfs:subPropertyOf* ?propertyClass .
         ?entityReference2 ex:referencesEntity ?entity; rdf:type ?typeOfEntityReference .
-        optional { 
+        OPTIONAL { 
           ?entityReference2 ex:referencesEntityInContext ?entityInContext2 . 
           ?entityInContext2 rdf:type ?typeOfEntityInContext; ex:sourceDescription ?descriptionOfEntityInContext2 }
         ?entity ex:name ?name; rdf:type ?typeOfEntity2 . 
@@ -253,7 +253,7 @@ export default {
                 'https://github.com/johnBradley501/FPO/raw/master/fpo.owl#Location',
               ].includes(typeOfEntity1And2)
             ) {
-              color = '#98fb98' //'green'
+              color = '#98fb98' // 'green'
               nodeType = typeOfEntity1And2
             } else if (
               // Group

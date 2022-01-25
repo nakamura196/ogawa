@@ -1,7 +1,17 @@
 <template>
   <div>
-    <v-container>
-      <TEI v-if="element" :element="element" />
+    <v-container fluid>
+      <v-row>
+        <v-col style="height: 600px; overflow-y: auto">
+          <TEI v-if="element" :element="element" />
+        </v-col>
+        <v-col>
+          <FactoidNetwork
+            v-if="selectedFactoidIdOnText"
+            :id="selectedFactoidIdOnText"
+          />
+        </v-col>
+      </v-row>
     </v-container>
   </div>
 </template>
@@ -28,6 +38,16 @@ export default {
       // setter 関数
       set(value) {
         this.$store.commit('setWordAttributes', value)
+      },
+    },
+    selectedFactoidIdOnText: {
+      // getter 関数
+      get() {
+        return this.$store.getters.getSelectedFactoidIdOnText
+      },
+      // setter 関数
+      set(value) {
+        this.$store.commit('setSelectedFactoidIdOnText', value)
       },
     },
   },

@@ -117,6 +117,16 @@ export default class TEIElements extends Vue {
     return this.$store.getters.getWordAttributes
   }
 
+  ///
+
+  get selectedFactoidIdOnText() {
+    return this.$store.getters.getSelectedFactoidIdOnText
+  }
+
+  set selectedFactoidIdOnText(value) {
+    this.$store.commit('setSelectedFactoidIdOnText', value)
+  }
+
   hasSpanId(element: any) {
     if (element.attributes) {
       const id = element.attributes['xml:id']
@@ -150,6 +160,7 @@ export default class TEIElements extends Vue {
   }
 
   clickFactoid(factoidId: string) {
+    /*
     this.$router.push(
       (this as any).localePath({
         name: 'item-id',
@@ -158,6 +169,9 @@ export default class TEIElements extends Vue {
         },
       })
     )
+    */
+    this.selectedFactoidIdOnText =
+      'http://www.example.com/roman-ontology/resource/Factoid/' + factoidId
   }
 }
 </script>

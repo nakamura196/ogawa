@@ -45,7 +45,7 @@
 import axios from 'axios'
 import Breadcrumbs from '~/components/layout/Breadcrumbs.vue'
 import Network from '~/components/Network.vue'
-const url = 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
+const url = process.env.endpoint
 
 export default {
   components: {
@@ -55,7 +55,8 @@ export default {
   async asyncData({ params, $axios }) {
     const id = await params.id
 
-    let cont = ''
+    const cont = 'entityInContext'
+    /*
     if (id.includes('pers_')) {
       cont = 'persCont'
     } else if (id.includes('place_')) {
@@ -65,15 +66,18 @@ export default {
     } else if (id.includes('gr_')) {
       cont = 'grCont'
     }
+    */
 
     const uri = `http://www.example.com/roman-ontology/resource/${cont}/${id}`
+
+    // ex:sourceDescription ?description;
 
     const query4Entity = `
       prefix fpo: <https://github.com/johnBradley501/FPO/raw/master/fpo.owl#>
       prefix owl: <http://www.w3.org/2002/07/owl#>
       prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
       select distinct * where {
-          ?s ex:sourceDescription ?description; ex:eventSince ?eventSince; ex:eventUntil ?eventUntil; 
+          ?s ex:eventSince ?eventSince; ex:eventUntil ?eventUntil; 
             ex:contextualAspectOf ?entity . 
           filter (?s = <${uri}> ) . 
           ?entity ex:name ?name; rdf:type ?typeOfEntity . 
