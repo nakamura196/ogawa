@@ -57,21 +57,30 @@
       </template>
     </template>
     <template v-else-if="element.name === 'persName'">
-      <span style="color: red">
+      <span
+        style="color: red; cursor: pointer"
+        @dblclick="clickEntity(element)"
+      >
         <template v-for="(e, key) in element.elements">
           <TEI :key="key" :element="e"> </TEI>
         </template>
       </span>
     </template>
     <template v-else-if="element.name === 'orgName'">
-      <span style="color: green">
+      <span
+        style="color: green; cursor: pointer"
+        @dblclick="clickEntity(element)"
+      >
         <template v-for="(e, key) in element.elements">
           <TEI :key="key" :element="e"> </TEI>
         </template>
       </span>
     </template>
     <template v-else-if="element.name === 'placeName'">
-      <span style="color: blue">
+      <span
+        style="color: blue; cursor: pointer"
+        @dblclick="clickEntity(element)"
+      >
         <template v-for="(e, key) in element.elements">
           <TEI :key="key" :element="e"> </TEI>
         </template>
@@ -117,6 +126,10 @@ export default class TEIElements extends Vue {
     return this.$store.getters.getWordAttributes
   }
 
+  get entityAttributes() {
+    return this.$store.getters.getEntityAttributes
+  }
+
   ///
 
   get selectedFactoidIdOnText() {
@@ -125,6 +138,14 @@ export default class TEIElements extends Vue {
 
   set selectedFactoidIdOnText(value) {
     this.$store.commit('setSelectedFactoidIdOnText', value)
+  }
+
+  get selectedEntityIdOnText() {
+    return this.$store.getters.getSelectedEntityIdOnText
+  }
+
+  set selectedEntityIdOnText(value) {
+    this.$store.commit('setSelectedEntityIdOnText', value)
   }
 
   hasSpanId(element: any) {
@@ -160,18 +181,18 @@ export default class TEIElements extends Vue {
   }
 
   clickFactoid(factoidId: string) {
-    /*
-    this.$router.push(
-      (this as any).localePath({
-        name: 'item-id',
-        params: {
-          id: factoidId,
-        },
-      })
-    )
-    */
+    this.selectedEntityIdOnText = ''
     this.selectedFactoidIdOnText =
       'http://www.example.com/roman-ontology/resource/Factoid/' + factoidId
+  }
+
+  clickEntity(element: any) {
+    this.selectedFactoidIdOnText = ''
+    if (element.attributes) {
+      const id = element.attributes['xml:id']
+      const entityInContextUri = this.entityAttributes[id]
+      this.selectedEntityIdOnText = entityInContextUri
+    }
   }
 }
 </script>

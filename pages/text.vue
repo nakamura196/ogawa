@@ -10,6 +10,10 @@
             v-if="selectedFactoidIdOnText"
             :id="selectedFactoidIdOnText"
           />
+          <EntityNetwork
+            v-if="selectedEntityIdOnText"
+            :id="selectedEntityIdOnText"
+          />
         </v-col>
       </v-row>
     </v-container>
@@ -50,6 +54,26 @@ export default {
         this.$store.commit('setSelectedFactoidIdOnText', value)
       },
     },
+    selectedEntityIdOnText: {
+      // getter 関数
+      get() {
+        return this.$store.getters.getSelectedEntityIdOnText
+      },
+      // setter 関数
+      set(value) {
+        this.$store.commit('setSelectedEntityIdOnText', value)
+      },
+    },
+    entityAttributes: {
+      // getter 関数
+      get() {
+        return this.$store.getters.getEntityAttributes
+      },
+      // setter 関数
+      set(value) {
+        this.$store.commit('setEntityAttributes', value)
+      },
+    },
   },
   async mounted() {
     const res = await axios.get(this.baseUrl + '/xml/BG_1_TEI.xml')
@@ -76,6 +100,7 @@ export default {
     const spans = xmlData.querySelector('spanGrp').querySelectorAll('span')
 
     const metadata = {}
+    const entityAttributes = {}
 
     for (const span of spans) {
       const spanId = span.getAttribute('xml:id')
@@ -100,9 +125,28 @@ export default {
           note,
         })
       }
+
+      // -----
+
+      const names = span.querySelectorAll('name')
+      for (const name of names) {
+        if (!name.getAttribute('corresp')) {
+          continue
+        }
+        const refs = name.querySelectorAll('ref')
+        for (const ref of refs) {
+          if (ref.getAttribute('ana') === 'referencesEntityInContext') {
+            // console.log(name, name.getAttribute('corresp'))
+            const correspId = name.getAttribute('corresp').replace('#', '')
+            const referencesEntityInContextUri = ref.getAttribute('target')
+            entityAttributes[correspId] = referencesEntityInContextUri
+          }
+        }
+      }
     }
 
     this.wordAttributes = metadata
+    this.entityAttributes = entityAttributes
     this.element = df
   },
 }

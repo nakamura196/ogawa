@@ -37,14 +37,14 @@
         </template>
       </v-simple-table>
 
-      <Network :item="item" />
+      <Network :id="item.s" />
     </v-container>
   </div>
 </template>
 <script>
 import axios from 'axios'
 import Breadcrumbs from '~/components/layout/Breadcrumbs.vue'
-import Network from '~/components/Network.vue'
+import Network from '~/components/EntityNetwork.vue'
 const url = process.env.endpoint
 
 export default {

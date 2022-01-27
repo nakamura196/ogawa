@@ -153,8 +153,6 @@ export default {
         filter (?s = <${factoidUri}> || ?o = <${factoidUri}>)
       }`
 
-      console.log(query)
-
       const url = `${endpoint}?query=${encodeURIComponent(query)}`
 
       const { data } = await this.$axios.get(url)

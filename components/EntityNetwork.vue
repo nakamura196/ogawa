@@ -4,7 +4,7 @@
       id="mynetwork"
       ref="network"
       class="mt-5"
-      style="width: 100%; height: 650px; background-color: lightyellow"
+      style="width: 100%; height: 500px; background-color: lightyellow"
       :nodes="nodes"
       :edges="edges"
       :options="options"
@@ -74,16 +74,25 @@ export default {
     network: Network,
   },
   props: {
-    item: {
-      type: Object,
+    id: {
+      type: String,
       require: true,
-      default: () => {},
+      default: '',
     },
+    /*,
+    label: {
+      type: String,
+      require: true,
+      default: '',
+    },
+    */
   },
   data() {
     return {
       nodes: [],
       nodesMap: {},
+      edgesMap: {},
+      contexts: {},
       edges: [],
       options: {
         nodes: {
@@ -93,28 +102,74 @@ export default {
           color: 'lightgray',
         },
       },
-      contexts: {},
       dialog: false,
       selectedContexts: {},
+      item: {},
+      endpoint: process.env.endpoint,
+      timeoutId: null,
     }
   },
   computed: {},
+  watch: {
+    id() {
+      this.init(this.id)
+    },
+  },
   mounted() {
-    this.getRelations()
+    this.init(this.id)
   },
   methods: {
+    async init(id) {
+      // const uri = this.id
+      const uri = id
+
+      // ex:sourceDescription ?description;
+
+      const query4Entity = `
+      prefix fpo: <https://github.com/johnBradley501/FPO/raw/master/fpo.owl#>
+      prefix owl: <http://www.w3.org/2002/07/owl#>
+      prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
+      select distinct * where {
+          ?s ex:eventSince ?eventSince; ex:eventUntil ?eventUntil;
+            ex:contextualAspectOf ?entity .
+          filter (?s = <${uri}> ) .
+          ?entity ex:name ?name; rdf:type ?typeOfEntity .
+          ?eventSince ex:description ?eventSinceDescription .
+          ?eventUntil ex:description ?eventUntilDescription .
+          optional { ?s ex:hasLocation/ex:sourceDescritpion ?locationDescription . }
+      }`
+
+      const { data } = await this.$axios.get(
+        `${this.endpoint}?query=${encodeURIComponent(query4Entity)}`
+      )
+
+      const item = data[0]
+      this.item = item
+
+      // const id = this.id
+      // const item = this.item
+
+      // const id = this.id
+
+      this.getRelations(id) // 1次
+      // this.getRelations(ids) //2次
+
+      // const ids =
+    },
     // pleiadesから緯度・経度情報の取得
-    async getRelations() {
+    async getRelations(id) {
       // 起点となっているノード
+
       const item = this.item
 
-      const endpoint = process.env.endpoint
+      const filter = `?entityInContext = <${id}>`
 
       const query = `prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
       SELECT DISTINCT *
       WHERE {
-        ?entityReference ex:referencesEntityInContext ?entityInContext; ex:referencesEntity/rdf:type ?typeOfEntity . 
-        filter (?entityInContext = <${item.s}>) .
+        ?entityInContext ex:contextualAspectOf ?entity0 .
+        ?entityReference ex:referencesEntityInContext ?entityInContext; ex:referencesEntity/rdf:type ?typeOfEntity .
+        filter (${filter}) .
         ?factoid ?hasReference ?entityReference .
         ?hasReference rdfs:subPropertyOf* ?propertyClass .
         filter (?propertyClass = ex:sceneObjectProperty || ?propertyClass = ex:sceneProperty).
@@ -122,13 +177,13 @@ export default {
         filter (?entityReference != ?entityReference2)
         ?hasReference2 rdfs:subPropertyOf* ?propertyClass .
         ?entityReference2 ex:referencesEntity ?entity; rdf:type ?typeOfEntityReference .
-        OPTIONAL { 
-          ?entityReference2 ex:referencesEntityInContext ?entityInContext2 . 
+        OPTIONAL {
+          ?entityReference2 ex:referencesEntityInContext ?entityInContext2 .
           ?entityInContext2 rdf:type ?typeOfEntityInContext; ex:sourceDescription ?descriptionOfEntityInContext2 }
-        ?entity ex:name ?name; rdf:type ?typeOfEntity2 . 
+        ?entity ex:name ?name; rdf:type ?typeOfEntity2 .
       }`
 
-      const url = `${endpoint}?query=${encodeURIComponent(query)}`
+      const url = `${this.endpoint}?query=${encodeURIComponent(query)}`
 
       const { data } = await this.$axios.get(url)
 
@@ -137,25 +192,28 @@ export default {
       // 各Entityの情報を保存するマップ
       const entities = {}
 
-      // 起点となる人の情報を入れておく
-      entities[item.s] = item
+      // 要検討ポイント。無理やり変換している。
+      id = data[0].entity0
 
-      const edgesMap = {}
-      const nodesMap = {}
+      // 起点となる人の情報を入れておく
+      entities[id] = item
+
+      const edgesMap = this.edgesMap
+      const nodesMap = this.nodesMap
 
       // entityとentityInContextの関係を保持
-      const contexts = {}
+      const contexts = this.contexts
       this.contexts = contexts
 
       for (const relation of data) {
         const factoid = relation.factoid
         if (!relationsByFactoid[factoid]) {
-          relationsByFactoid[factoid] = [item.s]
+          relationsByFactoid[factoid] = [id]
         }
         const relationByFactoid = relationsByFactoid[factoid]
 
         // 起点のノードとentityのつなぐ（entityInContextをつないでいたものから修正）
-        const entityUri = /* relation.entityInContext2 || */ relation.entity
+        const entityUri = relation.entity
         if (!relationByFactoid.includes(entityUri)) {
           relationByFactoid.push(entityUri)
         }
@@ -168,24 +226,6 @@ export default {
             contexts[entityUri] = {}
           }
           contexts[entityUri][entityInContextUri] = relation
-          /*
-          const edgeId = relation.entityInContext2 + ' - ' + relation.entity
-          if (!edgesMap[edgeId]) {
-            edgesMap[edgeId] = {
-              from: relation.entityInContext2,
-              to: relation.entity,
-            }
-          }
-
-          if (!nodesMap[relation.entity]) {
-            nodesMap[relation.entity] = {
-              id: relation.entity,
-              label: relation.name,
-              color: 'green',
-              shape: 'diamond',
-            }
-          }
-          */
         }
       }
 
@@ -195,7 +235,10 @@ export default {
         const combis = combination(relationByFactoid, 2)
 
         for (const combi of combis) {
-          const edgeId = combi[0] + '-' + combi[1]
+          // 名前順にソート
+          const combiArr = [combi[0], combi[1]]
+          combiArr.sort()
+          const edgeId = combiArr.join('-')
 
           if (!edgesMap[edgeId]) {
             edgesMap[edgeId] = {
@@ -217,8 +260,10 @@ export default {
 
             let typeOfEntity1And2 = ''
 
+            // 要検討！！！
+
             // 起点となるノードだったら
-            if (entityUri === item.s) {
+            if (entityUri === id) {
               typeOfEntity1And2 = entities[entityUri].typeOfEntity
             } else {
               typeOfEntity1And2 = entities[entityUri].typeOfEntity2
@@ -266,9 +311,11 @@ export default {
             }
 
             if (!nodesMap[entityUri]) {
+              // const spl = entityUri.split('/')
+              // const ln = spl[spl.length - 1]
               nodesMap[entityUri] = {
                 id: entityUri,
-                label: entities[entityUri].name, // ,
+                label: entities[entityUri].name, // + ' - ' + ln, // ,
                 color,
                 shape,
                 type: nodeType,
@@ -294,6 +341,7 @@ export default {
       this.edges = edges
 
       this.nodesMap = nodesMap
+      this.edgesMap = edgesMap
 
       this.relations = data
     },
@@ -315,6 +363,33 @@ export default {
           this.dialog = true
 
           this.selectedContexts = this.contexts[node.id]
+        }
+      }
+
+      this.onNodeDblClicked(value)
+    },
+
+    async onNodeDblClicked(value) {
+      const nodes = value.nodes
+      if (nodes.length > 0) {
+        const uri = nodes[0]
+        const node = this.nodesMap[uri]
+        if (
+          [
+            'https://github.com/johnBradley501/FPO/raw/master/fpo.owl#Person',
+            'https://github.com/johnBradley501/FPO/raw/master/fpo.owl#Location',
+            'https://github.com/johnBradley501/FPO/raw/master/fpo.owl#Group',
+            'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#Community',
+          ].includes(node.type)
+        ) {
+          const selectedContexts = this.contexts[node.id]
+
+          if (selectedContexts) {
+            // console.log()
+            for (const id of Object.keys(selectedContexts)) {
+              await this.init(id)
+            }
+          }
         }
       }
     },
