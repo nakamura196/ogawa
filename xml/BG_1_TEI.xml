@@ -23,13 +23,7 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/pers_1_0006100031_00001"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_1"/>
             </name>
-            <name type="PersonReference" ana="subject" corresp="#pers_1_2_1_8">
-               
-               <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/pers_1_0006100031_00001"/>
-               <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_1"/>
-            </name> 
             <name type="CommunityReference" ana="whom" corresp="#org_1_2_1_29">
-               
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/comm_1_0006100031_00001"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_1"/>
             </name>
