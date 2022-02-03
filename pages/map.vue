@@ -38,11 +38,11 @@
                         localePath({
                           name: 'item-id',
                           params: {
-                            id: $utils.getIdFromUriOld(factoid),
+                            id: $utils.getIdFromUri(factoid.id),
                           },
                         })
                       "
-                      >{{ factoid }}</nuxt-link
+                      >{{ factoid.description }} ({{ $utils.getIdFromUri(factoid.id).replace("f_", "Fact ") }})</nuxt-link
                     >
                   </td>
                 </tr>
@@ -193,12 +193,18 @@ export default {
   methods: {
     // 地名の一覧を取得する
     async getFilterCriteria() {
-      const endpoint = 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
+      const endpoint = process.env.endpoint
 
       const query = `prefix owl: <http://www.w3.org/2002/07/owl#>
+      prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
       prefix fpo: <https://github.com/johnBradley501/FPO/raw/master/fpo.owl#>
+      prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
       SELECT * WHERE {
-        ?place owl:sameAs ?placeUri; a fpo:Location
+        ?place owl:sameAs ?placeUri; a fpo:Location . 
+
+        ?placeRef ex:referencesEntity ?place .
+        ?factoid ?propertyWhere ?placeRef . 
+        ?factoid a/rdfs:subClassOf* ex:Factoid . 
       }`
 
       const url = `${endpoint}?query=${encodeURIComponent(query)}`
@@ -218,15 +224,15 @@ export default {
       this.searchPerson(placeUri)
     },
     async searchFactoid(placeUri) {
-      const endpoint = 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
+      const endpoint = process.env.endpoint
 
       const query = `prefix owl: <http://www.w3.org/2002/07/owl#>
-      prefix ex2: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
+      prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
 
       SELECT DISTINCT * WHERE {
       ?place owl:sameAs <${placeUri}> .
-      ?placeRef ex2:referencesEntity ?place .
-      ?factoid ?propertyWhere ?placeRef .
+      ?placeRef ex:referencesEntity ?place .
+      ?factoid ?propertyWhere ?placeRef; ex:description ?description . 
       }`
 
       const url = `${endpoint}?query=${encodeURIComponent(query)}`
@@ -235,7 +241,10 @@ export default {
 
       const factoids = []
       for (const item of data) {
-        factoids.push(item.factoid)
+        factoids.push({
+          "id" : item.factoid,
+          "description" : item.description
+        })
       }
       this.factoids = factoids
     },
@@ -243,15 +252,15 @@ export default {
       // テストのために残しています。
       placeUri = 'https://pleiades.stoa.org/places/167922'
 
-      const endpoint = 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
+      const endpoint = process.env.endpoint
 
       const query = `prefix owl: <http://www.w3.org/2002/07/owl#>
-      prefix ex2: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
+      prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
 
       SELECT DISTINCT * WHERE {
         ?place owl:sameAs <${placeUri}> .
-        ?placeRef ex2:contextualAspectOf ?place .
-        ?personInContext ex2:hasLocation ?placeRef .
+        ?placeRef ex:contextualAspectOf ?place .
+        ?personInContext ex:hasLocation ?placeRef .
       }`
 
       const url = `${endpoint}?query=${encodeURIComponent(query)}`
