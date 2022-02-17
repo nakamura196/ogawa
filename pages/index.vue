@@ -16,7 +16,9 @@
         </v-layout>
       </v-parallax>
     </section>
-    <v-container> 小川プロジェクト </v-container>
+    <v-container> 
+      <nuxt-content :document="page" />
+       </v-container>
   </div>
 </template>
 <script>
@@ -28,5 +30,14 @@ export default {
       siteName: process.env.siteName,
     }
   },
+  async asyncData ({ $content }) {
+    const page = await $content('index').fetch()
+
+    console.log({page})
+
+    return {
+      page
+    }
+  }
 }
 </script>

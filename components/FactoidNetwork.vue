@@ -354,6 +354,8 @@ export default {
     },
 
     async getAssociatedObjects(nodesMap, edgesMap) {
+      
+
       const filters = []
       for (const nodeUri in nodesMap) {
         if (nodesMap[nodeUri].type === 'factoid') {
@@ -368,12 +370,14 @@ export default {
       const query = `prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
       prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
       SELECT * WHERE {
-        ?s ex:associatedObject ?ao . ?ao ex:hasLemma/ex:referencesLemma ?lemma .
+        ?s ex:associatedObject ?ao . ?ao ex:hasLemma/ex:referencesLemma ?lemma; a ?type .
         filter (${filter})
-        SERVICE SILENT <https://dydra.com/i2k/lemmabank/sparql> {
+        SERVICE <https://dydra.com/i2k/lemmabank/sparql> {
           ?lemma rdfs:label ?label .
         }
       }`
+
+      // SILENT
 
       const url = `${endpoint}?query=${encodeURIComponent(query)}`
 
@@ -391,65 +395,36 @@ export default {
         }
 
         if (!factoidUri2labels[factoidUri][aoUri]) {
-          factoidUri2labels[factoidUri][aoUri] = []
-        }
-
-        if (!factoidUri2labels[factoidUri][aoUri].includes(label)) {
-          factoidUri2labels[factoidUri][aoUri].push(label)
-        }
-
-        /*
-        const label = item.label
-        const factoidUri = item.s
-        const aoUri = item.ao
-
-        if (!nodesMap[label]) {
-          nodesMap[label] = {
-            id: label,
-            label,
-            // shape: 'box',
-            color: 'pink',
-            shape: 'box',
-            // context: obj[`entityInContext_${key}`],
-            type: 'lemma',
+          factoidUri2labels[factoidUri][aoUri] = {
+            "type" : item.type,
+            "labels" : []
           }
         }
 
-        if (!nodesMap[aoUri]) {
-          nodesMap[aoUri] = {
-            id: aoUri,
-            label: '',
-            // shape: 'box',
-            color: 'yellow',
-            shape: 'box',
-            // context: obj[`entityInContext_${key}`],
-            type: 'ao',
-          }
+        const labels = factoidUri2labels[factoidUri][aoUri].labels
+        if (!labels.includes(label)) {
+          labels.push(label)
         }
+      }
 
-        edgesMap[`${factoidUri}-${aoUri}`] = {
-          from: factoidUri,
-          to: aoUri,
-          // label: this.$utils.getIdFromUri(obj.p, '#'),
-          arrows: 'to',
-          // font: { align: 'middle' },
-          color: 'gray',
+      const aoConfig = {
+        "https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#ConceptualObjectReference" : {
+          "color" : "pink",
+          "shape" : "box"
+        },
+        "https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#PhysicalObjectReference" : {
+          "color" : "gray",
+          "shape" : "diamond"
         }
-
-        edgesMap[`${aoUri}-${label}`] = {
-          from: aoUri,
-          to: label,
-          // label: this.$utils.getIdFromUri(obj.p, '#'),
-          arrows: 'to',
-          // font: { align: 'middle' },
-          color: 'gray',
-        }
-        */
       }
 
       for (const factoidUri in factoidUri2labels) {
         for (const aoUri in factoidUri2labels[factoidUri]) {
-          const labels = factoidUri2labels[factoidUri][aoUri]
+          const aoObj = factoidUri2labels[factoidUri][aoUri]
+          const type = aoObj.type
+
+          //複数のラベルをソートして結合
+          const labels = aoObj.labels
           labels.sort()
           const label = labels.join(' / ')
 
@@ -457,10 +432,8 @@ export default {
             nodesMap[label] = {
               id: label,
               label,
-              // shape: 'box',
-              color: 'pink',
-              shape: 'box',
-              // context: obj[`entityInContext_${key}`],
+              color: aoConfig[type].color,
+              shape: aoConfig[type].shape, 
               type: 'lemma',
             }
           }

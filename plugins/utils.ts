@@ -34,6 +34,63 @@ export class Utils {
 
     return sortedNodes
   }
+
+  getWordListByFactoid(xmlData: any, factoidId: string = ""){
+    // widの一覧を取得する
+    const ws = xmlData.querySelectorAll('w')
+    const wids = []
+    for (const w of ws) {
+      const id = w.getAttribute('xml:id')
+      wids.push(id)
+    }
+
+    let spans = []
+
+    if(factoidId){
+      spans = xmlData.querySelector('spanGrp').querySelectorAll(`span[*|id='${factoidId}']`)
+    } else {
+      spans = xmlData.querySelector('spanGrp').querySelectorAll('span')
+    }
+
+    const wordListByFactoid: any = {}
+
+    for (const span of spans) {
+      const spanId = span.getAttribute('xml:id')
+
+      const type = span.getAttribute('type')
+
+      const from = span.getAttribute('from').slice(1)
+      const to = span.getAttribute('to').slice(1)
+
+      const indexFrom = wids.indexOf(from)
+      const indexTo = wids.indexOf(to)
+
+      const note = span.querySelector('note').textContent
+
+      for (let index = indexFrom; index <= indexTo; index++) {
+        const id = wids[index]
+        if (!wordListByFactoid[id]) {
+          wordListByFactoid[id] = []
+        }
+        wordListByFactoid[id].push({
+          id: spanId,
+          type,
+          note,
+        })
+      }
+    }
+
+    console.log({wordListByFactoid})
+
+    return wordListByFactoid
+  }
+
+  createFactoidTitleFromId(factoidId: any) {
+    if(!factoidId){
+      return ""
+    }
+    return factoidId.replace('f_', 'Fact ')
+  }
 }
 
 export default (_: any, inject: any) => {

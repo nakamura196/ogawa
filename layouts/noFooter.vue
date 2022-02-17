@@ -22,14 +22,6 @@
     <v-main>
       <Nuxt />
     </v-main>
-
-    <v-footer :dark="true" class="mt-5">
-      <v-container>
-        <p class="text-center my-5">
-          <span>&copy; {{ new Date().getFullYear() }}</span>
-        </p>
-      </v-container>
-    </v-footer>
   </v-app>
 </template>
 

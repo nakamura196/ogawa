@@ -81,9 +81,9 @@ export default {
     isLemma() {
       this.drawNetwork()
     },
-    id(){
+    id() {
       this.init(this.id)
-    }
+    },
   },
   props: {
     id: {
@@ -336,7 +336,11 @@ export default {
       }
 
       // objectの情報の追加
-      const res = await this.getAssociatedObjects(nodesMap, edgesMap, relationsByFactoid)
+      const res = await this.getAssociatedObjects(
+        nodesMap,
+        edgesMap,
+        relationsByFactoid
+      )
       nodesMap = res.nodesMap
       edgesMap = res.edgesMap
 
@@ -413,12 +417,14 @@ export default {
       const query = `prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
       prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
       SELECT * WHERE {
-        ?s ex:associatedObject ?ao . ?ao ex:hasLemma/ex:referencesLemma ?lemma .
+        ?s ex:associatedObject ?ao . ?ao ex:hasLemma/ex:referencesLemma ?lemma; a ?type .
         filter (${filter})
-        SERVICE SILENT <https://dydra.com/i2k/lemmabank/sparql> {
+        SERVICE <https://dydra.com/i2k/lemmabank/sparql> {
           ?lemma rdfs:label ?label .
         }
       }`
+
+      // SILENT
 
       const url = `${endpoint}?query=${encodeURIComponent(query)}`
 
@@ -436,17 +442,40 @@ export default {
         }
 
         if (!factoidUri2labels[factoidUri][aoUri]) {
-          factoidUri2labels[factoidUri][aoUri] = []
+          factoidUri2labels[factoidUri][aoUri] = {
+            type: item.type,
+            lemma: item.lemma,
+            labels: [],
+          }
         }
 
-        if (!factoidUri2labels[factoidUri][aoUri].includes(label)) {
-          factoidUri2labels[factoidUri][aoUri].push(label)
+        const labels = factoidUri2labels[factoidUri][aoUri].labels
+        if (!labels.includes(label)) {
+          labels.push(label)
         }
+      }
+
+      const aoConfig = {
+        'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#ConceptualObjectReference':
+          {
+            color: 'pink',
+            shape: 'box',
+          },
+        'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#PhysicalObjectReference':
+          {
+            color: 'gray',
+            shape: 'diamond',
+          },
       }
 
       for (const factoidUri in factoidUri2labels) {
         for (const aoUri in factoidUri2labels[factoidUri]) {
-          const labels = factoidUri2labels[factoidUri][aoUri]
+          const aoObj = factoidUri2labels[factoidUri][aoUri]
+          const type = aoObj.type
+          //const lemma = aoObj.lemma
+
+          //複数のラベルをソートして結合
+          const labels = aoObj.labels
           labels.sort()
           const label = labels.join(' / ')
 
@@ -454,16 +483,14 @@ export default {
             nodesMap[label] = {
               id: label,
               label,
-              // shape: 'box',
-              color: 'pink',
-              shape: 'box',
-              // context: obj[`entityInContext_${key}`],
+              color: aoConfig[type].color,
+              shape: aoConfig[type].shape,
               type: 'lemma',
             }
           }
 
           const relationList = relationsByFactoid[factoidUri]
-          for(const relationUri of relationList){
+          for (const relationUri of relationList) {
             edgesMap[`${relationUri}-${label}`] = {
               from: relationUri,
               to: label,
@@ -473,8 +500,6 @@ export default {
               color: 'gray',
             }
           }
-
-          
         }
       }
 

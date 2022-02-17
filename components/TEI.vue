@@ -182,8 +182,7 @@ export default class TEIElements extends Vue {
 
   clickFactoid(factoidId: string) {
     this.selectedEntityIdOnText = ''
-    this.selectedFactoidIdOnText =
-      'http://www.example.com/roman-ontology/resource/Factoid/' + factoidId
+    this.selectedFactoidIdOnText = factoidId
   }
 
   clickEntity(element: any) {

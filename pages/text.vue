@@ -2,11 +2,11 @@
   <div>
     <v-container fluid>
       <v-row>
-        <v-col style="height: 600px; overflow-y: auto">
+        <v-col :style="`height: ${height}px; overflow-y: auto`">
           <TEI v-if="element" :element="element" />
         </v-col>
-        <v-col>
-          <FactoidNetwork
+        <v-col :style="`height: ${height}px; overflow-y: auto`">
+          <FactoidBlock
             v-if="selectedFactoidIdOnText"
             :id="selectedFactoidIdOnText"
           />
@@ -25,15 +25,24 @@ import axios from 'axios'
 const convert = require('xml-js')
 
 export default {
+  layout: 'noFooter',
   data() {
     return {
       baseUrl: process.env.BASE_URL,
       top: process.env.top,
       siteName: process.env.siteName,
       element: null,
+      height: window.innerHeight - 64,
     }
   },
   computed: {
+    /*
+    height : {
+      get() {
+        return window.innerHeight - 64
+      }
+    },
+    */
     wordAttributes: {
       // getter 関数
       get() {
@@ -81,6 +90,8 @@ export default {
     const parser = new window.DOMParser()
     const xmlData = parser.parseFromString(res.data, 'text/xml')
 
+    console.log({ xmlData })
+
     const df = JSON.parse(
       convert.xml2json(xmlData.querySelector('text').outerHTML, {
         compact: false,
@@ -90,6 +101,9 @@ export default {
 
     // idの一覧を取得する
     const ws = xmlData.querySelectorAll('w')
+
+    console.log({ ws })
+
     const wids = []
     for (const w of ws) {
       const id = w.getAttribute('xml:id')
@@ -148,6 +162,11 @@ export default {
     this.wordAttributes = metadata
     this.entityAttributes = entityAttributes
     this.element = df
+
+    const fId = this.$route.query.f_id
+    if (fId) {
+      this.selectedFactoidIdOnText = fId
+    }
   },
 }
 </script>
