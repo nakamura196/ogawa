@@ -38,8 +38,8 @@ export default {
 
     const words = []
 
-    for (let wid in wordListByFactoid) {
-      let wordText = xmlData
+    for (const wid in wordListByFactoid) {
+      const wordText = xmlData
         .querySelector(`w[*|id='${wid}']`)
         .textContent.trim()
       words.push(wordText)

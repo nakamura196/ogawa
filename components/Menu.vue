@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import { Prop, Component, Vue } from 'nuxt-property-decorator'
+import { Component, Vue } from 'nuxt-property-decorator'
 
 @Component({
   components: {},
