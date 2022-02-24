@@ -25,7 +25,10 @@
         </v-tooltip>
         -->
 
-        <span style="display: inline-block">
+        <span
+          style="display: inline-block"
+          :style="isHightlighted(element) ? 'background-color: #E0E0E0;' : ''"
+        >
           <template v-for="(e, key) in element.elements">
             <TEI :key="key" :element="e"> </TEI>
           </template>
@@ -37,6 +40,7 @@
           >
             <template #activator="{ on, attrs }">
               <div
+                :id="factoid.id"
                 v-bind="attrs"
                 style="margin-bottom: 4px; height: 8px; cursor: pointer"
                 :style="`background-color: ${getTypeColor(factoid.type)}`"
@@ -58,6 +62,7 @@
     </template>
     <template v-else-if="element.name === 'persName'">
       <span
+        :id="element.attributes['xml:id']"
         style="color: red; cursor: pointer"
         @dblclick="clickEntity(element)"
       >
@@ -68,6 +73,7 @@
     </template>
     <template v-else-if="element.name === 'orgName'">
       <span
+        :id="element.attributes['xml:id']"
         style="color: green; cursor: pointer"
         @dblclick="clickEntity(element)"
       >
@@ -78,6 +84,7 @@
     </template>
     <template v-else-if="element.name === 'placeName'">
       <span
+        :id="element.attributes['xml:id']"
         style="color: blue; cursor: pointer"
         @dblclick="clickEntity(element)"
       >
@@ -166,6 +173,19 @@ export default class TEIElements extends Vue {
     }
   }
 
+  isHightlighted(element: any) {
+    let isHightlighted = false
+    const spans = this.getSpanId(element)
+    const fIds = []
+    for (const span of spans) {
+      fIds.push(span.id)
+    }
+    if (fIds.includes(this.selectedFactoidIdOnText)) {
+      isHightlighted = true
+    }
+    return isHightlighted
+  }
+
   getTypeColor(type: any) {
     let color = null
     if (type === 'Contact') {
@@ -189,6 +209,8 @@ export default class TEIElements extends Vue {
     this.selectedFactoidIdOnText = ''
     if (element.attributes) {
       const id = element.attributes['xml:id']
+      // 2/24メモ
+      // this.selectedReferenceEntityIdOnText = id
       const entityInContextUri = this.entityAttributes[id]
       this.selectedEntityIdOnText = entityInContextUri
     }

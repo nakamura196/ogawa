@@ -12,30 +12,38 @@
     >
     </network>
 
-    <div class="my-4">
-      <v-switch v-model="isLemma" :label="`Lemma`"></v-switch>
+    <div class="text-right">
+      <v-switch v-model="isOption" :label="`Option`"></v-switch>
     </div>
 
-    <div class="mt-4">
-      <v-btn small class="ma-1" @click="hierarchical = false"
-        >hierarchicalを使用しない</v-btn
-      >
-      <v-btn small class="ma-1" @click="hierarchical = true"
-        >hierarchicalを使用する</v-btn
-      >
+    <template v-if="isOption">
+      <div class="my-4">
+        <v-switch v-model="isLemma" :label="`Lemma`"></v-switch>
+      </div>
 
-      <v-btn small class="ma-1" @click="sortMethod = 'directed'"
-        >directed</v-btn
-      >
-      <v-btn small class="ma-1" @click="sortMethod = 'hubsize'">hubsize</v-btn>
+      <div class="mt-4">
+        <v-btn small class="ma-1" @click="hierarchical = false"
+          >hierarchicalを使用しない</v-btn
+        >
+        <v-btn small class="ma-1" @click="hierarchical = true"
+          >hierarchicalを使用する</v-btn
+        >
 
-      <v-btn small class="ma-1" @click="physicsEnabled = true"
-        >physicsを使用する</v-btn
-      >
-      <v-btn small class="ma-1" @click="physicsEnabled = false"
-        >physicsを使用しない</v-btn
-      >
-    </div>
+        <v-btn small class="ma-1" @click="sortMethod = 'directed'"
+          >directed</v-btn
+        >
+        <v-btn small class="ma-1" @click="sortMethod = 'hubsize'"
+          >hubsize</v-btn
+        >
+
+        <v-btn small class="ma-1" @click="physicsEnabled = true"
+          >physicsを使用する</v-btn
+        >
+        <v-btn small class="ma-1" @click="physicsEnabled = false"
+          >physicsを使用しない</v-btn
+        >
+      </div>
+    </template>
   </div>
 </template>
 
@@ -65,6 +73,7 @@ export default {
       nodes: [],
       edges: [],
       nodesMap: {},
+      isOption: false,
     }
   },
   computed: {
@@ -114,6 +123,15 @@ export default {
   },
   methods: {
     async getRelatedFactoids() {
+      // 初期化
+
+      this.orgNodes = []
+      this.orgEdges = []
+
+      this.nodes = []
+      this.edge = []
+      this.nodesMap = {}
+
       // const item = this.item
       const factoidUri = this.id
 
@@ -354,8 +372,6 @@ export default {
     },
 
     async getAssociatedObjects(nodesMap, edgesMap) {
-      
-
       const filters = []
       for (const nodeUri in nodesMap) {
         if (nodesMap[nodeUri].type === 'factoid') {
@@ -396,8 +412,8 @@ export default {
 
         if (!factoidUri2labels[factoidUri][aoUri]) {
           factoidUri2labels[factoidUri][aoUri] = {
-            "type" : item.type,
-            "labels" : []
+            type: item.type,
+            labels: [],
           }
         }
 
@@ -408,14 +424,16 @@ export default {
       }
 
       const aoConfig = {
-        "https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#ConceptualObjectReference" : {
-          "color" : "pink",
-          "shape" : "box"
-        },
-        "https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#PhysicalObjectReference" : {
-          "color" : "gray",
-          "shape" : "diamond"
-        }
+        'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#ConceptualObjectReference':
+          {
+            color: 'pink',
+            shape: 'box',
+          },
+        'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#PhysicalObjectReference':
+          {
+            color: 'gray',
+            shape: 'diamond',
+          },
       }
 
       for (const factoidUri in factoidUri2labels) {
@@ -423,7 +441,7 @@ export default {
           const aoObj = factoidUri2labels[factoidUri][aoUri]
           const type = aoObj.type
 
-          //複数のラベルをソートして結合
+          // 複数のラベルをソートして結合
           const labels = aoObj.labels
           labels.sort()
           const label = labels.join(' / ')
@@ -433,7 +451,7 @@ export default {
               id: label,
               label,
               color: aoConfig[type].color,
-              shape: aoConfig[type].shape, 
+              shape: aoConfig[type].shape,
               type: 'lemma',
             }
           }

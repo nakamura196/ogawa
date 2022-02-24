@@ -2,7 +2,7 @@
   <div>
     <v-container fluid>
       <v-row>
-        <v-col :style="`height: ${height}px; overflow-y: auto`">
+        <v-col id="textDiv" :style="`height: ${height}px; overflow-y: auto`">
           <TEI v-if="element" :element="element" />
         </v-col>
         <v-col :style="`height: ${height}px; overflow-y: auto`">
@@ -23,6 +23,7 @@
 import axios from 'axios'
 
 const convert = require('xml-js')
+const { scroller } = require('vue-scrollto/src/scrollTo')
 
 export default {
   layout: 'noFooter',
@@ -84,13 +85,20 @@ export default {
       },
     },
   },
+  watch: {
+    selectedFactoidIdOnText(val) {
+      this.scroll(val)
+    },
+    selectedEntityIdOnText(val) {
+      // console.log('selectedEntityIdOnText', { val })
+      this.scroll(val)
+    },
+  },
   async mounted() {
     const res = await axios.get(this.baseUrl + '/xml/BG_1_TEI.xml')
 
     const parser = new window.DOMParser()
     const xmlData = parser.parseFromString(res.data, 'text/xml')
-
-    console.log({ xmlData })
 
     const df = JSON.parse(
       convert.xml2json(xmlData.querySelector('text').outerHTML, {
@@ -101,8 +109,6 @@ export default {
 
     // idの一覧を取得する
     const ws = xmlData.querySelectorAll('w')
-
-    console.log({ ws })
 
     const wids = []
     for (const w of ws) {
@@ -166,7 +172,29 @@ export default {
     const fId = this.$route.query.f_id
     if (fId) {
       this.selectedFactoidIdOnText = fId
+
+      const self = this
+      setTimeout(function () {
+        self.scroll(fId)
+      }, 500)
     }
+  },
+  methods: {
+    scroll(id) {
+      if (!id) {
+        return
+      }
+      try {
+        const scrollTo = scroller()
+        scrollTo('#' + id, 500, {
+          offset: -100,
+          container: '#textDiv',
+          y: true,
+        })
+      } catch (e) {
+        console.log({ e })
+      }
+    },
   },
 }
 </script>

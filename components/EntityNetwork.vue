@@ -77,14 +77,6 @@ export default {
   components: {
     network: Network,
   },
-  watch: {
-    isLemma() {
-      this.drawNetwork()
-    },
-    id() {
-      this.init(this.id)
-    },
-  },
   props: {
     id: {
       type: String,
@@ -125,6 +117,14 @@ export default {
     }
   },
   computed: {},
+  watch: {
+    isLemma() {
+      this.drawNetwork()
+    },
+    id() {
+      this.init(this.id)
+    },
+  },
   mounted() {
     this.init(this.id)
   },
@@ -472,9 +472,9 @@ export default {
         for (const aoUri in factoidUri2labels[factoidUri]) {
           const aoObj = factoidUri2labels[factoidUri][aoUri]
           const type = aoObj.type
-          //const lemma = aoObj.lemma
+          // const lemma = aoObj.lemma
 
-          //複数のラベルをソートして結合
+          // 複数のラベルをソートして結合
           const labels = aoObj.labels
           labels.sort()
           const label = labels.join(' / ')

@@ -1,14 +1,14 @@
 <template>
   <div>
-    <h2>{{ item.description }} ({{ $utils.createFactoidTitleFromId(id) }})</h2>
+    <h2 class="mb-5">
+      {{ item.description }} ({{ $utils.createFactoidTitleFromId(id) }})
+    </h2>
 
     <template v-if="xml">
       <h3 class="mt-5">このFactoidの典拠</h3>
 
       <span v-html="xml" />
     </template>
-
-    <hr class="my-10" />
 
     <Map
       v-if="markers.length > 0 || geojson"
@@ -19,16 +19,16 @@
 
     <FactoidNetwork :id="item.s" />
 
-    <div class="mt-5">
+    <div v-if="false" class="mt-5">
       <h2>Text</h2>
 
-      <TeiText class="mt-2" :id="item.s"></TeiText>
+      <TeiText :id="item.s" class="mt-2"></TeiText>
     </div>
   </div>
 </template>
 
 <script>
-import { Network } from 'vue-visjs'
+// import { Network } from 'vue-visjs'
 import axios from 'axios'
 import FactoidNetwork from '~/components/FactoidNetwork.vue'
 import TeiText from '~/components/TeiText.vue'
@@ -61,11 +61,14 @@ export default {
       this.init()
     },
   },
-  async mounted() {
+  mounted() {
     this.init()
   },
   methods: {
     async init() {
+      this.geo = {}
+      this.markers = []
+
       await this.getItem()
 
       // pleiadesから緯度・経度情報の取得
