@@ -3,6 +3,7 @@ export const state = () => ({
   entityAttributes: {},
   selectedFactoidIdOnText: '',
   selectedEntityIdOnText: '',
+  selectedReferenceIdOnText: '',
 })
 
 export const mutations = {
@@ -18,6 +19,9 @@ export const mutations = {
   setSelectedEntityIdOnText(state, data) {
     state.selectedEntityIdOnText = data
   },
+  setSelectedReferenceIdOnText(state, data) {
+    state.selectedReferenceIdOnText = data
+  },
 }
 
 export const getters = {
@@ -32,5 +36,8 @@ export const getters = {
   },
   getSelectedEntityIdOnText(state) {
     return state.selectedEntityIdOnText
+  },
+  getSelectedReferenceIdOnText(state) {
+    return state.selectedReferenceIdOnText
   },
 }

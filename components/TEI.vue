@@ -61,37 +61,21 @@
       </template>
     </template>
     <template v-else-if="element.name === 'persName'">
-      <span
-        :id="element.attributes['xml:id']"
-        style="color: red; cursor: pointer"
-        @dblclick="clickEntity(element)"
-      >
-        <template v-for="(e, key) in element.elements">
-          <TEI :key="key" :element="e"> </TEI>
-        </template>
-      </span>
+      <TEI4Entity :element="element"></TEI4Entity>
     </template>
     <template v-else-if="element.name === 'orgName'">
-      <span
-        :id="element.attributes['xml:id']"
-        style="color: green; cursor: pointer"
-        @dblclick="clickEntity(element)"
-      >
-        <template v-for="(e, key) in element.elements">
-          <TEI :key="key" :element="e"> </TEI>
-        </template>
-      </span>
+      <TEI4Entity :element="element"></TEI4Entity>
     </template>
     <template v-else-if="element.name === 'placeName'">
-      <span
-        :id="element.attributes['xml:id']"
-        style="color: blue; cursor: pointer"
-        @dblclick="clickEntity(element)"
-      >
-        <template v-for="(e, key) in element.elements">
-          <TEI :key="key" :element="e"> </TEI>
-        </template>
-      </span>
+      <TEI4Entity :element="element"></TEI4Entity>
+    </template>
+    <template v-else-if="element.name === 'milestone'">
+      <template v-if="element.attributes.unit === 'chapter'">
+        <h3 class="mt-10">Chapter. {{ element.attributes.n }}</h3>
+      </template>
+      <template v-else-if="element.attributes.unit === 'section'">
+        <h4 class="mt-5">Section. {{ element.attributes.n }}</h4>
+      </template>
     </template>
     <template v-else>
       <template v-for="(e, key) in element.elements">
@@ -104,11 +88,13 @@
 <script lang="ts">
 import { Prop, Component, Vue } from 'nuxt-property-decorator'
 import TEI from '~/components/TEI.vue'
+import TEI4Entity from '~/components/TEI4Entity.vue'
 
 @Component({
   name: 'TEI',
   components: {
     TEI,
+    TEI4Entity,
   },
 })
 export default class TEIElements extends Vue {
@@ -154,6 +140,16 @@ export default class TEIElements extends Vue {
   set selectedEntityIdOnText(value) {
     this.$store.commit('setSelectedEntityIdOnText', value)
   }
+
+  get selectedReferenceIdOnText() {
+    return this.$store.getters.getSelectedReferenceIdOnText
+  }
+
+  set selectedReferenceIdOnText(value) {
+    this.$store.commit('setSelectedReferenceIdOnText', value)
+  }
+
+  ///
 
   hasSpanId(element: any) {
     if (element.attributes) {
@@ -203,17 +199,6 @@ export default class TEIElements extends Vue {
   clickFactoid(factoidId: string) {
     this.selectedEntityIdOnText = ''
     this.selectedFactoidIdOnText = factoidId
-  }
-
-  clickEntity(element: any) {
-    this.selectedFactoidIdOnText = ''
-    if (element.attributes) {
-      const id = element.attributes['xml:id']
-      // 2/24メモ
-      // this.selectedReferenceEntityIdOnText = id
-      const entityInContextUri = this.entityAttributes[id]
-      this.selectedEntityIdOnText = entityInContextUri
-    }
   }
 }
 </script>

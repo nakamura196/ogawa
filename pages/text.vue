@@ -10,9 +10,9 @@
             v-if="selectedFactoidIdOnText"
             :id="selectedFactoidIdOnText"
           />
-          <EntityNetwork
+          <EntityBlock
             v-if="selectedEntityIdOnText"
-            :id="selectedEntityIdOnText"
+            :id="$utils.getIdFromUri(selectedEntityIdOnText)"
           />
         </v-col>
       </v-row>
@@ -74,6 +74,16 @@ export default {
         this.$store.commit('setSelectedEntityIdOnText', value)
       },
     },
+    selectedReferenceIdOnText: {
+      // getter 関数
+      get() {
+        return this.$store.getters.getSelectedReferenceIdOnText
+      },
+      // setter 関数
+      set(value) {
+        this.$store.commit('setSelectedReferenceIdOnText', value)
+      },
+    },
     entityAttributes: {
       // getter 関数
       get() {
@@ -89,8 +99,18 @@ export default {
     selectedFactoidIdOnText(val) {
       this.scroll(val)
     },
+
     selectedEntityIdOnText(val) {
-      // console.log('selectedEntityIdOnText', { val })
+      const entityAttributes = this.entityAttributes
+      for (const entityReferenceId in entityAttributes) {
+        const entityInContextId = entityAttributes[entityReferenceId]
+        if (entityInContextId === val) {
+          this.selectedReferenceIdOnText = entityReferenceId
+          break
+        }
+      }
+    },
+    selectedReferenceIdOnText(val) {
       this.scroll(val)
     },
   },

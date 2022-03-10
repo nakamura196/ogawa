@@ -26,6 +26,7 @@
               :key="key"
               class="mt-4"
             >
+              <!--
               <nuxt-link
                 :to="
                   localePath({
@@ -37,6 +38,10 @@
                 "
                 >{{ context.descriptionOfEntityInContext2 }}</nuxt-link
               >
+              -->
+              <a @click="selectedEntityIdOnText = key">
+                {{ context.descriptionOfEntityInContext2 }}
+              </a>
             </li>
           </ul>
         </v-card-text>
@@ -116,7 +121,18 @@ export default {
       timeoutId: null,
     }
   },
-  computed: {},
+  computed: {
+    selectedEntityIdOnText: {
+      // getter 関数
+      get() {
+        return this.$store.getters.getSelectedEntityIdOnText
+      },
+      // setter 関数
+      set(value) {
+        this.$store.commit('setSelectedEntityIdOnText', value)
+      },
+    },
+  },
   watch: {
     isLemma() {
       this.drawNetwork()
@@ -132,6 +148,13 @@ export default {
     async init(id) {
       // const uri = this.id
       const uri = id
+
+      // console.log('aaa', { uri })
+
+      // 要検討。IDが空の場合
+      if (!id) {
+        return
+      }
 
       // ex:sourceDescription ?description;
 
