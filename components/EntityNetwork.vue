@@ -146,6 +146,17 @@ export default {
   },
   methods: {
     async init(id) {
+      // 初期化
+
+      this.orgNodes = []
+      this.orgEdges = []
+
+      this.nodes = []
+      this.edge = []
+      this.nodesMap = {}
+
+      /// /////////////
+
       // const uri = this.id
       const uri = id
 
@@ -179,15 +190,7 @@ export default {
       const item = data[0]
       this.item = item
 
-      // const id = this.id
-      // const item = this.item
-
-      // const id = this.id
-
       this.getRelations(id) // 1次
-      // this.getRelations(ids) //2次
-
-      // const ids =
     },
     // pleiadesから緯度・経度情報の取得
     async getRelations(id) {
@@ -277,7 +280,9 @@ export default {
             edgesMap[edgeId] = {
               from: combi[0],
               to: combi[1],
-              value: 0,
+              // value: 0,
+              color: 'gray',
+              shadow: true,
             }
           }
 
@@ -285,7 +290,7 @@ export default {
 
           for (const entityUri of combi) {
             let color = null
-            let shape = null
+            // const shape = null
             let nodeType = null
 
             const typeOfEntityReference =
@@ -309,14 +314,14 @@ export default {
               ].includes(typeOfEntityReference)
             ) {
               color = 'yellow'
-              shape = 'diamond'
+              // shape = 'diamond'
             } else if (
               [
                 'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#Community',
               ].includes(typeOfEntity1And2)
             ) {
               color = 'red'
-              shape = 'square'
+              // shape = 'square'
               nodeType = typeOfEntity1And2
             } else if (
               // Person
@@ -350,22 +355,33 @@ export default {
                 id: entityUri,
                 label: entities[entityUri].name, // + ' - ' + ln, // ,
                 color,
-                shape,
+                // shape,
+                shape: 'dot',
                 type: nodeType,
+                shadow: true,
+                size: 15,
               }
             }
           }
         }
       }
 
-      // objectの情報の追加
-      const res = await this.getAssociatedObjects(
-        nodesMap,
-        edgesMap,
-        relationsByFactoid
-      )
-      nodesMap = res.nodesMap
-      edgesMap = res.edgesMap
+      // filtersが空になる問題への対応
+      if (Object.keys(relationsByFactoid).length > 0) {
+        // Federate Queryがエラーがになる問題への対応
+        try {
+          // objectの情報の追加
+          const res = await this.getAssociatedObjects(
+            nodesMap,
+            edgesMap,
+            relationsByFactoid
+          )
+          nodesMap = res.nodesMap
+          edgesMap = res.edgesMap
+        } catch (e) {
+          console.error({ e })
+        }
+      }
 
       // ノードとエッジ
       const nodes = []
@@ -447,7 +463,7 @@ export default {
         }
       }`
 
-      // SILENT
+      // SILENT を外した
 
       const url = `${endpoint}?query=${encodeURIComponent(query)}`
 
@@ -507,8 +523,11 @@ export default {
               id: label,
               label,
               color: aoConfig[type].color,
-              shape: aoConfig[type].shape,
+              // shape: aoConfig[type].shape,
+              shape: 'dot',
               type: 'lemma',
+              shadow: true,
+              size: 10,
             }
           }
 
@@ -520,7 +539,8 @@ export default {
               // label: this.$utils.getIdFromUri(obj.p, '#'),
               arrows: 'to',
               // font: { align: 'middle' },
-              color: 'gray',
+              // color: 'gray',
+              shadow: true,
             }
           }
         }
