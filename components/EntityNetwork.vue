@@ -39,7 +39,12 @@
                 >{{ context.descriptionOfEntityInContext2 }}</nuxt-link
               >
               -->
-              <a @click="selectedEntityIdOnText = key">
+              <a
+                @click="
+                  selectedEntityIdOnText = key
+                  isRedraw = true
+                "
+              >
                 {{ context.descriptionOfEntityInContext2 }}
               </a>
             </li>
@@ -132,6 +137,16 @@ export default {
         this.$store.commit('setSelectedEntityIdOnText', value)
       },
     },
+    isRedraw: {
+      // getter 関数
+      get() {
+        return this.$store.getters.getIsRedraw
+      },
+      // setter 関数
+      set(value) {
+        this.$store.commit('setIsRedraw', value)
+      },
+    },
   },
   watch: {
     isLemma() {
@@ -148,12 +163,16 @@ export default {
     async init(id) {
       // 初期化
 
-      this.orgNodes = []
-      this.orgEdges = []
+      if (this.isRedraw) {
+        this.orgNodes = []
+        this.orgEdges = []
 
-      this.nodes = []
-      this.edge = []
-      this.nodesMap = {}
+        this.nodes = []
+        this.edge = []
+        this.nodesMap = {}
+
+        this.isRedraw = false
+      }
 
       /// /////////////
 
@@ -573,6 +592,8 @@ export default {
     },
 
     async onNodeDblClicked(value) {
+      this.isRedraw = false
+
       const nodes = value.nodes
       if (nodes.length > 0) {
         const uri = nodes[0]

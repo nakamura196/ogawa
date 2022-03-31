@@ -43,6 +43,14 @@ export default class TEI4Entity extends Vue {
     this.$store.commit('setSelectedEntityIdOnText', value)
   }
 
+  get isRedraw() {
+    return this.$store.getters.getIsRedraw
+  }
+
+  set isRedraw(value) {
+    this.$store.commit('setIsRedraw', value)
+  }
+
   get selectedReferenceIdOnText() {
     return this.$store.getters.getSelectedReferenceIdOnText
   }
@@ -65,6 +73,7 @@ export default class TEI4Entity extends Vue {
 
   clickEntity(element: any) {
     this.selectedFactoidIdOnText = ''
+    this.isRedraw = true
     if (element.attributes) {
       const id = element.attributes['xml:id'] // referenceId
       this.selectedReferenceIdOnText = id

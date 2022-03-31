@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mb-5">
     <network
       id="mynetwork"
       ref="network"
@@ -21,7 +21,7 @@
         <v-switch v-model="isLemma" :label="`Lemma`"></v-switch>
       </div>
 
-      <div class="mt-4">
+      <div v-if="false" class="mt-4">
         <v-btn small class="ma-1" @click="hierarchical = false"
           >hierarchicalを使用しない</v-btn
         >
@@ -63,9 +63,9 @@ export default {
   },
   data() {
     return {
-      isLemma: true,
-      sortMethod: 'directed',
-      hierarchical: false,
+      isLemma: false,
+      sortMethod: 'hubsize',
+      hierarchical: true,
       physicsEnabled: true,
       orgNodes: [],
       orgEdges: [],
@@ -108,6 +108,26 @@ export default {
       }
 
       return option
+    },
+    selectedFactoidIdOnText: {
+      // getter 関数
+      get() {
+        return this.$store.getters.getSelectedFactoidIdOnText
+      },
+      // setter 関数
+      set(value) {
+        this.$store.commit('setSelectedFactoidIdOnText', value)
+      },
+    },
+    selectedEntityIdOnText: {
+      // getter 関数
+      get() {
+        return this.$store.getters.getSelectedEntityIdOnText
+      },
+      // setter 関数
+      set(value) {
+        this.$store.commit('setSelectedEntityIdOnText', value)
+      },
     },
   },
   watch: {
@@ -204,24 +224,27 @@ export default {
               shape: 'box',
               color: {
                 background: 'white',
+                border: 'white',
               },
               type: 'factoid',
+              shadow: true,
             }
           }
 
           if (!nodesMap[entityNodeUri]) {
             let color = null
-            let shape = null
+            let shape = 'dot' // null
             const entityType = obj[`referencesEntityType_${key}`]
             switch (entityType) {
               case 'https://github.com/johnBradley501/FPO/raw/master/fpo.owl#Location':
                 // 式の結果が value1 に一致する場合に実行する文
                 color = '#98fb98' // 'green'
+                shape = 'dot'
                 break
               case 'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#Community':
                 // 式の結果が value1 に一致する場合に実行する文
                 color = 'red'
-                shape = 'square'
+                shape = 'dot'
                 break
               /*
               case 'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#ConceptualObjectReference':
@@ -238,16 +261,19 @@ export default {
               case 'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#ConceptualObject':
                 // 式の結果が value1 に一致する場合に実行する文
                 color = 'yellow'
-                shape = 'diamond'
+                // shape = 'diamond'
+                shape = 'dot'
                 break
               case 'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#PhysicalObject':
                 // 式の結果が value1 に一致する場合に実行する文
                 color = 'yellow'
-                shape = 'diamond'
+                // shape = 'diamond'
+                shape = 'dot'
                 break
               case 'https://github.com/johnBradley501/FPO/raw/master/fpo.owl#Group':
                 // 式の結果が value1 に一致する場合に実行する文
                 color = 'orange'
+                shape = 'dot'
                 break
               /*
               case value2:
@@ -270,6 +296,8 @@ export default {
               shape,
               // context: obj[`entityInContext_${key}`],
               type: entityType,
+              shadow: true,
+              size: 15,
             }
           }
 
@@ -295,12 +323,14 @@ export default {
           obj.p &&
           ![
             'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#mentionedAsFollow',
+            // 'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#mentionedAsSubsequent',
           ].includes(obj.p)
         ) {
+          const edgeLabel = this.$utils.getIdFromUri(obj.p, '#')
           edgesMap[`${obj.s}-${obj.o}`] = {
             from: obj.s,
             to: obj.o,
-            label: this.$utils.getIdFromUri(obj.p, '#'),
+            label: edgeLabel,
             arrows: 'to',
             // font: { align: 'middle' },
             color: 'gray',
@@ -427,12 +457,12 @@ export default {
         'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#ConceptualObjectReference':
           {
             color: 'pink',
-            shape: 'box',
+            // shape: 'box',
           },
         'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#PhysicalObjectReference':
           {
             color: 'gray',
-            shape: 'diamond',
+            // shape: 'diamond',
           },
       }
 
@@ -451,8 +481,11 @@ export default {
               id: label,
               label,
               color: aoConfig[type].color,
-              shape: aoConfig[type].shape,
+              // shape: aoConfig[type].shape,
+              shape: 'dot',
               type: 'lemma',
+              shadow: true,
+              size: 10,
             }
           }
 
@@ -479,6 +512,7 @@ export default {
         const node = this.nodesMap[uri]
 
         if (node.type === 'factoid') {
+          /*
           this.$router.push(
             this.localePath({
               name: 'item-id',
@@ -487,11 +521,14 @@ export default {
               },
             })
           )
+          */
+          this.selectedFactoidIdOnText = this.$utils.getIdFromUri(node.id)
         } else {
           if (!node.context) {
             alert('contextがありません。')
             return
           }
+          /*
           this.$router.push(
             this.localePath({
               name: 'entity-id',
@@ -500,6 +537,8 @@ export default {
               },
             })
           )
+          */
+          this.selectedEntityIdOnText = this.$utils.getIdFromUri(node.context)
         }
       }
     },

@@ -4,6 +4,7 @@ export const state = () => ({
   selectedFactoidIdOnText: '',
   selectedEntityIdOnText: '',
   selectedReferenceIdOnText: '',
+  isRedraw: false,
 })
 
 export const mutations = {
@@ -22,6 +23,9 @@ export const mutations = {
   setSelectedReferenceIdOnText(state, data) {
     state.selectedReferenceIdOnText = data
   },
+  setIsRedraw(state, data) {
+    state.isRedraw = data
+  },
 }
 
 export const getters = {
@@ -39,5 +43,8 @@ export const getters = {
   },
   getSelectedReferenceIdOnText(state) {
     return state.selectedReferenceIdOnText
+  },
+  getIsRedraw(state) {
+    return state.isRedraw
   },
 }

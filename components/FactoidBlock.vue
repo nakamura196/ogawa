@@ -10,12 +10,15 @@
       <span v-html="xml" />
     </template>
 
-    <Map
-      v-if="markers.length > 0 || geojson"
-      :markers="markers"
-      :center="center"
-      :geojson="geojson"
-    />
+    <template v-if="markers.length > 0 || geojson">
+      <v-switch v-model="isMapDisplayed" :label="`Display Map`"></v-switch>
+      <Map
+        v-if="isMapDisplayed"
+        :markers="markers"
+        :center="center"
+        :geojson="geojson"
+      />
+    </template>
 
     <FactoidNetwork :id="item.s" />
 
@@ -53,6 +56,7 @@ export default {
       center: [51.505, -0.159],
       geojson: null,
       item: {},
+      isMapDisplayed: false,
     }
   },
   computed: {},
