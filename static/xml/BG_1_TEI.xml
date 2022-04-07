@@ -19,40 +19,39 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
    <standOff>
       <spanGrp>
          <span xml:id="f_1" type="Contact" from="#w_1_2_1_8" to="#w_1_2_2_12">
-            <name type="PersonReference" ana="subject" corresp="#pers_1_2_1_8">
+            <name type="PersonReference" ana="subject" target="#pers_1_2_1_8">
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/pers_1_0006100031_00001"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_1"/>
             </name>
-            <name type="CommunityReference" ana="whom" corresp="#org_1_2_1_29">
+            <name type="CommunityReference" ana="whom" target="#org_1_2_1_29">
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/comm_1_0006100031_00001"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_1"/>
             </name>
-            <ref ana="associatedConcept" corresp="#obj_1_2_1_22 #obj_1_2_1_25 #obj_1_2_1_26 #obj_1_2_2_5 #obj_1_2_2_9-10 #obj_1_2_2_11"/>
-            <ref ana="hasPredicate" corresp="#w_1_2_1_30"/>
-            <ref ana="mentionedAsPrecedent" target="#f_2"/>
+            <ref ana="associatedConcept" target="#obj_1_2_1_22 #obj_1_2_1_25 #obj_1_2_1_26 #obj_1_2_2_5 #obj_1_2_2_9-10 #obj_1_2_2_11"/>
+            <ref ana="hasPredicate" target="#w_1_2_1_30"/>
+            <ref ana="mentionedAsPrecedent" target="#f_2 #f_1"/>
             <ref ana="referencesEvent"
                target="http://www.example.com/roman-ontology/resource/event/61BC_31"/>
             <note>Orgetorix persuaded the Helvetians for re-settlement.</note>
          </span>
          <span xml:id="f_2" type="Contact" from="#w_1_3_3_5" to="#w_1_3_3_6">
-            <name type="PersonReference" ana="whom" corresp="#pers_1_3_3_5">
+            <name type="PersonReference" ana="whom" target="#pers_1_3_3_5">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/pers_1_0006100031_00001"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_1"/>
             </name>
-            <name type="CommunityReference" ana="sibject">
+            <name type="CommunityReference" ana="subject">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/comm_1_0006100031_00001"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_1"/>
             </name>
-            <ref ana="hasPredicate" corresp="#w_1_3_3_6"/>
-            <ref ana="mentionedAsPrecedent" target="f_4"/>
+            <ref ana="hasPredicate" target="#w_1_3_3_6"/>
+            <ref ana="mentionedAsPrecedent" target="#f_4 #f_8 #f_11 #f_12"/>
             <ref ana="mentionedAsParallel" target="#f_3"/>
-            <ref ana="mentionedAsSubsequent" target="#f_1"/>
             <note>Orgetorix was elected by the Helvetians to prepare for the re-settlement.</note>
          </span>
          <span xml:id="f_3" type="Contact" from="#w_1_3_3_8" to="#w_1_3_3_14">
-            <name type="PersonReference" ana="subject" corresp="#pers_1_3_3_5">
+            <name type="PersonReference" ana="subject" target="#pers_1_3_3_5">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/pers_1_0006100031_00001"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_1"/>
@@ -62,390 +61,373 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/comm_1_0006100031_00001"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_1"/>
             </name> 
-            <ref ana="associatedConcept" corresp="#obj_1_3_3_10"/>
-            <ref ana="hasPredicate" corresp="#w_1_3_3_13"/>
-            <ref ana="mentionedAsPrecedent" target="f_4"/>
-            <ref ana="mentionedAsParallel" target="#f_2"/>
-            <ref ana="mentionedAsSubsequent" target="#f_1"/>
+            <ref ana="associatedConcept" target="#obj_1_3_3_10"/>
+            <ref ana="hasPredicate" target="#w_1_3_3_13"/>
+            <ref ana="mentionedAsPrecedent" target="#f_4 #f_8 #f_11 #f_12"/>
             <note>Orgetorix received the mission to other tribes for the preparation of the re-settlement.</note>
          </span>
          <span xml:id="f_4" type="Contact" from="#w_1_3_4_4" to="#w_1_3_4_40">
-            <name type="PersonReference" ana="whom" corresp="#pers_1_3_4_5">
+            <name type="PersonReference" ana="whom" target="#pers_1_3_4_5">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_2"/>
             </name> 
-            <name type="PersonReference" ana="subject" corresp="#pers_1_3_3_5">
+            <name type="PersonReference" ana="subject" target="#pers_1_3_3_5">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/pers_1_0006100031_00001"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_1"/>
             </name> 
-            <name type="CommunityReference" ana="associatedPerson" corresp="#org_1_3_4_32-33">
+            <name type="CommunityReference" ana="associatedPerson" target="#org_1_3_4_32-33">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/comm_2_0006100031_00001"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_2"/>
             </name> 
-            <ref ana="associatedConcept" corresp="#obj_1_3_4_30"/>
-            <ref ana="hasPredicate" corresp="#w_1_3_4_4"/>
+            <ref ana="associatedConcept" target="#obj_1_3_4_30"/>
+            <ref ana="hasPredicate" target="#w_1_3_4_4"/>
             <ref ana="mentionedAsPrecedent" target="#f_13"/>
-            <ref ana="mentionedAsSubsequent" target="#f_2 #f_3"/>
             <note>Orgetorix persuaded Casticus, Sequan, to gain the kingship of his own tribe.</note>
          </span>
          <span xml:id="f_5" type="FamilialRelationship" from="#w_1_3_4_5" to="#w_1_3_4_8">
-            <name type="PersonReference" ana='subject' corresp="#pers_1_3_4_5">
+            <name type="PersonReference" ana='subject' target="#pers_1_3_4_5">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_2"/>
             </name> 
-            <name type="PersonReference" ana='whom' corresp="#pers_1_3_4_6">
+            <name type="PersonReference" ana='whom' target="#pers_1_3_4_6">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_3"/>
             </name> 
-            <ref ana="hasProperty" corresp="#w_1_3_4_8"/>
+            <ref ana="hasProperty" target="#w_1_3_4_8"/>
             <note>Casticus was a son of Catamantaloedes.</note>
          </span>
          <span xml:id="f_6" type="SocialRelationship" from="#w_1_3_4_12" to="#w_1_3_4_19">
-            <name type="PersonReference" ana='subject' corresp="#pers_1_3_4_6">
+            <name type="PersonReference" ana='subject' target="#pers_1_3_4_6">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_3"/>
             </name> 
-            <name type="CommunityReference" ana='whom' corresp="#org_1_3_4_16">
+            <name type="CommunityReference" ana='whom' target="#org_1_3_4_16">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_2"/>
             </name> 
-            <ref ana="associatedConcept" corresp="#obj_1_3_4_14"/>
-            <ref ana="hasPredicate" corresp="#w_1_3_4_19"/>
+            <ref ana="associatedConcept" target="#obj_1_3_4_14"/>
+            <ref ana="hasPredicate" target="#w_1_3_4_19"/>
+            <ref ana="mentionedAsPrecedent" target="#f_4"/>
             <note>Catamantaloedes held the kingship of Sequans.</note>
          </span>
          <span xml:id="f_7" type="SocialRelationship" from="#w_1_3_4_21" to="#w_1_3_4_27">
-            <name type="PersonReference" ana='whom' corresp="#pers_1_3_4_6">
+            <name type="PersonReference" ana='whom' target="#pers_1_3_4_6">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_3"/>
             </name> 
-            <name type="InstitutionReference" ana='subject' corresp="#org_1_3_4_22-23-24">
+            <name type="InstitutionReference" ana='subject' target="#org_1_3_4_22-23-24">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/inst/inst_1"/>
             </name> 
-            <ref ana="associatedConcept" corresp="#obj_1_3_4_25"/>
-            <ref ana="hasPredicate" corresp="#w_1_3_4_26"/>
+            <ref ana="associatedConcept" target="#obj_1_3_4_25"/>
+            <ref ana="hasPredicate" target="#w_1_3_4_26"/>
+            <ref ana="mentionedAsPrecedent" target="#f_4"/>
             <note>Roman senat called Catamantaloedes "amicus".</note>
          </span>
          <span xml:id="f_8" type="Contact" from="#w_1_3_5_1" to="#w_1_3_5_24">
-            <name type="PersonReference" ana='subject' corresp="#pers_1_3_3_5">
+            <name type="PersonReference" ana='subject' target="#pers_1_3_3_5">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/pers_1_0006100031_00001"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_1"/>
             </name> 
-            <name type="PersonReference" ana='whom' corresp="#pers_1_3_5_2">
+            <name type="PersonReference" ana='whom' target="#pers_1_3_5_2">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/pers_4_0006100031_00001"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_4"/>
             </name> 
-            <ref ana="associatedConcept" corresp="#obj_1_3_4_30"/>
-            <ref ana="hasPredicate" corresp="#w_1_3_5_24"/>
+            <ref ana="associatedConcept" target="#obj_1_3_4_30"/>
+            <ref ana="hasPredicate" target="#w_1_3_5_24"/>
             <ref ana="mentionedAsParallel" target="#f_11"/>
             <ref ana="mentionedAsPrecedent" target="#f_13"/>
-            <ref ana="mentionedAsSubsequent" target="#f_2 #f_3"/>
             <note>Orgetorix persuaded Dumnorix, Haeduan, to gain the kingship of his own tribe.</note>
          </span>
          <span xml:id="f_9" type="FamilialRelationship" from="#w_1_3_5_1" to="#w_1_3_5_6">
-            <name type="PersonReference" ana='subject' corresp="#pers_1_3_5_1">
+            <name type="PersonReference" ana='subject' target="#pers_1_3_5_1">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_4>"/>
             </name> 
-            <name type="PersonReference" ana='whom' corresp="#pers_1_3_5_6">
+            <name type="PersonReference" ana='whom' target="#pers_1_3_5_6">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_5"/>
             </name> 
-            <ref ana="hasProperty" corresp="#w_1_3_5_5"/>
+            <ref ana="hasProperty" target="#w_1_3_5_5"/>
             <note>Dumnorix was a brother of Diviciacus.</note>
          </span>
          <span xml:id="f_10" type="SocialRelationship" from="#w_1_3_5_6" to="#w_1_3_5_19">
-            <name type="PersonReference" ana='subject' corresp="#pers_1_3_5_6">
+            <name type="PersonReference" ana='subject' target="#pers_1_3_5_6">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/pers_5_0006100031_00001"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_5"/>
             </name> 
-            <name type="CommunityReference" ana='whom' corresp="#org_1_3_5_13">
+            <name type="CommunityReference" ana='whom' target="#org_1_3_5_13">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/comm_3_0006100031_00001"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_3"/>
             </name> 
-            <ref ana="associatedConcept" corresp="#obj_1_3_5_11 #obj_1_3_5_17"/>
-            <ref ana="hasPredicate" corresp="#w_1_3_5_14"/>
+            <ref ana="associatedConcept" target="#obj_1_3_5_11 #obj_1_3_5_17"/>
+            <ref ana="hasPredicate" target="#w_1_3_5_14"/>
             <note>Diviciacus held the "principatus" of Haeduans and most popularity among the people.</note>
          </span>
          <span xml:id="f_11" type="Contact" from="#w_1_3_5_25" to="#w_1_3_5_30">
-            <name type="PersonReference" ana='subject' corresp="#pers_1_3_3_5">
+            <name type="PersonReference" ana='subject' target="#pers_1_3_3_5">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/pers_1_0006100031_00001"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_1"/>
             </name> 
-            <name type="PersonReference" ana='whom' corresp="#pers_1_3_5_1">
+            <name type="PersonReference" ana='whom' target="#pers_1_3_5_1">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/pers_4_0006100031_00001"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_4"/>
             </name>
-            <name type="PersonReference" ana='associatedPerson' corresp="#pers_1_3_5_26-27">
+            <name type="PersonReference" ana='associatedPerson' target="#pers_1_3_5_26-27">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_9"/>
             </name>
-            <ref ana="associatedConcept" corresp="#obj_1_3_5_29"/>
-            <ref ana="hasPredicate" corresp="#w_1_3_5_30"/>
-            <ref ana="mentionedAsParallel" target="#f_8"/>
+            <ref ana="associatedConcept" target="#obj_1_3_5_29"/>
+            <ref ana="hasPredicate" target="#w_1_3_5_30"/>
             <ref ana="mentionedAsPrecedent" target="#f_13"/>
-            <ref ana="mentionedAsSubsequent" target="#f_2 #f_3"/>
             <note>Orgetorix married off his daughter to Dumnorix.</note>
          </span>
          <span xml:id="f_12" type="Contact" from="#w_1_3_6_1" to="#w_1_3_7_26">
-            <name type="PersonReference" ana='subject' corresp="#pers_1_3_3_5">
+            <name type="PersonReference" ana='subject' target="#pers_1_3_3_5">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/pers_1_0006100031_00001"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_1"/>
             </name> 
-            <name type="PersonReference" ana='subject' corresp="#pers_1_3_5_1">
+            <name type="PersonReference" ana='subject' target="#pers_1_3_5_1">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/pers_4_0006100031_00001"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_4"/>
             </name> 
-            <name type="PersonReference" ana='subject' corresp="#pers_1_3_4_5">
+            <name type="PersonReference" ana='subject' target="#pers_1_3_4_5">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_2"/>
             </name> 
-            <ref ana="associatedConcept" corresp="obj_1_3_7_8-9 obj_1_3_7_6"/>
-            <ref ana="hasPredicate" corresp="#w_1_3_7_10"/>
+            <ref ana="associatedConcept" target="obj_1_3_7_8-9 obj_1_3_7_6"/>
+            <ref ana="hasPredicate" target="#w_1_3_7_10"/>
             <ref ana="mentionedAsPrecedent" target="#f_13"/>
-            <ref ana="mentionedAsSubsequent" target="#f_2 #f_3"/>
             <note>Orgetorix, Dumnorix and Casticus gave each other "fides" and "jus jurando".</note>
          </span>
          <span xml:id="f_13" type="Contact" from="#w_1_4_1_1" to="#w_1_4_1_16">
-            <name type="CommunityReference" ana='subject' corresp="#org_1_4_1_4">
+            <name type="CommunityReference" ana='subject' target="#org_1_4_1_4">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/comm_1_0006100031_00001"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_1"/>
             </name> 
-            <name type="PersonReference" ana='whom' corresp="#pers_1_4_1_11">
+            <name type="PersonReference" ana='whom' target="#pers_1_4_1_11">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/pers_1_0006100031_00001"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_1"/>
             </name> 
-            <ref ana="associatedConcept" corresp="#obj_1_4_1_14-15"/>
-            <ref ana="associatedPhysicalObject" corresp="#obj_1_4_1_13"/>
-            <ref ana="hasPredicate" corresp="#w_1_4_1_16"/>
+            <ref ana="associatedConcept" target="#obj_1_4_1_14-15"/>
+            <ref ana="associatedPhysicalObject" target="#obj_1_4_1_13"/>
+            <ref ana="hasPredicate" target="#w_1_4_1_16"/>
             <ref ana="mentionedAsPrecedent" target="#f_14"/>
-            <ref ana="mentionedAsSubsequent" target="#f_4 #f_8 #f_11 #f_12"/>
             <note>Helvetians accused Orgetorix.</note>
          </span>
          <span xml:id="f_14" type="Contact" from="#w_1_4_2_5" to="#w_1_4_2_40">
-            <name type="CommunityReference" ana='whom' corresp="#org_1_4_1_4">
+            <name type="CommunityReference" ana='whom' target="#org_1_4_1_4">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/comm_1_0006100031_00001"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_1"/>
             </name> 
-            <name type="PersonReference" ana='subject' corresp="#pers_1_4_1_11">
+            <name type="PersonReference" ana='subject' target="#pers_1_4_1_11">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/pers_1_0006100031_00001"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_1"/>
             </name> 
-            <ref ana="associatedConcept" corresp="#obj_1_4_2_7 #obj_1_4_2_10 #obj_1_4_2_22 #obj_1_4_2_23"/>
-            <ref ana="hasPredicate" corresp="#w_1_4_2_40"/>
+            <ref ana="associatedConcept" target="#obj_1_4_2_7 #obj_1_4_2_10 #obj_1_4_2_22 #obj_1_4_2_23"/>
+            <ref ana="hasPredicate" target="#w_1_4_2_40"/>
             <ref ana="mentionedAsPrecedent" target="#f_15"/>
-            <ref ana="mentionedAsSubsequent" target="#f_13"/>
             <note>Orgetorix escaped from the tribal court.</note>
          </span>
          <span xml:id="f_15" type="Contact" from="#w_1_4_3_1" to="#w_1_4_3_21">
-            <name type="CommunityReference" ana='subject' corresp="#org_1_4_3_2">
+            <name type="CommunityReference" ana='subject' target="#org_1_4_3_2">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/comm_1_0006100031_00001"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_1"/>
             </name> 
-            <name type="PersonReference" ana='whom' corresp="#pers_1_4_3_19">
+            <name type="PersonReference" ana='whom' target="#pers_1_4_3_19">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/pers_1_0006100031_00001"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_1"/>
             </name> 
-            <ref ana="associatedConcept" corresp="#obj_1_4_3_7 #obj_1_4_3_12"/>
-            <ref ana="hasPredicate" corresp="#w_1_4_3_6"/>
-            <ref ana="mentionedAsPrecedent" />
-            <ref ana="mentionedAsSubsequent" target="#f_14"/>
+            <ref ana="associatedConcept" target="#obj_1_4_3_7 #obj_1_4_3_12"/>
+            <ref ana="hasPredicate" target="#w_1_4_3_6"/>
+            <ref ana="mentionedAsPrecedent" target="#f_16 #f_17 #f_18 #f_19"/>
             <note>Orgetorix was forced to commit suicide by the pressure of the Helvetians.</note>
          </span>
          <span xml:id="f_16" type="Contact" from="#w_1_5_4_1" to="#w_1_5_4_20">
-            <name type="CommunityReference" ana='subject' corresp="#org_1_5_1_6">
+            <name type="CommunityReference" ana='subject' target="#org_1_5_1_6">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/comm_1_0005800025_0005800040"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_1"/>
             </name> 
-            <name type="CommunityReference" ana='whom' corresp="#org_1_5_4_2">
+            <name type="CommunityReference" ana='whom' target="#org_1_5_4_2">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_4"/>
             </name> 
-            <ref ana="associatedPhysicalObject" corresp="#obj_1_5_4_13 #obj_1_5_4_15"/>
-            <ref ana="hasPredicate" corresp="#w_1_5_4_1"/>
-            <ref ana="mentionedAsPrecedent" />
-            <ref ana="mentionedAsSubsequent" target="#f_15"/>
+            <ref ana="associatedPhysicalObject" target="#obj_1_5_4_13 #obj_1_5_4_15"/>
+            <ref ana="hasPredicate" target="#w_1_5_4_1"/>
+            <ref ana="mentionedAsParallel" target="#f_17 #f_18 #f_19"/>
+            <ref ana="mentionedAsPrecedent" target="#f_20"/>
             <note>the Helvetians persuaded Rauracii.</note>
          </span>
          <span xml:id="f_17" type="Contact" from="#w_1_5_4_1" to="#w_1_5_4_20">
-            <name type="CommunityReference" ana='subject' corresp="#org_1_5_1_6">
+            <name type="CommunityReference" ana='subject' target="#org_1_5_1_6">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/comm_1_0005800025_0005800040"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_1"/>
             </name> 
-            <name type="CommunityReference" ana='whom' corresp="#org_1_5_4_4">
+            <name type="CommunityReference" ana='whom' target="#org_1_5_4_4">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_5"/>
             </name> 
-            <ref ana="associatedPhysicalObject" corresp="#obj_1_5_4_13 #obj_1_5_4_15"/>
-            <ref ana="hasPredicate" corresp="#w_1_5_4_1"/>
-            <ref ana="mentionedAsPrecedent" />
-            <ref ana="mentionedAsSubsequent" target="#f_15"/>
+            <ref ana="associatedPhysicalObject" target="#obj_1_5_4_13 #obj_1_5_4_15"/>
+            <ref ana="hasPredicate" target="#w_1_5_4_1"/>
+            <ref ana="mentionedAsPrecedent" target="#f_20"/>
             <note>the Helvetians persuaded Tulingi.</note>
          </span>
          <span xml:id="f_18" type="Contact" from="#w_1_5_4_1" to="#w_1_5_4_20">
-            <name type="CommunityReference" ana='subject' corresp="#org_1_5_1_6">
+            <name type="CommunityReference" ana='subject' target="#org_1_5_1_6">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/comm_1_0005800025_0005800040"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_1"/>
             </name> 
-            <name type="CommunityReference" ana='whom' corresp="#org_1_5_4_6">
+            <name type="CommunityReference" ana='whom' target="#org_1_5_4_6">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_6"/>
             </name> 
-            <ref ana="associatedPhysicalObject" corresp="#obj_1_5_4_13 #obj_1_5_4_15"/>
-            <ref ana="hasPredicate" corresp="#w_1_5_4_1"/>
-            <ref ana="mentionedAsPrecedent" />
-            <ref ana="mentionedAsSubsequent" target="#f_15"/>
+            <ref ana="associatedPhysicalObject" target="#obj_1_5_4_13 #obj_1_5_4_15"/>
+            <ref ana="hasPredicate" target="#w_1_5_4_1"/>
+            <ref ana="mentionedAsPrecedent" target="#f_20"/>
             <note>the Helvetians persuaded Latobrigi.</note>
          </span>
          <span xml:id="f_19" type="Contact" from="#w_1_5_4_22" to="#w_1_5_4_41">
-            <name type="CommunityReference" ana='subject' corresp="#org_1_5_1_6">
+            <name type="CommunityReference" ana='subject' target="#org_1_5_1_6">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/comm_1_0005800025_0005800040"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_1"/>
             </name> 
-            <name type="CommunityReference" ana='whom' corresp="#org_1_5_4_22">
+            <name type="CommunityReference" ana='whom' target="#org_1_5_4_22">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_7"/>
             </name> 
-            <ref ana="associatedConcept" corresp="#obj_1_5_4_39"/>
-            <ref ana="hasPredicate" corresp="#w_1_5_4_41"/>
+            <ref ana="associatedConcept" target="#obj_1_5_4_39"/>
+            <ref ana="hasPredicate" target="#w_1_5_4_41"/>
             <ref ana="mentionedAsPrecedent" target="#f_20"/>
-            <ref ana="mentionedAsSubsequent" target="#f_15"/>
             <note>the Helvetians accepted Boii as their ally.</note>
          </span>
          <span xml:id="f_20" type="Contact" from="#w_1_7_3_2" to="#w_1_7_3_15">
-            <name type="CommunityReference" ana='subject' corresp="#org_1_7_3_5">
+            <name type="CommunityReference" ana='subject' target="#org_1_7_3_5">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/comm_1_0005800025_0005800040"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_1"/>
             </name> 
-            <name type="PersonReference" ana='whom' corresp="#pers_1_7_1_1">
+            <name type="PersonReference" ana='whom' target="#pers_1_7_1_1">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/pers_6_0005800025_0005800040"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_6"/>
             </name> 
-            <name type="LocationReference" ana='atWhere' corresp="#place_1_7_1_30">
+            <name type="LocationReference" ana='atWhere' target="#place_1_7_1_30">
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/place/place_4"/>
             </name> 
-            <ref ana="associatedConcept" corresp="#obj_1_7_3_14"/>
-            <ref ana="hasPredicate" corresp="#w_1_7_3_13"/>
-            <ref ana="mentionedAsPrecedent" />
-            <ref ana="mentionedAsSubsequent" target="#f_19"/>
+            <ref ana="associatedConcept" target="#obj_1_7_3_14"/>
+            <ref ana="hasPredicate" target="#w_1_7_3_13"/>
+            <ref ana="mentionedAsPrecedent" target="#f_23"/>
             <ref ana="referencesEvent"
                target="http://www.example.com/roman-ontology/resource/event/0005800028"/>
             <note>Helvetii send envoys to Caesar when they heard his arrival to Geneve.</note>
          </span>
          <span xml:id="f_21" type="SocialRelationship" from="#w_1_7_3_17" to="#w_1_7_3_24">
-            <name type="CommunityReference" ana='whom' corresp="#org_1_7_3_15">
+            <name type="CommunityReference" ana='whom' target="#org_1_7_3_15">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/comm_1_0005800025_0005800040"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_1"/>
             </name> 
-            <name type="PersonReference" ana='subject' corresp="#pers_1_7_3_19">
+            <name type="PersonReference" ana='subject' target="#pers_1_7_3_19">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_7"/>
             </name> 
-            <ref ana="associatedConcept" corresp="#obj_1_7_3_18 #obj_1_7_3_22"/>
-            <ref ana="hasPredicate" corresp="#w_1_7_3_24"/>
-            <ref ana="mentionedAsPrecedent" />
-            <ref ana="mentionedAsSubsequent" target="#f_20"/>
+            <ref ana="associatedConcept" target="#obj_1_7_3_18 #obj_1_7_3_22"/>
+            <ref ana="hasPredicate" target="#w_1_7_3_24"/>
+            <ref ana="mentionedAsParallel" target="#f_20"/>
             <note>Nammeius was a "princeps" of Helvetian envoys.</note>
          </span>
          <span xml:id="f_22" type="SocialRelationship" from="#w_1_7_3_17" to="#w_1_7_3_24">
-            <name type="CommunityReference" ana='whom' corresp="#org_1_7_3_15">
+            <name type="CommunityReference" ana='whom' target="#org_1_7_3_15">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/comm_1_0005800025_0005800040"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_1"/>
             </name> 
-            <name type="PersonReference" ana='subject' corresp="#pers_1_7_3_21">
+            <name type="PersonReference" ana='subject' target="#pers_1_7_3_21">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_8"/>
             </name> 
-            <ref ana="associatedConcept" corresp="#obj_1_7_3_18 #obj_1_7_3_22"/>
-            <ref ana="hasPredicate" corresp="#w_1_7_3_24"/>
-            <ref ana="mentionedAsPrecedent" />
-            <ref ana="mentionedAsSubsequent" target="#f_20"/>
+            <ref ana="associatedConcept" target="#obj_1_7_3_18 #obj_1_7_3_22"/>
+            <ref ana="hasPredicate" target="#w_1_7_3_24"/>
+            <ref ana="mentionedAsParallel" target="#f_20"/>
             <note> Verucloetius was a "princeps" of Helvetian envoys.</note>
          </span>
          <span xml:id="f_23" type="Contact" from="#w_1_7_3_17" to="#w_1_7_3_28">
-            <name type="PersonReference" ana='subject' corresp="#pers_1_7_3_19">
+            <name type="PersonReference" ana='subject' target="#pers_1_7_3_19">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_7"/>
             </name> 
-            <name type="PersonReference" ana='subject' corresp="#pers_1_7_3_21">
+            <name type="PersonReference" ana='subject' target="#pers_1_7_3_21">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_8"/>
             </name> 
-            <name type="PersonReference" ana='whom' corresp="#pers_1_7_1_1">
+            <name type="PersonReference" ana='whom' target="#pers_1_7_1_1">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/pers_6_0005800025_0005800040"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_6"/>
             </name> 
-            <ref ana="hasPredicate" corresp="#w_1_7_3_27"/>
+            <ref ana="hasPredicate" target="#w_1_7_3_27"/>
             <ref ana="mentionedAsPrecedent" target="#f_24"/>
-            <ref ana="mentionedAsSubsequent" target="#f_20"/>
             <ref ana="referencesEvent"
                target="http://www.example.com/roman-ontology/resource/event/0005800028"/>
             <note>Nammeius and Verucloetius had statement against Caesar.</note>
          </span>
          <span xml:id="f_24" type="Contact" from="#w_1_7_5_13" to="#w_1_7_5_28">
-            <name type="PersonReference" ana='whom' corresp="#pers_1_7_3_19">
+            <name type="PersonReference" ana='whom' target="#pers_1_7_3_19">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_7"/>
             </name> 
-            <name type="PersonReference" ana='whom' corresp="#pers_1_7_3_21">
+            <name type="PersonReference" ana='whom' target="#pers_1_7_3_21">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_8"/>
             </name> 
-            <name type="PersonReference" ana='subject' corresp="#pers_1_7_3_56">
+            <name type="PersonReference" ana='subject' target="#pers_1_7_3_56">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/pers_6_0005800025_0005800040"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_6"/>
             </name> 
-            <ref ana="hasPredicate" corresp="#w_1_7_5_14"/>
+            <ref ana="hasPredicate" target="#w_1_7_5_14"/>
             <ref ana="mentionedAsPrecedent" target="#f_25"/>
-            <ref ana="mentionedAsSubsequent" target="#f_23"/>
             <ref ana="referencesEvent"
                target="http://www.example.com/roman-ontology/resource/event/0005800028"/>
             <note>Caesar responded to the Helvetian envoys (Nammeius and Verucloetius).</note>
          </span>
          <span xml:id="f_25" type="Contact" from="#w_1_8_3_10" to="#w_1_8_3_36">
-            <name type="PersonReference" ana='whom' corresp="#pers_1_7_3_19">
+            <name type="PersonReference" ana='whom' target="#pers_1_7_3_19">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_7"/>
             </name> 
-            <name type="PersonReference" ana='whom' corresp="#pers_1_7_3_21">
+            <name type="PersonReference" ana='whom' target="#pers_1_7_3_21">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_8"/>
             </name> 
-            <name type="PersonReference" ana='subject' corresp="#pers_1_7_3_56">
+            <name type="PersonReference" ana='subject' target="#pers_1_7_3_56">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/pers_6_0005800025_0005800040"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_6"/>
             </name> 
-            <ref ana="associatedConcept" corresp="#obj_1_8_3_17 #obj_1_8_3_19"/>
-            <ref ana="hasPredicate" corresp="#w_1_8_3_15"/>
+            <ref ana="associatedConcept" target="#obj_1_8_3_17 #obj_1_8_3_19"/>
+            <ref ana="hasPredicate" target="#w_1_8_3_15"/>
             <ref ana="mentionedAsPrecedent" target="#f_26"/>
-            <ref ana="mentionedAsSubsequent" target="#f_24"/>
             <ref ana="referencesEvent"
                target="http://www.example.com/roman-ontology/resource/event/0005800028"/>
             <note>When the Helvetian envoys (Nammeius and Verucloetius) came back, Caesar refused to allow them passing the Province.</note>
@@ -456,91 +438,90 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/comm_1_0005800025_0005800040"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_1"/>
             </name> 
-            <name type="PersonReference" ana='whom' corresp="#pers_1_9_2_11">
+            <name type="PersonReference" ana='whom' target="#pers_1_9_2_11">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/pers_4_0005800025_0005800040"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_4"/>
             </name> 
-            <name type="CommunityReference" ana='AssociatedPerson' corresp="#org_1_9_2_19">
+            <name type="CommunityReference" ana='AssociatedPerson' target="#org_1_9_2_19">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/comm_2_0005800025_0005800040"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_2"/>
             </name> 
-            <ref ana="associatedPhysicalObject" corresp="#obj_1_9_2_9"/>
-            <ref ana="associatedConcept" corresp="#obj_1_9_2_17"/>
-            <ref ana="hasPredicate" corresp="#w_1_9_2_13"/>
+            <ref ana="associatedPhysicalObject" target="#obj_1_9_2_9"/>
+            <ref ana="associatedConcept" target="#obj_1_9_2_17"/>
+            <ref ana="hasPredicate" target="#w_1_9_2_13"/>
             <ref ana="mentionedAsPrecedent" target="#f_29"/>
-            <ref ana="mentionedAsSubsequent" target="#f_25"/>
             <note>The Helvetians send envoys to Dumnorix in order to negotiate with the Sequans.</note>
          </span>
          <span xml:id="f_27" type="SocialRelationship" from="#w_1_9_3_1" to="#w_1_9_3_8">
-            <name type="CommunityReference" ana='whom' corresp="#org_1_9_3_6">
+            <name type="CommunityReference" ana='whom' target="#org_1_9_3_6">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_2"/>
             </name> 
-            <name type="PersonReference" ana='subject' corresp="#pers_1_9_3_1">
+            <name type="PersonReference" ana='subject' target="#pers_1_9_3_1">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_4"/>
             </name> 
-            <ref ana="associatedConcept" corresp="#obj_1_9_3_3 #obj_1_9_3_3"/>
-            <ref ana="hasPredicate" corresp="#w_1_9_3_7 #w_1_9_3_8"/>
+            <ref ana="associatedConcept" target="#obj_1_9_3_3 #obj_1_9_3_3"/>
+            <ref ana="hasPredicate" target="#w_1_9_3_7 #w_1_9_3_8"/>
+            <ref ana="mentionedAsParallel" target="#f_26"/>
             <note>Dumnorix had great influence to the Sequans with his "gratia" and "largitio".</note>
          </span>
          <span xml:id="f_28" type="SocialRelationship" from="#w_1_9_3_10" to="#w_1_9_3_22">
-            <name type="CommunityReference" ana='whom' corresp="#org_1_9_3_10">
+            <name type="CommunityReference" ana='whom' target="#org_1_9_3_10">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_1"/>
             </name> 
-            <name type="PersonReference" ana='subject' corresp="#pers_1_9_3_1">
+            <name type="PersonReference" ana='subject' target="#pers_1_9_3_1">
                
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_4"/>
             </name> 
-            <ref ana="associatedConcept" corresp="#obj_1_9_3_12"/>
-            <ref ana="hasProperty" corresp="#w_1_9_3_12"/>
+            <ref ana="associatedConcept" target="#obj_1_9_3_12"/>
+            <ref ana="hasProperty" target="#w_1_9_3_12"/>
+            <ref ana="mentionedAsParallel" target="#f_26"/>
             <note>Dumnorix had favour for the Helvetians.</note>
          </span>
          <span xml:id="f_29" type="Contact" from="#w_1_9_4_1" to="#w_1_9_4_14">
-            <name type="CommunityReference" ana='whom' corresp="#org_1_9_4_6">
+            <name type="CommunityReference" ana='whom' target="#org_1_9_4_6">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/comm_2_0005800025_0005800040"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_2"/>
             </name> 
-            <name type="PersonReference" ana='subject' corresp="#pers_1_9_3_1">
+            <name type="PersonReference" ana='subject' target="#pers_1_9_3_1">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/pers_4_0005800025_0005800040"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_4"/>
             </name> 
-            <name type="CommunityReference" ana='AssociatedPerson' corresp="#org_1_9_4_12">
+            <name type="CommunityReference" ana='AssociatedPerson' target="#org_1_9_4_12">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/comm_1_0005800025_0005800040"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_1"/>
             </name> 
-            <ref ana="hasPredicate" corresp="#w_1_9_4_7"/>
+            <ref ana="hasPredicate" target="#w_1_9_4_7"/>
             <ref ana="mentionedAsPrecedent" target="#f_30"/>
-            <ref ana="mentionedAsSubsequent" target="#f_26"/>
             <note>Dumnorix convinced the Sequans to let the Helvetians pass through their territory.</note>
          </span>
          <span xml:id="f_30" type="Contact" from="#w_1_9_4_16" to="#w_1_9_4_21">
-            <name type="CommunityReference" ana='subject' corresp="#org_1_9_4_6">
+            <name type="CommunityReference" ana='subject' target="#org_1_9_4_6">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/comm_2_0005800025_0005800040"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_2"/>
             </name> 
-            <name type="PersonReference" ana='associatedPerson' corresp="#pers_1_9_3_1">
+            <name type="PersonReference" ana='associatedPerson' target="#pers_1_9_3_1">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/pers_4_0005800025_0005800040"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/pers/pers_4"/>
             </name> 
-            <name type="CommunityReference" ana='subject' corresp="#org_1_9_4_12">
+            <name type="CommunityReference" ana='subject' target="#org_1_9_4_12">
                
                <ref ana="referencesEntityInContext" target="http://www.example.com/roman-ontology/resource/entityInContext/comm_1_0005800025_0005800040"/>
                <ref ana="referencesEntity" target="http://www.example.com/roman-ontology/resource/comm/comm_1"/>
             </name> 
-            <ref ana="associatedPhysicalObject" corresp="#obj_1_9_4_16"/>
-            <ref ana="associatedConcept" corresp="#obj_1_9_4_34 #obj_1_9_4_36"/>
-            <ref ana="hasPredicate" corresp="#w_1_9_4_20"/>
+            <ref ana="associatedPhysicalObject" target="#obj_1_9_4_16"/>
+            <ref ana="associatedConcept" target="#obj_1_9_4_34 #obj_1_9_4_36"/>
+            <ref ana="hasPredicate" target="#w_1_9_4_20"/>
             <ref ana="mentionedAsPrecedent" />
-            <ref ana="mentionedAsSubsequent" target="#f_29"/>
             <note>The Sequans and the Helvetians exchanged hostages.</note>
          </span>
       </spanGrp>
@@ -552,7 +533,7 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                <milestone unit="chapter" n="1"/>
                <milestone unit="section" n="1"/><w xml:id="w_1_1_1_1" lemma="gallia"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/54447 http://lila-erc.eu/data/id/lemma/7760"
-                  >gallia </w><w xml:id="w_1_1_1_2" lemma="sum"
+                  >Gallia </w><w xml:id="w_1_1_1_2" lemma="sum"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/126689">est </w><w xml:id="w_1_1_1_3"
                   lemma="omnis" lemmaRef="http://lila-erc.eu/data/id/lemma/114954">omnis </w><w
                   xml:id="w_1_1_1_4" lemma="diuido"
@@ -566,10 +547,10 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   xml:id="w_1_1_1_10" lemma="unus" lemmaRef="http://lila-erc.eu/data/id/lemma/85636"
                   >unam </w><w xml:id="w_1_1_1_11" lemma="incaleo">incolunt </w><w
                   xml:id="w_1_1_1_12" lemma="belga" lemmaRef="http://lila-erc.eu/data/id/lemma/831"
-                  >belgae </w><w xml:id="w_1_1_1_13" lemma=",">, </w><w xml:id="w_1_1_1_14"
+                  >Belgae </w><w xml:id="w_1_1_1_13" lemma=",">, </w><w xml:id="w_1_1_1_14"
                   lemma="alius" lemmaRef="http://lila-erc.eu/data/id/lemma/88481">aliam </w><w
                   xml:id="w_1_1_1_15" lemma="aquitanus"
-                  lemmaRef="http://lila-erc.eu/data/id/lemma/21581">aquitani </w><w
+                  lemmaRef="http://lila-erc.eu/data/id/lemma/21581">Aquitani </w><w
                   xml:id="w_1_1_1_16" lemma=",">, </w><w xml:id="w_1_1_1_17" lemma="tertius"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/127957">tertiam </w><w
                   xml:id="w_1_1_1_18" lemma="qui" lemmaRef="http://lila-erc.eu/data/id/lemma/121354"
@@ -578,16 +559,16 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   xml:id="w_1_1_1_20" lemma="lingua"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/110562">lingua </w><w
                   xml:id="w_1_1_1_21" lemma="celta" lemmaRef="http://lila-erc.eu/data/id/lemma/2698"
-                  >celtae </w><w xml:id="w_1_1_1_22" lemma=",">, </w><w xml:id="w_1_1_1_23"
+                  >Celtae </w><w xml:id="w_1_1_1_22" lemma=",">, </w><w xml:id="w_1_1_1_23"
                   lemma="noster"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/113882 http://lila-erc.eu/data/id/lemma/15995"
                   >nostra </w><w xml:id="w_1_1_1_24" lemma="gallus"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/104525 http://lila-erc.eu/data/id/lemma/7786 http://lila-erc.eu/data/id/lemma/104318"
-                  >galli </w><w xml:id="w_1_1_1_25" lemma="appello"
+                  >Galli </w><w xml:id="w_1_1_1_25" lemma="appello"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/89581 http://lila-erc.eu/data/id/lemma/89580"
                   >appellantur </w><w xml:id="w_1_1_1_26" lemma=".">. </w>
                <milestone unit="section" n="2"/><w xml:id="w_1_1_2_1" lemma="hic"
-                  lemmaRef="http://lila-erc.eu/data/id/lemma/105455">hi </w><w xml:id="w_1_1_2_2"
+                  lemmaRef="http://lila-erc.eu/data/id/lemma/105455">Hi </w><w xml:id="w_1_1_2_2"
                   lemma="omnis" lemmaRef="http://lila-erc.eu/data/id/lemma/114954">omnes </w><w
                   xml:id="w_1_1_2_3" lemma="lingua"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/110562">lingua </w><w
@@ -603,30 +584,30 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   lemmaRef="http://lila-erc.eu/data/id/lemma/99342">differunt </w><w
                   xml:id="w_1_1_2_11" lemma=".">. </w><w xml:id="w_1_1_2_12" lemma="gallus"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/104525 http://lila-erc.eu/data/id/lemma/7786 http://lila-erc.eu/data/id/lemma/104318"
-                  >gallos </w><w xml:id="w_1_1_2_13" lemma="ab">ab </w><w xml:id="w_1_1_2_14"
-                  lemma="aquita">aquitanis </w><w xml:id="w_1_1_2_15" lemma="garumna"
-                  lemmaRef="http://lila-erc.eu/data/id/lemma/7858">garumna </w><w
+                  >Gallos </w><w xml:id="w_1_1_2_13" lemma="ab">ab </w><w xml:id="w_1_1_2_14"
+                  lemma="aquita">Aquitanis </w><w xml:id="w_1_1_2_15" lemma="garumna"
+                  lemmaRef="http://lila-erc.eu/data/id/lemma/7858">Garumna </w><w
                   xml:id="w_1_1_2_16" lemma="flumen"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/7348 http://lila-erc.eu/data/id/lemma/7349 http://lila-erc.eu/data/id/lemma/103514"
                   >flumen </w><w xml:id="w_1_1_2_17" lemma=",">, </w><w xml:id="w_1_1_2_18"
-                  lemma="ab">a </w><w xml:id="w_1_1_2_19" lemma="belx">belgis </w><w
+                  lemma="ab">a </w><w xml:id="w_1_1_2_19" lemma="belx">Belgis </w><w
                   xml:id="w_1_1_2_20" lemma="matrona"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/13743 http://lila-erc.eu/data/id/lemma/13744 http://lila-erc.eu/data/id/lemma/111722"
-                  >matrona </w><w xml:id="w_1_1_2_21" lemma="et"
+                  >Matrona </w><w xml:id="w_1_1_2_21" lemma="et"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/101541 http://lila-erc.eu/data/id/lemma/101542"
                   >et </w><w xml:id="w_1_1_2_22" lemma="sequanus"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/21387 http://lila-erc.eu/data/id/lemma/21386"
-                  >sequana </w><w xml:id="w_1_1_2_23" lemma="diuido"
+                  >Sequana </w><w xml:id="w_1_1_2_23" lemma="diuido"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/99932">diuidit </w><w
                   xml:id="w_1_1_2_24" lemma=".">. </w><milestone unit="section" n="3"/><w
                   xml:id="w_1_1_3_1" lemma="hic" lemmaRef="http://lila-erc.eu/data/id/lemma/105455"
-                  >horum </w><w xml:id="w_1_1_3_2" lemma="omnis"
+                  >Horum </w><w xml:id="w_1_1_3_2" lemma="omnis"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/114954">omnium </w><w
                   xml:id="w_1_1_3_3" lemma="fors"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/7442 http://lila-erc.eu/data/id/lemma/103683 http://lila-erc.eu/data/id/lemma/103682"
                   >fortissimi </w><w xml:id="w_1_1_3_4" lemma="sum"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/126689">sunt </w><w xml:id="w_1_1_3_5"
-                  lemma="belga" lemmaRef="http://lila-erc.eu/data/id/lemma/831">belgae </w><w
+                  lemma="belga" lemmaRef="http://lila-erc.eu/data/id/lemma/831">Belgae </w><w
                   xml:id="w_1_1_3_6" lemma=",">, </w><w xml:id="w_1_1_3_7" lemma="propterea"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/120712">propterea </w><w
                   xml:id="w_1_1_3_8" lemma="qui" lemmaRef="http://lila-erc.eu/data/id/lemma/121354"
@@ -670,11 +651,11 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   lemmaRef="http://lila-erc.eu/data/id/lemma/126689">sunt </w><w xml:id="w_1_1_3_34"
                   lemma="germanus"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/104526 http://lila-erc.eu/data/id/lemma/104528"
-                  >germanis </w><w xml:id="w_1_1_3_35" lemma=",">, </w><w xml:id="w_1_1_3_36"
+                  >Germanis </w><w xml:id="w_1_1_3_35" lemma=",">, </w><w xml:id="w_1_1_3_36"
                   lemma="qui" lemmaRef="http://lila-erc.eu/data/id/lemma/121354">qui </w><w
                   xml:id="w_1_1_3_37" lemma="trans"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/128567 http://lila-erc.eu/data/id/lemma/128566"
-                  >trans </w><w xml:id="w_1_1_3_38" lemma="rhenum">rhenum </w><w xml:id="w_1_1_3_39"
+                  >trans </w><w xml:id="w_1_1_3_38" lemma="rhenum">Rhenum </w><w xml:id="w_1_1_3_39"
                   lemma="incaleo">incolunt </w><w xml:id="w_1_1_3_40" lemma=",">, </w><w
                   xml:id="w_1_1_3_41" lemma="quicum">quibuscum </w><w xml:id="w_1_1_3_42"
                   lemma="continenter">continenter </w><w xml:id="w_1_1_3_43" lemma="bellum"
@@ -683,15 +664,15 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   lemmaRef="http://lila-erc.eu/data/id/lemma/104536">gerunt </w><w
                   xml:id="w_1_1_3_45" lemma=".">. </w><milestone unit="section" n="4"/><w
                   xml:id="w_1_1_4_1" lemma="qui" lemmaRef="http://lila-erc.eu/data/id/lemma/121354"
-                  >qua </w><w xml:id="w_1_1_4_2" lemma="de"
+                  >Qua </w><w xml:id="w_1_1_4_2" lemma="de"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/97932">de </w><w xml:id="w_1_1_4_3"
                   lemma="causa" lemmaRef="http://lila-erc.eu/data/id/lemma/93253">causa </w><w
-                  xml:id="w_1_1_4_4" lemma="heluetium">heluetii </w><w xml:id="w_1_1_4_5"
+                  xml:id="w_1_1_4_4" lemma="heluetium">Heluetii </w><w xml:id="w_1_1_4_5"
                   lemma="quoque">quoque </w><w xml:id="w_1_1_4_6" lemma="reliquus"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/121488">reliquos </w><w
                   xml:id="w_1_1_4_7" lemma="gallus"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/104525 http://lila-erc.eu/data/id/lemma/7786 http://lila-erc.eu/data/id/lemma/104318"
-                  >gallos </w><w xml:id="w_1_1_4_8" lemma="uirtus"
+                  >Gallos </w><w xml:id="w_1_1_4_8" lemma="uirtus"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/130356 http://lila-erc.eu/data/id/lemma/25179"
                   >uirtute </w><w xml:id="w_1_1_4_9" lemma="praecedo"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/118708">praecedunt </w><w
@@ -704,7 +685,7 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   lemmaRef="http://lila-erc.eu/data/id/lemma/97207 http://lila-erc.eu/data/id/lemma/97202 http://lila-erc.eu/data/id/lemma/97201"
                   >cum </w><w xml:id="w_1_1_4_16" lemma="germanus"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/104526 http://lila-erc.eu/data/id/lemma/104528"
-                  >germanis </w><w xml:id="w_1_1_4_17" lemma="contendo"
+                  >Germanis </w><w xml:id="w_1_1_4_17" lemma="contendo"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/96251">contendunt </w><w
                   xml:id="w_1_1_4_18" lemma=",">, </w><w xml:id="w_1_1_4_19" lemma="cum"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/97207 http://lila-erc.eu/data/id/lemma/97202 http://lila-erc.eu/data/id/lemma/97201"
@@ -730,14 +711,14 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   lemmaRef="http://lila-erc.eu/data/id/lemma/104536">gerunt </w><w
                   xml:id="w_1_1_4_32" lemma=".">. </w><milestone unit="section" n="5"/><w
                   xml:id="w_1_1_5_1" lemma="is" lemmaRef="http://lila-erc.eu/data/id/lemma/109083"
-                  >eorum </w><w xml:id="w_1_1_5_2" lemma="unus"
+                  >Eorum </w><w xml:id="w_1_1_5_2" lemma="unus"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/85636">una </w><w xml:id="w_1_1_5_3"
                   lemma="pars" lemmaRef="http://lila-erc.eu/data/id/lemma/116084">pars </w><w
                   xml:id="w_1_1_5_4" lemma=",">, </w><w xml:id="w_1_1_5_5" lemma="quam"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/74492">quam </w><w xml:id="w_1_1_5_6"
                   lemma="gallus"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/104525 http://lila-erc.eu/data/id/lemma/7786 http://lila-erc.eu/data/id/lemma/104318"
-                  >gallos </w><w xml:id="w_1_1_5_7" lemma="obtineo"
+                  >Gallos </w><w xml:id="w_1_1_5_7" lemma="obtineo"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/114504">obtinere </w><w
                   xml:id="w_1_1_5_8" lemma="dico"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/99301 http://lila-erc.eu/data/id/lemma/99302"
@@ -751,11 +732,11 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   lemma="flumen"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/7348 http://lila-erc.eu/data/id/lemma/7349 http://lila-erc.eu/data/id/lemma/103514"
                   >flumine </w><w xml:id="w_1_1_5_15" lemma="rhodanus"
-                  lemmaRef="http://lila-erc.eu/data/id/lemma/20178">rhodano </w><w
+                  lemmaRef="http://lila-erc.eu/data/id/lemma/20178">Rhodano </w><w
                   xml:id="w_1_1_5_16" lemma=",">, </w><w xml:id="w_1_1_5_17" lemma="contineo"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/96292">continetur </w><w
                   xml:id="w_1_1_5_18" lemma="garumna"
-                  lemmaRef="http://lila-erc.eu/data/id/lemma/7858">garumna </w><w
+                  lemmaRef="http://lila-erc.eu/data/id/lemma/7858">Garumna </w><w
                   xml:id="w_1_1_5_19" lemma="flumen"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/7348 http://lila-erc.eu/data/id/lemma/7349 http://lila-erc.eu/data/id/lemma/103514"
                   >flumine </w><w xml:id="w_1_1_5_20" lemma=",">, </w><w xml:id="w_1_1_5_21"
@@ -763,20 +744,20 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   xml:id="w_1_1_5_22" lemma=",">, </w><w xml:id="w_1_1_5_23" lemma="finis"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/103321 http://lila-erc.eu/data/id/lemma/52244"
                   >finibus </w><w xml:id="w_1_1_5_24" lemma="belga"
-                  lemmaRef="http://lila-erc.eu/data/id/lemma/831">belgarum </w><w
+                  lemmaRef="http://lila-erc.eu/data/id/lemma/831">Belgarum </w><w
                   xml:id="w_1_1_5_25" lemma=",">, </w><w xml:id="w_1_1_5_26" lemma="attingo"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/90555 http://lila-erc.eu/data/id/lemma/90596"
                   >attingit </w><w xml:id="w_1_1_5_27" lemma="etiam"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/101554">etiam </w><w
                   xml:id="w_1_1_5_28" lemma="ab">ab </w><w xml:id="w_1_1_5_29" lemma="sequanus"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/21387 http://lila-erc.eu/data/id/lemma/21386"
-                  >sequanis </w><w xml:id="w_1_1_5_30" lemma="et"
+                  >Sequanis </w><w xml:id="w_1_1_5_30" lemma="et"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/101541 http://lila-erc.eu/data/id/lemma/101542"
                   >et </w><w xml:id="w_1_1_5_31" lemma="heluetia"
-                  lemmaRef="http://lila-erc.eu/data/id/lemma/8924">heluetiis </w><w
+                  lemmaRef="http://lila-erc.eu/data/id/lemma/8924">Heluetiis </w><w
                   xml:id="w_1_1_5_32" lemma="flumen"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/7348 http://lila-erc.eu/data/id/lemma/7349 http://lila-erc.eu/data/id/lemma/103514"
-                  >flumen </w><w xml:id="w_1_1_5_33" lemma="rhenum">rhenum </w><w
+                  >flumen </w><w xml:id="w_1_1_5_33" lemma="rhenum">Rhenum </w><w
                   xml:id="w_1_1_5_34" lemma=",">, </w><w xml:id="w_1_1_5_35" lemma="uergo"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/129867 http://lila-erc.eu/data/id/lemma/84609"
                   >uergit </w><w xml:id="w_1_1_5_36" lemma="ad"
@@ -784,12 +765,12 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   lemma="septentrio" lemmaRef="http://lila-erc.eu/data/id/lemma/124403"
                   >septentriones </w><w xml:id="w_1_1_5_38" lemma=".">. </w><milestone
                   unit="section" n="6"/><w xml:id="w_1_1_6_1" lemma="belga"
-                  lemmaRef="http://lila-erc.eu/data/id/lemma/831">belgae </w><w xml:id="w_1_1_6_2"
+                  lemmaRef="http://lila-erc.eu/data/id/lemma/831">Belgae </w><w xml:id="w_1_1_6_2"
                   lemma="ab">ab </w><w xml:id="w_1_1_6_3" lemma="exterior"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/50940 http://lila-erc.eu/data/id/hypolemma/15814"
                   >extremis </w><w xml:id="w_1_1_6_4" lemma="gallia"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/54447 http://lila-erc.eu/data/id/lemma/7760"
-                  >galliae </w><w xml:id="w_1_1_6_5" lemma="finis"
+                  >Galliae </w><w xml:id="w_1_1_6_5" lemma="finis"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/103321 http://lila-erc.eu/data/id/lemma/52244"
                   >finibus </w><w xml:id="w_1_1_6_6" lemma="orior"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/115264">oriuntur </w><w
@@ -802,7 +783,7 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   lemmaRef="http://lila-erc.eu/data/id/lemma/116084">partem </w><w
                   xml:id="w_1_1_6_12" lemma="flumen"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/7348 http://lila-erc.eu/data/id/lemma/7349 http://lila-erc.eu/data/id/lemma/103514"
-                  >fluminis </w><w xml:id="w_1_1_6_13" lemma="rhenum">rheni </w><w
+                  >fluminis </w><w xml:id="w_1_1_6_13" lemma="rhenum">Rheni </w><w
                   xml:id="w_1_1_6_14" lemma=",">, </w><w xml:id="w_1_1_6_15" lemma="specto"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/125299">spectant </w><w
                   xml:id="w_1_1_6_16" lemma="in" lemmaRef="http://lila-erc.eu/data/id/lemma/106748"
@@ -815,14 +796,14 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   xml:id="w_1_1_6_20" lemma="sol"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/21881 http://lila-erc.eu/data/id/lemma/81101 http://lila-erc.eu/data/id/lemma/125027"
                   >solem </w><w xml:id="w_1_1_6_21" lemma=".">. </w><milestone unit="section" n="7"
-                  /><w xml:id="w_1_1_7_1" lemma="aquitanis">aquitania </w><w xml:id="w_1_1_7_2"
+                  /><w xml:id="w_1_1_7_1" lemma="aquitanis">Aquitania </w><w xml:id="w_1_1_7_2"
                   lemma="ab">a </w><w xml:id="w_1_1_7_3" lemma="garumna"
-                  lemmaRef="http://lila-erc.eu/data/id/lemma/7858">garumna </w><w xml:id="w_1_1_7_4"
+                  lemmaRef="http://lila-erc.eu/data/id/lemma/7858">Garumna </w><w xml:id="w_1_1_7_4"
                   lemma="flumen"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/7348 http://lila-erc.eu/data/id/lemma/7349 http://lila-erc.eu/data/id/lemma/103514"
                   >flumine </w><w xml:id="w_1_1_7_5" lemma="ad"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/87344">ad </w><w xml:id="w_1_1_7_6"
-                  lemma="pyrenaeus" lemmaRef="http://lila-erc.eu/data/id/lemma/19681">pyrenaeos
+                  lemma="pyrenaeus" lemmaRef="http://lila-erc.eu/data/id/lemma/19681">Pyrenaeos
                   </w><w xml:id="w_1_1_7_7" lemma="mons"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/112727 http://lila-erc.eu/data/id/lemma/14879"
                   >montes </w><w xml:id="w_1_1_7_8" lemma="et"
@@ -837,7 +818,7 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   lemma="sum" lemmaRef="http://lila-erc.eu/data/id/lemma/126689">est </w><w
                   xml:id="w_1_1_7_14" lemma="ad" lemmaRef="http://lila-erc.eu/data/id/lemma/87344"
                   >ad </w><w xml:id="w_1_1_7_15" lemma="hispania"
-                  lemmaRef="http://lila-erc.eu/data/id/lemma/9443">hispaniam </w><w
+                  lemmaRef="http://lila-erc.eu/data/id/lemma/9443">Hispaniam </w><w
                   xml:id="w_1_1_7_16" lemma="pertineo"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/117404">pertinet </w><w
                   xml:id="w_1_1_7_17" lemma=";">; </w><w xml:id="w_1_1_7_18" lemma="specto"
@@ -854,7 +835,7 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   xml:id="w_1_1_7_24" lemma=".">. </w></p>
             <p><milestone unit="chapter" n="2"/><milestone unit="section" n="1"/><w
                   xml:id="w_1_2_1_1" lemma="apud" lemmaRef="http://lila-erc.eu/data/id/lemma/89686"
-                  >apud </w><w xml:id="w_1_2_1_2" lemma="heluetio">heluetios </w><w
+                  >Apud </w><w xml:id="w_1_2_1_2" lemma="heluetio">Heluetios </w><w
                   xml:id="w_1_2_1_3" lemma="longe"
                   lemmaRef="http://lila-erc.eu/data/id/hypolemma/25967">longe </w><w
                   xml:id="w_1_2_1_4" lemma="nobilis"
@@ -865,21 +846,21 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   lemmaRef="http://lila-erc.eu/data/id/lemma/101541 http://lila-erc.eu/data/id/lemma/101542"
                   >et </w><w xml:id="w_1_2_1_7" lemma="ditussus">ditissimus </w><persName
                   xml:id="pers_1_2_1_8"><w xml:id="w_1_2_1_8" lemma="orgetorix"
-                     lemmaRef="http://lila-erc.eu/data/id/lemma/16863">orgetorix </w></persName><w
+                     lemmaRef="http://lila-erc.eu/data/id/lemma/16863">Orgetorix </w></persName><w
                   xml:id="w_1_2_1_9" lemma=".">. </w><w xml:id="w_1_2_1_10" lemma="is"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/109083">is </w><w xml:id="w_1_2_1_11"
                   lemma="m"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/111165 http://lila-erc.eu/data/id/lemma/12707 http://lila-erc.eu/data/id/lemma/62971"
-                  >m </w><w xml:id="w_1_2_1_12" lemma=".">. </w><w xml:id="w_1_2_1_13"
-                  lemma="messalum">messala </w><w xml:id="w_1_2_1_14" lemma=",">, </w><w
+                  >M</w><w xml:id="w_1_2_1_12" lemma=".">. </w><w xml:id="w_1_2_1_13"
+                  lemma="messalum">Messala </w><w xml:id="w_1_2_1_14" lemma=",">, </w><w
                   xml:id="w_1_2_1_15" lemma="et"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/101541 http://lila-erc.eu/data/id/lemma/101542"
                   >et </w><w xml:id="w_1_2_1_16" lemma="p"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/115565 http://lila-erc.eu/data/id/lemma/17160"
-                  >p </w><w xml:id="w_1_2_1_17" lemma=".">. </w><w xml:id="w_1_2_1_18" lemma="m"
+                  >P</w><w xml:id="w_1_2_1_17" lemma=".">. </w><w xml:id="w_1_2_1_18" lemma="m"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/111165 http://lila-erc.eu/data/id/lemma/12707 http://lila-erc.eu/data/id/lemma/62971"
-                  >m </w><w xml:id="w_1_2_1_19" lemma=".">. </w><w xml:id="w_1_2_1_20" lemma="pison"
-                  >pisone </w><w xml:id="w_1_2_1_21" lemma="consulus">consulibus </w><objectName xml:id="obj_1_2_1_22"><w
+                  >M</w><w xml:id="w_1_2_1_19" lemma=".">. </w><w xml:id="w_1_2_1_20" lemma="pison"
+                  >Pisone </w><w xml:id="w_1_2_1_21" lemma="consulus">consulibus </w><objectName xml:id="obj_1_2_1_22"><w
                   xml:id="w_1_2_1_22" lemma="regnum"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/121683">regni </w></objectName><w
                   xml:id="w_1_2_1_23" lemma="cupiditas"
@@ -928,13 +909,13 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   lemmaRef="http://lila-erc.eu/data/id/lemma/128484 http://lila-erc.eu/data/id/lemma/129429"
                   >totius </w><w xml:id="w_1_2_2_10" lemma="gallia"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/54447 http://lila-erc.eu/data/id/lemma/7760"
-                  >galliae </w></objectName><w xml:id="w_1_2_2_11" lemma="imperium"
+                  >Galliae </w></objectName><w xml:id="w_1_2_2_11" lemma="imperium"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/106532">imperio </w><w
                   xml:id="w_1_2_2_12" lemma="potior"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/72857 http://lila-erc.eu/data/id/lemma/118660 http://lila-erc.eu/data/id/lemma/118663"
                   >potiri </w><w xml:id="w_1_2_2_13" lemma=".">. </w><milestone unit="section" n="3"
                   /><w xml:id="w_1_2_3_1" lemma="is"
-                  lemmaRef="http://lila-erc.eu/data/id/lemma/109083">id </w><w xml:id="w_1_2_3_2"
+                  lemmaRef="http://lila-erc.eu/data/id/lemma/109083">Id </w><w xml:id="w_1_2_3_2"
                   lemma="hic" lemmaRef="http://lila-erc.eu/data/id/lemma/105455">hoc </w><w
                   xml:id="w_1_2_3_3" lemma="faciliter"
                   lemmaRef="http://lila-erc.eu/data/id/hypolemma/16090">facilius </w><w
@@ -947,7 +928,7 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   lemmaRef="http://lila-erc.eu/data/id/lemma/12215 http://lila-erc.eu/data/id/lemma/110019"
                   >loci </w><w xml:id="w_1_2_3_10" lemma="natura"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/15422 http://lila-erc.eu/data/id/lemma/113421"
-                  >natura </w><w xml:id="w_1_2_3_11" lemma="heluetium">heluetii </w><w
+                  >natura </w><w xml:id="w_1_2_3_11" lemma="heluetium">Heluetii </w><w
                   xml:id="w_1_2_3_12" lemma="contineo"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/96292">continentur </w><w
                   xml:id="w_1_2_3_13" lemma=":">: </w><w xml:id="w_1_2_3_14" lemma="unus"
@@ -957,7 +938,7 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   lemmaRef="http://lila-erc.eu/data/id/lemma/116084">parte </w><w
                   xml:id="w_1_2_3_17" lemma="flumen"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/7348 http://lila-erc.eu/data/id/lemma/7349 http://lila-erc.eu/data/id/lemma/103514"
-                  >flumine </w><w xml:id="w_1_2_3_18" lemma="rhenum">rheno </w><w
+                  >flumine </w><w xml:id="w_1_2_3_18" lemma="rhenum">Rheno </w><w
                   xml:id="w_1_2_3_19" lemma="latissimus">latissimo </w><w xml:id="w_1_2_3_20"
                   lemma="atque" lemmaRef="http://lila-erc.eu/data/id/lemma/90490">atque </w><w
                   xml:id="w_1_2_3_21" lemma="altus">altissimo </w><w xml:id="w_1_2_3_22" lemma=",">,
@@ -965,10 +946,10 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   lemmaRef="http://lila-erc.eu/data/id/lemma/121354">qui </w><w xml:id="w_1_2_3_24"
                   lemma="ager"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/7628 http://lila-erc.eu/data/id/lemma/88060"
-                  >agrum </w><w xml:id="w_1_2_3_25" lemma="heluetium">heluetium </w><w
+                  >agrum </w><w xml:id="w_1_2_3_25" lemma="heluetium">Heluetium </w><w
                   xml:id="w_1_2_3_26" lemma="ab">a </w><w xml:id="w_1_2_3_27" lemma="germanus"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/104526 http://lila-erc.eu/data/id/lemma/104528"
-                  >germanis </w><w xml:id="w_1_2_3_28" lemma="diuido"
+                  >Germanis </w><w xml:id="w_1_2_3_28" lemma="diuido"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/99932">diuidit </w><w
                   xml:id="w_1_2_3_29" lemma=";">; </w><w xml:id="w_1_2_3_30" lemma="alter"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/88457">altera </w><w
@@ -979,7 +960,7 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   lemmaRef="http://lila-erc.eu/data/id/lemma/112727 http://lila-erc.eu/data/id/lemma/14879"
                   >monte </w><w xml:id="w_1_2_3_34" lemma="iura"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/60526 http://lila-erc.eu/data/id/lemma/10965"
-                  >iura </w><w xml:id="w_1_2_3_35" lemma="altus">altissimo </w><w
+                  >Jura </w><w xml:id="w_1_2_3_35" lemma="altus">altissimo </w><w
                   xml:id="w_1_2_3_36" lemma=",">, </w><w xml:id="w_1_2_3_37" lemma="qui"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/121354">qui </w><w xml:id="w_1_2_3_38"
                   lemma="sum" lemmaRef="http://lila-erc.eu/data/id/lemma/126689">est </w><w
@@ -987,32 +968,32 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   lemmaRef="http://lila-erc.eu/data/id/lemma/108393 http://lila-erc.eu/data/id/lemma/108392"
                   >inter </w><w xml:id="w_1_2_3_40" lemma="sequanus"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/21387 http://lila-erc.eu/data/id/lemma/21386"
-                  >sequanos </w><w xml:id="w_1_2_3_41" lemma="et"
+                  >Sequanos </w><w xml:id="w_1_2_3_41" lemma="et"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/101541 http://lila-erc.eu/data/id/lemma/101542"
-                  >et </w><w xml:id="w_1_2_3_42" lemma="heluetio">heluetios </w><w
+                  >et </w><w xml:id="w_1_2_3_42" lemma="heluetio">Heluetios </w><w
                   xml:id="w_1_2_3_43" lemma=";">; </w><w xml:id="w_1_2_3_44" lemma="tertius"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/127957">tertia </w><w
                   xml:id="w_1_2_3_45" lemma="lacus"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/11105 http://lila-erc.eu/data/id/lemma/110374 http://lila-erc.eu/data/id/lemma/110370"
-                  >lacu </w><w xml:id="w_1_2_3_46" lemma="lemannum">lemanno </w><w
+                  >lacu </w><w xml:id="w_1_2_3_46" lemma="lemannum">Lemanno </w><w
                   xml:id="w_1_2_3_47" lemma="et"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/101541 http://lila-erc.eu/data/id/lemma/101542"
                   >et </w><w xml:id="w_1_2_3_48" lemma="flumen"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/7348 http://lila-erc.eu/data/id/lemma/7349 http://lila-erc.eu/data/id/lemma/103514"
                   >flumine </w><w xml:id="w_1_2_3_49" lemma="rhodanus"
-                  lemmaRef="http://lila-erc.eu/data/id/lemma/20178">rhodano </w><w
+                  lemmaRef="http://lila-erc.eu/data/id/lemma/20178">Rhodano </w><w
                   xml:id="w_1_2_3_50" lemma=",">, </w><w xml:id="w_1_2_3_51" lemma="qui"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/121354">qui </w><w xml:id="w_1_2_3_52"
-                  lemma="prouincia" lemmaRef="http://lila-erc.eu/data/id/lemma/120189">prouinciam
+                  lemma="prouincia" lemmaRef="http://lila-erc.eu/data/id/lemma/120189">Prouinciam
                   </w><w xml:id="w_1_2_3_53" lemma="noster"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/113882 http://lila-erc.eu/data/id/lemma/15995"
                   >nostram </w><w xml:id="w_1_2_3_54" lemma="ab">ab </w><w xml:id="w_1_2_3_55"
-                  lemma="heluetia" lemmaRef="http://lila-erc.eu/data/id/lemma/8924">heluetiis </w><w
+                  lemma="heluetia" lemmaRef="http://lila-erc.eu/data/id/lemma/8924">Heluetiis </w><w
                   xml:id="w_1_2_3_56" lemma="diuido"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/99932">diuidit </w><w
                   xml:id="w_1_2_3_57" lemma=".">. </w><milestone unit="section" n="4"/><w
                   xml:id="w_1_2_4_1" lemma="hic" lemmaRef="http://lila-erc.eu/data/id/lemma/105455"
-                  >his </w><w xml:id="w_1_2_4_2" lemma="res"
+                  >His </w><w xml:id="w_1_2_4_2" lemma="res"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/121868">rebus </w><w xml:id="w_1_2_4_3"
                   lemma="facio"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/102758 http://lila-erc.eu/data/id/lemma/51124"
@@ -1095,7 +1076,7 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   lemmaRef="http://lila-erc.eu/data/id/lemma/106748">in </w><w xml:id="w_1_2_5_25"
                   lemma="latitudo"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/110033 http://lila-erc.eu/data/id/lemma/110058"
-                  >latitudinem </w><w xml:id="w_1_2_5_26" lemma="clxxx">clxxx </w><w
+                  >latitudinem </w><w xml:id="w_1_2_5_26" lemma="clxxx">CLXXX </w><w
                   xml:id="w_1_2_5_27" lemma="pateo"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/116202">patebant </w><w
                   xml:id="w_1_2_5_28" lemma=".">. </w></p>
