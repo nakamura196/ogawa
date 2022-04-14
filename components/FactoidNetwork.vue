@@ -4,42 +4,43 @@
       id="mynetwork"
       ref="network"
       class="mt-5"
-      style="width: 100%; height: 500px; background-color: lightyellow"
+      style="width: 100%; height: 500px; "
       :nodes="nodes"
       :edges="edges"
       :options="options"
       @click="onNodeSelected"
     >
+    <!-- background-color: lightyellow -->
     </network>
 
-    <div class="text-right">
+    <div v-if="false" class="text-right">
       <v-switch v-model="isOption" :label="`Option`"></v-switch>
     </div>
 
-    <template v-if="isOption">
-      <div class="my-4">
+    <template v-if="isOption || true">
+      <div class="mt-4">
         <v-switch v-model="isLemma" :label="`Lemma`"></v-switch>
       </div>
 
-      <div v-if="false" class="mt-4">
-        <v-btn small class="ma-1" @click="hierarchical = false"
+      <div class="mt-4">
+        <v-btn color="secondary" depressed rounded small class="ma-1" @click="hierarchical = false"
           >hierarchicalを使用しない</v-btn
         >
-        <v-btn small class="ma-1" @click="hierarchical = true"
+        <v-btn color="secondary" depressed rounded small class="ma-1" @click="hierarchical = true"
           >hierarchicalを使用する</v-btn
         >
 
-        <v-btn small class="ma-1" @click="sortMethod = 'directed'"
+        <v-btn color="secondary" depressed rounded small class="ma-1" @click="sortMethod = 'directed'"
           >directed</v-btn
         >
-        <v-btn small class="ma-1" @click="sortMethod = 'hubsize'"
+        <v-btn color="secondary" depressed rounded small class="ma-1" @click="sortMethod = 'hubsize'"
           >hubsize</v-btn
         >
 
-        <v-btn small class="ma-1" @click="physicsEnabled = true"
+        <v-btn color="secondary" depressed rounded small class="ma-1" @click="physicsEnabled = true"
           >physicsを使用する</v-btn
         >
-        <v-btn small class="ma-1" @click="physicsEnabled = false"
+        <v-btn color="secondary" depressed rounded small class="ma-1" @click="physicsEnabled = false"
           >physicsを使用しない</v-btn
         >
       </div>
@@ -64,9 +65,9 @@ export default {
   data() {
     return {
       isLemma: false,
-      sortMethod: 'hubsize',
+      sortMethod: "directed", // 'hubsize',
       hierarchical: true,
-      physicsEnabled: true,
+      physicsEnabled: false,
       orgNodes: [],
       orgEdges: [],
 
@@ -155,7 +156,7 @@ export default {
       // const item = this.item
       const factoidUri = this.id
 
-      const endpoint = process.env.endpoint // 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
+      const endpoint = process.env.endpoint
 
       const query = `prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
       prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -333,7 +334,7 @@ export default {
             label: edgeLabel,
             arrows: 'to',
             // font: { align: 'middle' },
-            color: 'gray',
+            color: "orange", // 'gray',
           }
         }
       }
@@ -409,15 +410,19 @@ export default {
         }
       }
 
+      if (filters.length === 0) {
+        return { nodesMap, edgesMap }
+      }
+
       const filter = filters.join(' || ')
 
       const endpoint = process.env.endpoint // 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
 
-      const query = `prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
-      prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+      const query = `PREFIX ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
+      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
       SELECT * WHERE {
-        ?s ex:associatedObject ?ao . ?ao ex:hasLemma/ex:referencesLemma ?lemma; a ?type .
-        filter (${filter})
+        ?s ?v ?ao . ?ao ex:hasLemma/ex:referencesLemma ?lemma; a ?type .
+        FILTER (${filter})
         SERVICE <https://dydra.com/i2k/lemmabank/sparql> {
           ?lemma rdfs:label ?label .
         }

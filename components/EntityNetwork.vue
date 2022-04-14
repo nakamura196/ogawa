@@ -4,12 +4,13 @@
       id="mynetwork"
       ref="network"
       class="mt-5"
-      style="width: 100%; height: 500px; background-color: lightyellow"
+      style="width: 100%; height: 500px;"
       :nodes="nodes"
       :edges="edges"
       :options="options"
       @click="onNodeSelected"
     >
+    <!-- background-color: lightyellow -->
     </network>
 
     <div class="my-4">
@@ -475,7 +476,7 @@ export default {
       const query = `prefix ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
       prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
       SELECT * WHERE {
-        ?s ex:associatedObject ?ao . ?ao ex:hasLemma/ex:referencesLemma ?lemma; a ?type .
+        ?s ?v ?ao . ?ao ex:hasLemma/ex:referencesLemma ?lemma; a ?type .
         filter (${filter})
         SERVICE <https://dydra.com/i2k/lemmabank/sparql> {
           ?lemma rdfs:label ?label .

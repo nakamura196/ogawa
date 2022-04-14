@@ -170,14 +170,13 @@ export default {
 
       const names = span.querySelectorAll('name')
       for (const name of names) {
-        if (!name.getAttribute('corresp')) {
+        if (!name.getAttribute('target')) {
           continue
         }
         const refs = name.querySelectorAll('ref')
         for (const ref of refs) {
           if (ref.getAttribute('ana') === 'referencesEntityInContext') {
-            // console.log(name, name.getAttribute('corresp'))
-            const correspId = name.getAttribute('corresp').replace('#', '')
+            const correspId = name.getAttribute('target').replace('#', '')
             const referencesEntityInContextUri = ref.getAttribute('target')
             entityAttributes[correspId] = referencesEntityInContextUri
           }
