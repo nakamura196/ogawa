@@ -4,7 +4,7 @@
       id="mynetwork"
       ref="network"
       class="mt-5"
-      style="width: 100%; height: 500px; "
+      style="width: 100%; height: 500px; border: 1px solid lightgray;"
       :nodes="nodes"
       :edges="edges"
       :options="options"

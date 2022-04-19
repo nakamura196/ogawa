@@ -13,7 +13,7 @@
     <template v-if="markers.length > 0 || geojson">
       <v-switch v-model="isMapDisplayed" :label="`Display Map`"></v-switch>
       <Map
-        v-if="isMapDisplayed"
+        v-show="isMapDisplayed"
         :markers="markers"
         :center="center"
         :geojson="geojson"
