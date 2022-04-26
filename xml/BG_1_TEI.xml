@@ -2658,9 +2658,9 @@ schematypens="http://purl.oclc.org/dsdl/schematron"?>
                   xml:id="w_1_9_4_37" lemma="transeo"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/128591">transeant </w><w
                   xml:id="w_1_9_4_38" lemma=".">. </w></p>
-            <p><milestone unit="chapter" n="10"/><milestone unit="section" n="1"/><w
+            <p><milestone unit="chapter" n="10"/><milestone unit="section" n="1"/><persName xml:id="pers_1_10_1_1"><w
                   xml:id="w_1_10_1_1" lemma="caeso" lemmaRef="http://lila-erc.eu/data/id/lemma/1970"
-                  >caesari </w><w xml:id="w_1_10_1_2" lemma="renuntio"
+                  >caesari </w></persName><w xml:id="w_1_10_1_2" lemma="renuntio"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/122637">renuntiatur </w><w
                   xml:id="w_1_10_1_3" lemma="heluetia"
                   lemmaRef="http://lila-erc.eu/data/id/lemma/8924">heluetiis </w><w
