@@ -35,8 +35,31 @@ export default {
       const query = `PREFIX ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
         SELECT * WHERE {
           ?s ?v ?o; ex:description ?desc_s . 
+          OPTIONAL {
+            ?s ?related_so ?s_o .
+            {
+              ?s_o ex:referencesEntityInContext ?entityInContext_s; ex:referencesEntity ?referencesEntity_s .
+            }
+            UNION
+            {
+              ?s_o ex:referencesEntity ?referencesEntity_s .
+            }
+            ?referencesEntity_s ex:name ?referencesEntityName_s; rdf:type ?referencesEntityType_s
+          }
           ?o ex:description ?desc_o .
           filter (?v = ex:mentionedAsPrecedent || ?v = ex:mentionedAsParallel || ?v = ex:hasContent)
+
+          OPTIONAL {
+            ?o ?related_oo ?o_o .
+            {
+              ?o_o ex:referencesEntityInContext ?entityInContext_o; ex:referencesEntity ?referencesEntity_o .
+            }
+            UNION
+            {
+              ?o_o ex:referencesEntity ?referencesEntity_o .
+            }
+            ?referencesEntity_o ex:name ?referencesEntityName_o; rdf:type ?referencesEntityType_o . 
+          }
         }`
 
       const endpoint = process.env.endpoint
@@ -45,6 +68,8 @@ export default {
 
       const { data } = await this.$axios.get(url)
 
+      console.log({data})
+
       const nodesMap = {}
       const edgesMap = {}
 
@@ -52,6 +77,7 @@ export default {
         const keys = ['s', 'o']
         for (const key of keys) {
           const node = obj[key]
+          // factoid
           if (!nodesMap[node]) {
             nodesMap[node] = {
               id: node,
@@ -61,16 +87,44 @@ export default {
               original_color: "orange"
             }
           }
+
+          // referencesEntity
+          const referencesEntityNode = obj[`referencesEntity_${key}`]
+          if (!nodesMap[referencesEntityNode]) {
+            nodesMap[referencesEntityNode] = {
+              id: referencesEntityNode,
+              label: obj[`referencesEntityName_${key}`],
+              shape: 'dot',
+              color: "pink",
+              original_color: "pink"
+            }
+          }
+
+          // factoidとreferencesEntity間のエッジ
+          const edge4referencesEntity = `${node}-${referencesEntityNode}`
+          edgesMap[edge4referencesEntity] = {
+            from: node,
+            to: referencesEntityNode,
+            // color: "blue",
+            arrows: {
+              to: {
+                enabled: true,
+                type: 'arrow'
+              }
+            }
+          }
         }      
 
         const nodeS = obj.s
         const nodeO = obj.o
 
+        // factoid間のエッジ
         const edge = `${nodeS}-${nodeO}`
-
+    
         edgesMap[edge] = {
-          from: node_s,
-          to: node_o,
+          from: nodeS,
+          to: nodeO,
+          
           arrows: {
             to: {
               enabled: true,
@@ -78,6 +132,10 @@ export default {
             }
           }
         }
+
+        
+
+        
 
       }
 
