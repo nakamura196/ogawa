@@ -6,14 +6,8 @@
           <TEI v-if="element" :element="element" />
         </v-col>
         <v-col :style="`height: ${height}px; overflow-y: auto`">
-          <!--
           <FactoidBlock
             v-if="selectedFactoidIdOnText"
-            :id="selectedFactoidIdOnText"
-          />
-          -->
-          <!-- v-if="selectedFactoidIdOnText" -->
-          <FactoidBlock2
             :id="selectedFactoidIdOnText"
           />
           <EntityBlock

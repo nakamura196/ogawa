@@ -10,6 +10,9 @@
       @click="neighbourhoodHighlight"
     >
     </network>
+    <div class="mt-4">
+        <v-switch v-model="isLemma" :label="`Lemma`"></v-switch>
+      </div>
   </v-container>
 </template>
 <script>
@@ -23,12 +26,20 @@ export default {
   },
   data() {
     return {
+      isLemma: false,
       nodes: [],
       edges: [],
       nodesMap: {},
       edgesMap: {},
       options: {
-      }
+      },
+      orgNodes: [],
+      orgEdges: [],
+    }
+  },
+  watch: {
+    isLemma() {
+      this.drawNetwork()
     }
   },
    async mounted() {
@@ -68,10 +79,8 @@ export default {
 
       const { data } = await this.$axios.get(url)
 
-      console.log({data})
-
-      const nodesMap = {}
-      const edgesMap = {}
+      let nodesMap = {}
+      let edgesMap = {}
 
       for (const obj of data) {
         const keys = ['s', 'o']
@@ -84,19 +93,47 @@ export default {
               label: obj[`desc_${key}`],
               shape: 'dot',
               color: "orange",
-              original_color: "orange"
+              shadow: true,
+              original_color: "orange",
+              type: 'factoid'
             }
           }
 
           // referencesEntity
           const referencesEntityNode = obj[`referencesEntity_${key}`]
           if (!nodesMap[referencesEntityNode]) {
+            const referencesEntityType= obj[`referencesEntityType_${key}`]
+            // const localReferencesEntityType = referencesEntityType.split("#")[1]
+            let color = null
+            switch (referencesEntityType) {
+              case 'https://github.com/johnBradley501/FPO/raw/master/fpo.owl#Location':
+                // 式の結果が value1 に一致する場合に実行する文
+                color = '#98fb98'
+                break
+              case 'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#Community':
+                // 式の結果が value1 に一致する場合に実行する文
+                color = 'red'
+                break
+              case 'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#ConceptualObject':
+                // 式の結果が value1 に一致する場合に実行する文
+                color = 'yellow'
+                break
+              case 'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#PhysicalObject':
+                // 式の結果が value1 に一致する場合に実行する文
+                color = 'yellow'
+                break
+              case 'https://github.com/johnBradley501/FPO/raw/master/fpo.owl#Group':
+                // 式の結果が value1 に一致する場合に実行する文
+                color = 'orange'
+                break
+            }
             nodesMap[referencesEntityNode] = {
               id: referencesEntityNode,
               label: obj[`referencesEntityName_${key}`],
               shape: 'dot',
-              color: "pink",
-              original_color: "pink"
+              color,
+              shadow: true,
+              original_color: color
             }
           }
 
@@ -131,14 +168,12 @@ export default {
               type: 'arrow'
             }
           }
-        }
-
-        
-
-        
-
+        }    
       }
 
+      const res = await this.getAssociatedObjects(nodesMap, edgesMap)
+      nodesMap = res.nodesMap
+      edgesMap = res.edgesMap
 
       this.nodesMap = nodesMap
       this.edgesMap = edgesMap
@@ -154,10 +189,158 @@ export default {
         edges.push(edgesMap[edge])
       }
       
+      // this.nodes = nodes
+      // this.edges = edges
+
+      // 全データの格納
+      this.orgEdges = edges
+      this.orgNodes = nodes
+
+      // 描画
+      this.drawNetwork()
+   },
+   
+   methods: {
+     async getAssociatedObjects(nodesMap, edgesMap) {
+      const filters = []
+      for (const nodeUri in nodesMap) {
+        if (nodesMap[nodeUri].type === 'factoid') {
+          filters.push(`?s = <${nodeUri}>`)
+        }
+      }
+
+      if (filters.length === 0) {
+        return { nodesMap, edgesMap }
+      }
+
+      const filter = filters.join(' || ')
+
+      const endpoint = process.env.endpoint // 'https://dydra.com/junjun7613/romanfactoid_v2/sparql'
+
+      const query = `PREFIX ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
+      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+      SELECT * WHERE {
+        ?s ?v ?ao . ?ao ex:hasLemma/ex:referencesLemma ?lemma; a ?type .
+        FILTER (${filter})
+        SERVICE <https://dydra.com/i2k/lemmabank/sparql> {
+          ?lemma rdfs:label ?label .
+        }
+      }`
+
+      // SILENT
+
+      const url = `${endpoint}?query=${encodeURIComponent(query)}`
+
+      const { data } = await this.$axios.get(url)
+
+      const factoidUri2labels = {}
+
+      for (const item of data) {
+        const label = item.label
+        const aoUri = item.ao
+        const factoidUri = item.s
+
+        if (!factoidUri2labels[factoidUri]) {
+          factoidUri2labels[factoidUri] = {}
+        }
+
+        if (!factoidUri2labels[factoidUri][aoUri]) {
+          factoidUri2labels[factoidUri][aoUri] = {
+            type: item.type,
+            labels: [],
+          }
+        }
+
+        const labels = factoidUri2labels[factoidUri][aoUri].labels
+        if (!labels.includes(label)) {
+          labels.push(label)
+        }
+      }
+
+      const aoConfig = {
+        'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#ConceptualObjectReference':
+          {
+            color: 'pink',
+            // shape: 'box',
+          },
+        'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#PhysicalObjectReference':
+          {
+            color: 'gray',
+            // shape: 'diamond',
+          },
+      }
+
+      for (const factoidUri in factoidUri2labels) {
+        for (const aoUri in factoidUri2labels[factoidUri]) {
+          const aoObj = factoidUri2labels[factoidUri][aoUri]
+          const type = aoObj.type
+
+          // 複数のラベルをソートして結合
+          const labels = aoObj.labels
+          labels.sort()
+          const label = labels.join(' / ')
+
+          if (!nodesMap[label]) {
+            nodesMap[label] = {
+              id: label,
+              label,
+              color: aoConfig[type].color,
+              // shape: aoConfig[type].shape,
+              shape: 'dot',
+              type: 'lemma',
+              shadow: true,
+              size: 10,
+            }
+          }
+
+          edgesMap[`${factoidUri}-${label}`] = {
+            from: factoidUri,
+            to: label,
+            // label: this.$utils.getIdFromUri(obj.p, '#'),
+            arrows: 'to',
+            // font: { align: 'middle' },
+            color: 'gray',
+          }
+        }
+      }
+
+      return { nodesMap, edgesMap }
+    },
+    drawNetwork() {
+      // 全データ
+      const orgEdges = this.orgEdges
+      const orgNodes = this.orgNodes
+
+      // 表示するものだけ
+      const nodes = []
+      const edges = []
+      const nodesUris = []
+
+      // 表示条件
+      const isLemma = this.isLemma
+
+      // ノードについて
+      for (const node of orgNodes) {
+        if (!isLemma && node.type === 'lemma') {
+          continue
+        }
+
+        nodes.push(node)
+        nodesUris.push(node.id)
+      }
+
+      // エッジについて
+      for (const edge of orgEdges) {
+        const fromUri = edge.from
+        const toUri = edge.to
+        if (nodesUris.includes(fromUri) && nodesUris.includes(toUri)) {
+          edges.push(edge)
+        }
+      }
+
       this.nodes = nodes
       this.edges = edges
-   },
-   methods: {
+    },
     neighbourhoodHighlight(params){
 
       const allNodes = JSON.parse(JSON.stringify(this.nodesMap))
