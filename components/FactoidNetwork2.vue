@@ -49,6 +49,8 @@ export default {
     },
     id() {
       const id = this.id
+      const network = this.$refs.network
+      network.selectNodes([id])
       this.neighbourhoodHighlight([id])
     },
   },
@@ -114,7 +116,7 @@ export default {
           if (!nodesMap[referencesEntityNode]) {
             const referencesEntityType= obj[`referencesEntityType_${key}`]
             // const localReferencesEntityType = referencesEntityType.split("#")[1]
-            let color = null
+            let color = "#03A9F4"
             switch (referencesEntityType) {
               case 'https://github.com/johnBradley501/FPO/raw/master/fpo.owl#Location':
                 // 式の結果が value1 に一致する場合に実行する文
@@ -153,6 +155,7 @@ export default {
             from: node,
             to: referencesEntityNode,
             // color: "blue",
+            color: 'gray',
             arrows: {
               to: {
                 enabled: true,
@@ -171,7 +174,7 @@ export default {
         edgesMap[edge] = {
           from: nodeS,
           to: nodeO,
-          
+          color: 'gray',
           arrows: {
             to: {
               enabled: true,
@@ -291,15 +294,17 @@ export default {
           const label = labels.join(' / ')
 
           if (!nodesMap[label]) {
+            const color = aoConfig[type].color
             nodesMap[label] = {
               id: label,
               label,
-              color: aoConfig[type].color,
+              color,
               // shape: aoConfig[type].shape,
               shape: 'dot',
               type: 'lemma',
               shadow: true,
               size: 10,
+              original_color: color
             }
           }
 
@@ -408,8 +413,18 @@ export default {
             }
           }
 
+          // これはネットワークを直接クリックした時に呼ばれる
           // the main node gets its own color and its label back.
-          allNodes[selectedNode].color = allNodes[selectedNode].original_color;
+          // allNodes[selectedNode].color = allNodes[selectedNode].original_color;
+          allNodes[selectedNode].color = {
+            border: 'black',
+            background: allNodes[selectedNode].original_color,
+            highlight: {
+              background: allNodes[selectedNode].original_color, // 'yellow',
+              border: 'black'
+            }
+          }
+          // color: { background: "pink", border: "purple" }, 
           if (allNodes[selectedNode].hiddenLabel !== undefined) {
             allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
             allNodes[selectedNode].hiddenLabel = undefined;
@@ -428,9 +443,14 @@ export default {
 
         // transform the object into an array
         const updateArray = [];
+        const isLemma = this.isLemma
         for (const nodeId in allNodes) {
           if (allNodes[nodeId]) {
-            updateArray.push(allNodes[nodeId]);
+            const targetNode = allNodes[nodeId]
+            if (!isLemma && targetNode.type === 'lemma') {
+              continue
+            }
+            updateArray.push(targetNode);
           }
         }
         this.nodes = updateArray;

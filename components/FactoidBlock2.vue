@@ -76,7 +76,7 @@ export default {
       await this.getItem()
 
       // pleiadesから緯度・経度情報の取得
-      this.getPlaceInfo()
+      // this.getPlaceInfo()
     },
 
     async getItem() {
