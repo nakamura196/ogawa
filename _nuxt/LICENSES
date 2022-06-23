@@ -114,6 +114,7 @@ PERFORMANCE OF THIS SOFTWARE.
 
 /*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
 
+
 /* @preserve
  * Leaflet 1.7.1, a JS library for interactive maps. http://leafletjs.com
  * (c) 2010-2019 Vladimir Agafonkin, (c) 2010-2011 CloudMade
@@ -139,3 +140,13 @@ Copyright (c) Microsoft Corporation.
   * (c) 2015-present Evan You
   * @license MIT
   */
+
+
+/*!
+ * The buffer module from node.js, for the browser.
+ *
+ * @author   Feross Aboukhadijeh <http://feross.org>
+ * @license  MIT
+ */
+
+/*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
