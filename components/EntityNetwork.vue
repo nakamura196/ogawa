@@ -309,7 +309,7 @@ export default {
           // edgesMap[edgeId].value += 1
 
           for (const entityUri of combi) {
-            let color = null
+            let color = '#03A9F4'
             // const shape = null
             let nodeType = null
 

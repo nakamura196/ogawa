@@ -1,9 +1,9 @@
 <template>
-  <div class="mb-5">
-    <network v-if="nodes.length > 0"
+  <div v-if="nodes.length > 0" class="mb-5">
+    <network
       ref="network"
       class="mt-5"
-      style="width: 100%; height: 500px; border: 1px solid lightgray;"
+      style="width: 100%; height: 500px; border: 1px solid lightgray"
       :nodes="nodes"
       :edges="edges"
       :options="options"
@@ -11,14 +11,14 @@
     >
     </network>
     <div class="mt-4">
-        <v-switch v-model="isLemma" :label="`Lemma`"></v-switch>
-      </div>
+      <v-switch v-model="isLemma" :label="`Lemma`"></v-switch>
+    </div>
   </div>
 </template>
 
 <script>
 import { Network } from 'vue-visjs'
-let highlightActive = false;
+let highlightActive = false
 export default {
   components: {
     network: Network,
@@ -37,10 +37,21 @@ export default {
       edges: [],
       nodesMap: {},
       edgesMap: {},
-      options: {
-      },
+      options: {},
       orgNodes: [],
       orgEdges: [],
+    }
+  },
+  computed: {
+    selectedFactoidIdOnText: {
+      // getter 関数
+      get() {
+        return this.$store.getters.getSelectedFactoidIdOnText
+      },
+      // setter 関数
+      set(value) {
+        this.$store.commit('setSelectedFactoidIdOnText', value)
+      },
     }
   },
   watch: {
@@ -50,12 +61,15 @@ export default {
     id() {
       const id = this.id
       const network = this.$refs.network
+      if(!network){
+        return
+      }
       network.selectNodes([id])
       this.neighbourhoodHighlight([id])
     },
   },
-   async mounted() {
-      const query = `PREFIX ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
+  async mounted() {
+    const query = `PREFIX ex: <https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#>
         SELECT * WHERE {
           ?s ?v ?o; ex:description ?desc_s . 
           OPTIONAL {
@@ -85,136 +99,136 @@ export default {
           }
         }`
 
-      const endpoint = process.env.endpoint
+    const endpoint = process.env.endpoint
 
-      const url = `${endpoint}?query=${encodeURIComponent(query)}`
+    const url = `${endpoint}?query=${encodeURIComponent(query)}`
 
-      const { data } = await this.$axios.get(url)
+    const { data } = await this.$axios.get(url)
 
-      let nodesMap = {}
-      let edgesMap = {}
+    let nodesMap = {}
+    let edgesMap = {}
 
-      for (const obj of data) {
-        const keys = ['s', 'o']
-        for (const key of keys) {
-          const node = obj[key]
-          // factoid
-          if (!nodesMap[node]) {
-            nodesMap[node] = {
-              id: node,
-              label: obj[`desc_${key}`],
-              shape: 'dot',
-              color: "orange",
-              shadow: true,
-              original_color: "orange",
-              type: 'factoid'
-            }
+    for (const obj of data) {
+      const keys = ['s', 'o']
+      for (const key of keys) {
+        const node = obj[key]
+        // factoid
+        if (!nodesMap[node]) {
+          nodesMap[node] = {
+            id: node,
+            label: obj[`desc_${key}`],
+            shape: 'dot',
+            color: 'orange',
+            shadow: true,
+            original_color: 'orange',
+            type: 'factoid',
           }
+        }
 
-          // referencesEntity
-          const referencesEntityNode = obj[`referencesEntity_${key}`]
-          if (!nodesMap[referencesEntityNode]) {
-            const referencesEntityType= obj[`referencesEntityType_${key}`]
-            // const localReferencesEntityType = referencesEntityType.split("#")[1]
-            let color = "#03A9F4"
-            switch (referencesEntityType) {
-              case 'https://github.com/johnBradley501/FPO/raw/master/fpo.owl#Location':
-                // 式の結果が value1 に一致する場合に実行する文
-                color = '#98fb98'
-                break
-              case 'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#Community':
-                // 式の結果が value1 に一致する場合に実行する文
-                color = 'red'
-                break
-              case 'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#ConceptualObject':
-                // 式の結果が value1 に一致する場合に実行する文
-                color = 'yellow'
-                break
-              case 'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#PhysicalObject':
-                // 式の結果が value1 に一致する場合に実行する文
-                color = 'yellow'
-                break
-              case 'https://github.com/johnBradley501/FPO/raw/master/fpo.owl#Group':
-                // 式の結果が value1 に一致する場合に実行する文
-                color = 'orange'
-                break
-            }
-            nodesMap[referencesEntityNode] = {
-              id: referencesEntityNode,
-              label: obj[`referencesEntityName_${key}`],
-              shape: 'dot',
-              color,
-              shadow: true,
-              original_color: color
-            }
+        // referencesEntity
+        const referencesEntityNode = obj[`referencesEntity_${key}`]
+        if (!nodesMap[referencesEntityNode]) {
+          const referencesEntityType = obj[`referencesEntityType_${key}`]
+          // const localReferencesEntityType = referencesEntityType.split("#")[1]
+          let color = '#03A9F4'
+          switch (referencesEntityType) {
+            case 'https://github.com/johnBradley501/FPO/raw/master/fpo.owl#Location':
+              // 式の結果が value1 に一致する場合に実行する文
+              color = '#98fb98'
+              break
+            case 'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#Community':
+              // 式の結果が value1 に一致する場合に実行する文
+              color = 'red'
+              break
+            case 'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#ConceptualObject':
+              // 式の結果が value1 に一致する場合に実行する文
+              color = 'yellow'
+              break
+            case 'https://junjun7613.github.io/RomanFactoid_v2/Roman_Contextual_Factoid.owl#PhysicalObject':
+              // 式の結果が value1 に一致する場合に実行する文
+              color = 'yellow'
+              break
+            case 'https://github.com/johnBradley501/FPO/raw/master/fpo.owl#Group':
+              // 式の結果が value1 に一致する場合に実行する文
+              color = 'orange'
+              break
           }
-
-          // factoidとreferencesEntity間のエッジ
-          const edge4referencesEntity = `${node}-${referencesEntityNode}`
-          edgesMap[edge4referencesEntity] = {
-            from: node,
-            to: referencesEntityNode,
-            // color: "blue",
-            color: 'gray',
-            arrows: {
-              to: {
-                enabled: true,
-                type: 'arrow'
-              }
-            }
+          nodesMap[referencesEntityNode] = {
+            id: referencesEntityNode,
+            label: obj[`referencesEntityName_${key}`],
+            shape: 'dot',
+            color,
+            shadow: true,
+            original_color: color,
           }
-        }      
+        }
 
-        const nodeS = obj.s
-        const nodeO = obj.o
-
-        // factoid間のエッジ
-        const edge = `${nodeS}-${nodeO}`
-    
-        edgesMap[edge] = {
-          from: nodeS,
-          to: nodeO,
+        // factoidとreferencesEntity間のエッジ
+        const edge4referencesEntity = `${node}-${referencesEntityNode}`
+        edgesMap[edge4referencesEntity] = {
+          from: node,
+          to: referencesEntityNode,
+          // color: "blue",
           color: 'gray',
           arrows: {
             to: {
               enabled: true,
-              type: 'arrow'
-            }
-          }
-        }    
+              type: 'arrow',
+            },
+          },
+        }
       }
 
-      const res = await this.getAssociatedObjects(nodesMap, edgesMap)
-      nodesMap = res.nodesMap
-      edgesMap = res.edgesMap
+      const nodeS = obj.s
+      const nodeO = obj.o
 
-      this.nodesMap = nodesMap
-      this.edgesMap = edgesMap
+      // factoid間のエッジ
+      const edge = `${nodeS}-${nodeO}`
 
-      const nodes = []
-      const edges = []
-
-      for (const node in nodesMap) {
-        nodes.push(nodesMap[node])
+      edgesMap[edge] = {
+        from: nodeS,
+        to: nodeO,
+        color: 'gray',
+        arrows: {
+          to: {
+            enabled: true,
+            type: 'arrow',
+          },
+        },
       }
+    }
 
-      for (const edge in edgesMap) {
-        edges.push(edgesMap[edge])
-      }
-      
-      // this.nodes = nodes
-      // this.edges = edges
+    const res = await this.getAssociatedObjects(nodesMap, edgesMap)
+    nodesMap = res.nodesMap
+    edgesMap = res.edgesMap
 
-      // 全データの格納
-      this.orgEdges = edges
-      this.orgNodes = nodes
+    this.nodesMap = nodesMap
+    this.edgesMap = edgesMap
 
-      // 描画
-      this.drawNetwork()
-   },
-   
-   methods: {
-     async getAssociatedObjects(nodesMap, edgesMap) {
+    const nodes = []
+    const edges = []
+
+    for (const node in nodesMap) {
+      nodes.push(nodesMap[node])
+    }
+
+    for (const edge in edgesMap) {
+      edges.push(edgesMap[edge])
+    }
+
+    // this.nodes = nodes
+    // this.edges = edges
+
+    // 全データの格納
+    this.orgEdges = edges
+    this.orgNodes = nodes
+
+    // 描画
+    this.drawNetwork()
+  },
+
+  methods: {
+    async getAssociatedObjects(nodesMap, edgesMap) {
       const filters = []
       for (const nodeUri in nodesMap) {
         if (nodesMap[nodeUri].type === 'factoid') {
@@ -304,7 +318,7 @@ export default {
               type: 'lemma',
               shadow: true,
               size: 10,
-              original_color: color
+              original_color: color,
             }
           }
 
@@ -356,188 +370,229 @@ export default {
       this.nodes = nodes
       this.edges = edges
     },
-    neighbourhoodHighlightByHand(params){
+    neighbourhoodHighlightByHand(params) {
       this.neighbourhoodHighlight(params.nodes)
+      this.onNodeSelected(params)
     },
-    neighbourhoodHighlight(selectNodes){
-
+    neighbourhoodHighlight(selectNodes) {
       const allNodes = JSON.parse(JSON.stringify(this.nodesMap))
 
       const network = this.$refs.network
 
       if (selectNodes.length > 0) {
-          highlightActive = true;
-          let i, j;
-          const selectedNode = selectNodes[0];
-          const degrees = 2;
+        highlightActive = true
+        let i, j
+        const selectedNode = selectNodes[0]
+        const degrees = 2
 
-          // mark all nodes as hard to read.
-          for (const nodeId in allNodes) {
-            allNodes[nodeId].color = "rgba(200,200,200,0.5)";
-            if (allNodes[nodeId].hiddenLabel === undefined) {
-              allNodes[nodeId].hiddenLabel = allNodes[nodeId].label;
-              allNodes[nodeId].label = undefined;
-            }
-          }
-
-          const connectedNodes = network.getConnectedNodes(selectedNode);
-
-          let allConnectedNodes = [];
-
-          // get the second degree nodes
-          for (i = 1; i < degrees; i++) {
-            for (j = 0; j < connectedNodes.length; j++) {
-              allConnectedNodes = allConnectedNodes.concat(
-                network.getConnectedNodes(connectedNodes[j])
-              );
-            }
-          }
-
-          // all second degree nodes get a different color and their label back
-          for (i = 0; i < allConnectedNodes.length; i++) {
-            allNodes[allConnectedNodes[i]].color = "rgba(150,150,150,0.75)";
-            if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
-              allNodes[allConnectedNodes[i]].label =
-                allNodes[allConnectedNodes[i]].hiddenLabel;
-              allNodes[allConnectedNodes[i]].hiddenLabel = undefined;
-            }
-          }
-
-          // all first degree nodes get their own color and their label back
-          for (i = 0; i < connectedNodes.length; i++) {
-            allNodes[connectedNodes[i]].color = allNodes[connectedNodes[i]].original_color;
-            if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
-              allNodes[connectedNodes[i]].label =
-                allNodes[connectedNodes[i]].hiddenLabel;
-              allNodes[connectedNodes[i]].hiddenLabel = undefined;
-            }
-          }
-
-          // これはネットワークを直接クリックした時に呼ばれる
-          // the main node gets its own color and its label back.
-          // allNodes[selectedNode].color = allNodes[selectedNode].original_color;
-          allNodes[selectedNode].color = {
-            border: 'black',
-            background: allNodes[selectedNode].original_color,
-            highlight: {
-              background: allNodes[selectedNode].original_color, // 'yellow',
-              border: 'black'
-            }
-          }
-          // color: { background: "pink", border: "purple" }, 
-          if (allNodes[selectedNode].hiddenLabel !== undefined) {
-            allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
-            allNodes[selectedNode].hiddenLabel = undefined;
-          }
-        } else if (highlightActive === true) {
-          // reset all nodes
-          for (const nodeId in allNodes) {
-            allNodes[nodeId].color = allNodes[nodeId].original_color;
-            if (allNodes[nodeId].hiddenLabel !== undefined) {
-              allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
-              allNodes[nodeId].hiddenLabel = undefined;
-            }
-          }
-          highlightActive = false;  
-        }
-
-        // transform the object into an array
-        const updateArray = [];
-        const isLemma = this.isLemma
+        // mark all nodes as hard to read.
         for (const nodeId in allNodes) {
-          if (allNodes[nodeId]) {
-            const targetNode = allNodes[nodeId]
-            if (!isLemma && targetNode.type === 'lemma') {
-              continue
-            }
-            updateArray.push(targetNode);
+          allNodes[nodeId].color = 'rgba(200,200,200,0.5)'
+          if (allNodes[nodeId].hiddenLabel === undefined) {
+            allNodes[nodeId].hiddenLabel = allNodes[nodeId].label
+            allNodes[nodeId].label = undefined
           }
         }
-        this.nodes = updateArray;
-      },
-    neighbourhoodHighlight2(params){
 
-      console.log({params})
+        const connectedNodes = network.getConnectedNodes(selectedNode)
+
+        let allConnectedNodes = []
+
+        // get the second degree nodes
+        for (i = 1; i < degrees; i++) {
+          for (j = 0; j < connectedNodes.length; j++) {
+            allConnectedNodes = allConnectedNodes.concat(
+              network.getConnectedNodes(connectedNodes[j])
+            )
+          }
+        }
+
+        // all second degree nodes get a different color and their label back
+        for (i = 0; i < allConnectedNodes.length; i++) {
+          allNodes[allConnectedNodes[i]].color = 'rgba(150,150,150,0.75)'
+          if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
+            allNodes[allConnectedNodes[i]].label =
+              allNodes[allConnectedNodes[i]].hiddenLabel
+            allNodes[allConnectedNodes[i]].hiddenLabel = undefined
+          }
+        }
+
+        // all first degree nodes get their own color and their label back
+        for (i = 0; i < connectedNodes.length; i++) {
+          allNodes[connectedNodes[i]].color =
+            allNodes[connectedNodes[i]].original_color
+          if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
+            allNodes[connectedNodes[i]].label =
+              allNodes[connectedNodes[i]].hiddenLabel
+            allNodes[connectedNodes[i]].hiddenLabel = undefined
+          }
+        }
+
+        // これはネットワークを直接クリックした時に呼ばれる
+        // the main node gets its own color and its label back.
+        // allNodes[selectedNode].color = allNodes[selectedNode].original_color;
+        allNodes[selectedNode].color = {
+          border: 'black',
+          background: allNodes[selectedNode].original_color,
+          highlight: {
+            background: allNodes[selectedNode].original_color, // 'yellow',
+            border: 'black',
+          },
+        }
+        // color: { background: "pink", border: "purple" },
+        if (allNodes[selectedNode].hiddenLabel !== undefined) {
+          allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel
+          allNodes[selectedNode].hiddenLabel = undefined
+        }
+      } else if (highlightActive === true) {
+        // reset all nodes
+        for (const nodeId in allNodes) {
+          allNodes[nodeId].color = allNodes[nodeId].original_color
+          if (allNodes[nodeId].hiddenLabel !== undefined) {
+            allNodes[nodeId].label = allNodes[nodeId].hiddenLabel
+            allNodes[nodeId].hiddenLabel = undefined
+          }
+        }
+        highlightActive = false
+      }
+
+      // transform the object into an array
+      const updateArray = []
+      const isLemma = this.isLemma
+      for (const nodeId in allNodes) {
+        if (allNodes[nodeId]) {
+          const targetNode = allNodes[nodeId]
+          if (!isLemma && targetNode.type === 'lemma') {
+            continue
+          }
+          updateArray.push(targetNode)
+        }
+      }
+      this.nodes = updateArray
+    },
+    neighbourhoodHighlight2(params) {
+      console.log({ params })
 
       const allNodes = JSON.parse(JSON.stringify(this.nodesMap))
 
       const network = this.$refs.network
 
       if (params.nodes.length > 0) {
-          highlightActive = true;
-          let i, j;
-          const selectedNode = params.nodes[0];
-          const degrees = 2;
+        highlightActive = true
+        let i, j
+        const selectedNode = params.nodes[0]
+        const degrees = 2
 
-          // mark all nodes as hard to read.
-          for (const nodeId in allNodes) {
-            allNodes[nodeId].color = "rgba(200,200,200,0.5)";
-            if (allNodes[nodeId].hiddenLabel === undefined) {
-              allNodes[nodeId].hiddenLabel = allNodes[nodeId].label;
-              allNodes[nodeId].label = undefined;
-            }
-          }
-
-          const connectedNodes = network.getConnectedNodes(selectedNode);
-
-          let allConnectedNodes = [];
-
-          // get the second degree nodes
-          for (i = 1; i < degrees; i++) {
-            for (j = 0; j < connectedNodes.length; j++) {
-              allConnectedNodes = allConnectedNodes.concat(
-                network.getConnectedNodes(connectedNodes[j])
-              );
-            }
-          }
-
-          // all second degree nodes get a different color and their label back
-          for (i = 0; i < allConnectedNodes.length; i++) {
-            allNodes[allConnectedNodes[i]].color = "rgba(150,150,150,0.75)";
-            if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
-              allNodes[allConnectedNodes[i]].label =
-                allNodes[allConnectedNodes[i]].hiddenLabel;
-              allNodes[allConnectedNodes[i]].hiddenLabel = undefined;
-            }
-          }
-
-          // all first degree nodes get their own color and their label back
-          for (i = 0; i < connectedNodes.length; i++) {
-            allNodes[connectedNodes[i]].color = allNodes[connectedNodes[i]].original_color;
-            if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
-              allNodes[connectedNodes[i]].label =
-                allNodes[connectedNodes[i]].hiddenLabel;
-              allNodes[connectedNodes[i]].hiddenLabel = undefined;
-            }
-          }
-
-          // the main node gets its own color and its label back.
-          allNodes[selectedNode].color = allNodes[selectedNode].original_color;
-          if (allNodes[selectedNode].hiddenLabel !== undefined) {
-            allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
-            allNodes[selectedNode].hiddenLabel = undefined;
-          }
-        } else if (highlightActive === true) {
-          // reset all nodes
-          for (const nodeId in allNodes) {
-            allNodes[nodeId].color = allNodes[nodeId].original_color;
-            if (allNodes[nodeId].hiddenLabel !== undefined) {
-              allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
-              allNodes[nodeId].hiddenLabel = undefined;
-            }
-          }
-          highlightActive = false;  
-        }
-
-        // transform the object into an array
-        const updateArray = [];
+        // mark all nodes as hard to read.
         for (const nodeId in allNodes) {
-          if (allNodes[nodeId]) {
-            updateArray.push(allNodes[nodeId]);
+          allNodes[nodeId].color = 'rgba(200,200,200,0.5)'
+          if (allNodes[nodeId].hiddenLabel === undefined) {
+            allNodes[nodeId].hiddenLabel = allNodes[nodeId].label
+            allNodes[nodeId].label = undefined
           }
         }
-        this.nodes = updateArray;
+
+        const connectedNodes = network.getConnectedNodes(selectedNode)
+
+        let allConnectedNodes = []
+
+        // get the second degree nodes
+        for (i = 1; i < degrees; i++) {
+          for (j = 0; j < connectedNodes.length; j++) {
+            allConnectedNodes = allConnectedNodes.concat(
+              network.getConnectedNodes(connectedNodes[j])
+            )
+          }
+        }
+
+        // all second degree nodes get a different color and their label back
+        for (i = 0; i < allConnectedNodes.length; i++) {
+          allNodes[allConnectedNodes[i]].color = 'rgba(150,150,150,0.75)'
+          if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
+            allNodes[allConnectedNodes[i]].label =
+              allNodes[allConnectedNodes[i]].hiddenLabel
+            allNodes[allConnectedNodes[i]].hiddenLabel = undefined
+          }
+        }
+
+        // all first degree nodes get their own color and their label back
+        for (i = 0; i < connectedNodes.length; i++) {
+          allNodes[connectedNodes[i]].color =
+            allNodes[connectedNodes[i]].original_color
+          if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
+            allNodes[connectedNodes[i]].label =
+              allNodes[connectedNodes[i]].hiddenLabel
+            allNodes[connectedNodes[i]].hiddenLabel = undefined
+          }
+        }
+
+        // the main node gets its own color and its label back.
+        allNodes[selectedNode].color = allNodes[selectedNode].original_color
+        if (allNodes[selectedNode].hiddenLabel !== undefined) {
+          allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel
+          allNodes[selectedNode].hiddenLabel = undefined
+        }
+      } else if (highlightActive === true) {
+        // reset all nodes
+        for (const nodeId in allNodes) {
+          allNodes[nodeId].color = allNodes[nodeId].original_color
+          if (allNodes[nodeId].hiddenLabel !== undefined) {
+            allNodes[nodeId].label = allNodes[nodeId].hiddenLabel
+            allNodes[nodeId].hiddenLabel = undefined
+          }
+        }
+        highlightActive = false
       }
-   }
+
+      // transform the object into an array
+      const updateArray = []
+      for (const nodeId in allNodes) {
+        if (allNodes[nodeId]) {
+          updateArray.push(allNodes[nodeId])
+        }
+      }
+      this.nodes = updateArray
+    },
+
+    // クリックした時の処理
+    onNodeSelected(value) {
+      const nodes = value.nodes
+
+      if (nodes.length > 0) {
+        const uri = nodes[0]
+        const node = this.nodesMap[uri]
+
+        if (node.type === 'factoid') {
+          /*
+          this.$router.push(
+            this.localePath({
+              name: 'item-id',
+              params: {
+                id: this.$utils.getIdFromUri(node.id).replace('fact_', ''),
+              },
+            })
+          )
+          */
+          this.selectedFactoidIdOnText = this.$utils.getIdFromUri(node.id)
+        } else {
+          if (!node.context) {
+            // alert('contextがありません。')
+            return
+          }
+          /*
+          this.$router.push(
+            this.localePath({
+              name: 'entity-id',
+              params: {
+                id: this.$utils.getIdFromUri(node.context),
+              },
+            })
+          )
+          */
+          this.selectedEntityIdOnText = this.$utils.getIdFromUri(node.context)
+        }
+      }
+    },
+  },
 }
 </script>

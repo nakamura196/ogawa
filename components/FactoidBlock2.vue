@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 class="mb-5">
+    <h2 v-if="item.description" class="mb-5">
       {{ item.description }} ({{ $utils.createFactoidTitleFromId(id) }})
     </h2>
 
