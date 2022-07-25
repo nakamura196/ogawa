@@ -80,7 +80,9 @@ export default class TEI4Entity extends Vue {
       const id = element.attributes['xml:id'] // referenceId
       this.selectedReferenceIdOnText = id
 
+      console.log(this.entityAttributes)
       const entityInContextUri = this.entityAttributes[id]
+      console.log(entityInContextUri)
       this.selectedEntityIdOnText = entityInContextUri
     }
   }
